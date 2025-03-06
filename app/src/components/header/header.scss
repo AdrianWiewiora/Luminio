@@ -1,0 +1,94 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 80px;
+    padding: 0 56px;
+    background-color: var(--background2);
+
+    &__nav-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 42px;
+
+        &--logo {
+            width: 168px;
+            height: 32px;
+        }
+    
+        &--nav {
+            display: flex;
+
+            &--ul {
+                display: flex;
+                gap: 24px;
+                list-style-type: none;
+
+                &--li{
+                    transition: 0.15s ease-in-out;
+                    cursor: pointer;
+                }
+
+                &--li:hover{
+                    color: var(--white-text);
+                }
+            }
+        }
+    }
+
+    &__btn-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 26px;
+
+        &--log-in {
+            display: flex;
+            padding: 8px 16px;
+            justify-content: center;
+            align-items: center;
+
+            &--text{
+                transition: 0.15s ease-in-out;
+            }
+
+            &--text:hover{
+                color: var(--white-text);
+            }
+        }
+
+        &--sign-in {
+            display: flex;
+            padding: 8px 16px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            background: var(--main-gradient);
+            overflow: hidden;
+            position: relative;
+
+            &--text {
+                color: var(--white-text);
+                z-index: 100;
+            }
+
+            &::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border-radius: inherit;
+                transition: opacity 0.15s ease-in-out;
+                opacity: 0;
+            }
+        
+            &:hover::before {
+                background: var(--hover-gradient);
+                opacity: 1;
+                cursor: pointer;
+            }
+        }
+    
+    }
+}

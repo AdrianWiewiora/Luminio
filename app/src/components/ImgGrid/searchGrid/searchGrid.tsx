@@ -1,0 +1,41 @@
+import { useState } from "react";
+import { Gallery } from "react-grid-gallery";
+import "./searchGrid.scss";
+import FilterBtn from "../../btn/filter/filter";
+
+const filterOptions = [
+    { id: 1, name: "Ślubne" },
+    { id: 2, name: "Krajobrazy" },
+    { id: 3, name: "Portrety" },
+    { id: 4, name: "Architektura" }
+];
+
+import {
+    image1,
+    image2,
+    image3,
+    image4,
+    image5,
+    image6,
+    image7,
+    image8
+} from "../../../assets/img/imgExport";
+
+
+function SearchGrid() {
+    return(
+        <section className="search-grid">
+            <h2 className="search-grid__h2">
+                Ostatnie zdjęcia
+            </h2>
+            <div className="search-grid__filter-content">
+                {filterOptions.map(({id, name}) => (
+                    <FilterBtn key={id} title={name} />
+                ))}
+            </div>
+            
+        </section>
+    );
+}
+
+export default SearchGrid;

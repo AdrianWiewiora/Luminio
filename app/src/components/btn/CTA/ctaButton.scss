@@ -1,0 +1,25 @@
+.cta-button {
+    position: relative;
+    display: flex;
+    padding: 16px 32px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 100px;
+    background-color: var(--background2);
+    color: var(--white-text);
+    font-size: 1.2rem;
+}
+
+.cta-button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 2px; 
+    border-radius: inherit; 
+    background: var(--main-gradient); 
+    -webkit-mask: linear-gradient(white 0 0) content-box, linear-gradient(white 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    pointer-events: none; 
+}

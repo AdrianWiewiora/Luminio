@@ -1,0 +1,34 @@
+.submit-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    margin-top: 24px;
+    border-radius: 8px;
+    border: none;
+    background: var(--main-gradient);
+    overflow: hidden;
+    position: relative;
+
+    &__text {
+        color: var(--white-text);
+        z-index: 100;
+        cursor: pointer;
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        transition: opacity 0.15s ease-in-out;
+        opacity: 0;
+    }
+
+    &:hover::before {
+        background: var(--hover-gradient);
+        opacity: 1;
+        cursor: pointer;
+    }   
+}

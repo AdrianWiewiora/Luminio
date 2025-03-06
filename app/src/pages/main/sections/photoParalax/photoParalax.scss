@@ -1,0 +1,22 @@
+.paralax-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 20px;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 56px;
+    background-color: var(--main-background);
+
+    &__picture:first-child,
+    &__picture:nth-child(2),
+    &__picture:nth-child(3) {
+        margin-top: -150px;
+    }
+
+    &__picture {
+        width: 527px;
+        height: 527px;
+        object-fit: cover;
+        border-radius: 24px;
+    }
+}
