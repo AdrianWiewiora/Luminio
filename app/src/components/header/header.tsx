@@ -4,9 +4,9 @@ import "./header.scss";
 import Logo from '../../assets/img/logo.png';
 
 const navItems = [
-    { id: 1, name: "Ekspolruj" },
-    { id: 2, name: "Znajdź fotografie"},
-    { id: 3, name: "Losuj"}
+    { id: 1, name: <Link to="/gallery">Ekspolruj</Link> },
+    { id: 2, name: "Znajdź fotografie" },
+    { id: 3, name: "Losuj" }
 ]
 
 function Header(){
@@ -32,11 +32,13 @@ function Header(){
                         Zaloguj się
                     </Link>
                 </div>
-                <div className="header__btn-container--sign-in">
-                    <Link to="/Registration" className="header__btn-container--sign-in--text">
-                        Zarejestruj się
-                    </Link>
-                </div>
+                <Link to="/registration">
+                    <div className="header__btn-container--sign-in">
+                        <span className="header__btn-container--sign-in--text">
+                            Zarejestruj się
+                        </span>
+                    </div>
+                </Link>
             </section>
         </header>
     );

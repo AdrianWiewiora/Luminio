@@ -1,0 +1,40 @@
+.discover {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 96px 0 32px 0;
+    gap: 32px;
+
+    &__head{
+        display: flex;
+        flex-direction: column;
+        gap: 48px;
+
+        &--h1 {
+            color: var(--white-text);
+            font-size: 6rem;
+            text-align: center;
+            font-weight: 300;
+        }
+    
+        &--text {
+            color: var(--gray-text);
+            text-align: center;
+            font-size: 1.25rem;
+            line-height: 42px;
+        }
+    }
+
+    &__filter {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 72px;
+        padding: 0 50px;
+        border-top: 1px solid var(--background3);
+        border-bottom: 1px solid var(--background3);
+        background-color: var(--background2);
+    }
+}

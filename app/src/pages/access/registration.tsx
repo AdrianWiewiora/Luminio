@@ -4,7 +4,7 @@ import './access.scss';
 import RegistrationForm from './registrationForm';
 import Logo from "../../assets/img/logo.png";
 import FormFooter from '../../components/footers/access/formFooter';
-import { logReg1, logReg2, logReg3, logReg4, logReg5, logReg6, logReg7, logReg8, logReg9 } from "../../assets/img/imgExport";
+import AccessImg from "../../components/accessImg/accessImg";
 
 function Registration(){
     return(
@@ -16,9 +16,7 @@ function Registration(){
                 <RegistrationForm />
                 <FormFooter />
             </section>
-            <section className="access-container__carousel">
-                <img src={logReg2} alt="photographer" className="access-container__carousel--img"/>
-            </section>
+            <AccessImg />
         </main>
     );
 }

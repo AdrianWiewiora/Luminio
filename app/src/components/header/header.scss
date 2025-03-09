@@ -34,6 +34,10 @@
                 &--li:hover{
                     color: var(--white-text);
                 }
+
+                &--li > a:hover{
+                    color: var(--white-text);
+                }
             }
         }
     }
@@ -52,6 +56,10 @@
 
             &--text{
                 transition: 0.15s ease-in-out;
+            }
+
+            &--text:hover{
+                color: var(--white-text);
             }
 
             &--text:hover{

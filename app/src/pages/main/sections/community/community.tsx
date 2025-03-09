@@ -1,5 +1,6 @@
 import "./community.scss";
 import CtaButton from "../../../../components/btn/CTA/ctaButton";
+
 import {
     Community1,
     Community2,

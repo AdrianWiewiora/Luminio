@@ -18,18 +18,6 @@
             height: 76px;
         }
     }
-
-    &__carousel {
-        width: 50%;
-        height: 100vh;
-        object-fit: cover;
-        overflow: hidden;
-
-        &--img {
-            width: 100%;
-            height: 100%;
-        }
-    }
 }
 
 .form {
