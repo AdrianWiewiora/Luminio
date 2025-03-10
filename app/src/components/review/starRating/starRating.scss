@@ -1,0 +1,20 @@
+.starRating-container {
+    display: flex;
+    min-width: 128px;
+    gap: 8px;
+
+    .star {
+
+        &--animated {
+            animation: bounce 0.3s ease-in-out;
+        }
+    }
+}
+@keyframes bounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}

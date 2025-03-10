@@ -7,6 +7,8 @@ import Main from './pages/main/main'
 import LogIn from './pages/access/logIn'
 import Registration from './pages/access/registration'
 import Gallery from './pages/gallery/gallery'
+import Album from './pages/album/album'
+import Author from './pages/author/author'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -16,6 +18,8 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/logIn" element={<LogIn />}/>
         <Route path="/registration" element={<Registration />}/>
         <Route path="/gallery" element={<Gallery />} />
+        <Route path="/album" element={<Album />}/>
+        <Route path="/author" element={<Author />}/>
       </Routes>
     </BrowserRouter>
   </StrictMode>,
