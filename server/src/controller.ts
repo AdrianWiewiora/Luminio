@@ -7,20 +7,22 @@ router.get("/", (ctx) => {
   ctx.response.body = "Hello world";
 });
 
-router.get("/createuser", async (ctx) => {
-  const user: User = {
-    id: 0,
+router.post("/createuser", async (ctx) => {
+
+  //feel free to scrap any changes made :)
+
+  /*const user: User = {
     first_name: "Damian",
     last_name: "Main",
-    email: "damian@damian.pl",
+    email: "",
     password_hash: "123",
     user_description: "Fajowy gośc",
-    created_at: 0,
-    avatar_id: 0,
-  };
-
+    role: 1,
+    created_at: 0
+  };*/
+  const user: User = await ctx.request.body.json()
   await insertUser(user);
-  ctx.response.body = "koks";
+  ctx.response.body = user.first_name + " to koks";
 });
 
 router.get("/getuser", async (ctx) => {

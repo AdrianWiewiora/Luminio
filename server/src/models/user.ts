@@ -1,14 +1,13 @@
 import { sql } from "../db.ts";
 
 export interface User {
-  id: number;
   first_name: string;
   last_name: string;
   email: string;
   password_hash: string;
   user_description: string;
   created_at: number;
-  avatar_id: number;
+  role: number;
 }
 
 export async function getUserById(id: number): Promise<User> {
