@@ -7,6 +7,8 @@
     "@felix/bcrypt": "jsr:@felix/bcrypt@^1.0.5",
     "@oak/oak": "jsr:@oak/oak@^17.1.4",
     "@std/assert": "jsr:@std/assert@1",
+    "@std/fs": "jsr:@std/fs@^1.0.14",
+    "@std/path": "jsr:@std/path@^1.0.8",
     "@valibot/valibot": "jsr:@valibot/valibot@^0.42.1",
     "postgres": "npm:postgres@^3.4.5"
     "common/responses": "../common/responses.ts"
