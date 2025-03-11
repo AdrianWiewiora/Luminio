@@ -1,9 +1,30 @@
 # Lumin.io
+Luminio is a web application designed for photographers who want to showcase their portfolios professionally.  
+It allows users to create and manage photo albums, add contact details, and include links to social media.
 
+## 🚀 Technologies
 
-# ReactApp
-# Install dependencies
+### **Backend**
+- Deno – Modern runtime for JS/TS
+- Oak – Lightweight server framework
+- PostgreSQL – Opensource relational database
+
+### **Frontend**
+- React – Library for building user interfaces
+- Vite – A fast build tool replacing Webpack
+
+## 🏗️ **Setup & Run**
+### Without Docker
+### ReactApp
+Install dependencies:
 npm install
 
-## Start App
+Start App:
 npm run dev
+
+### Deno server
+
+Start server:
+deno run --allow-net --allow-env --allow-read --allow-ffi main.ts
+
+### With Docker

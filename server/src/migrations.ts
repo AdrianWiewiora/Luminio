@@ -2,7 +2,7 @@ import { sql } from "./db.ts";
 import { readDir } from "@std/fs/unstable-read-dir";
 import * as path from "@std/path";
 
-const MIGRATIONS_DIR = "./../migrations/";
+const MIGRATIONS_DIR = "../../migrations/";
 
 interface LuminioDbInfo {
   value: string;

@@ -24,4 +24,4 @@ app/*.njsproj
 app/*.sln
 app/*.sw?
 
-idea/
+.idea/
