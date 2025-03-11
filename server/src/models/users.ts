@@ -30,11 +30,13 @@ export async function getUser(id: number): Promise<DbUser> {
   return rows[0];
 }
 
-export async function getUserByMail(email: string): Promise<DbUser | null> {
+export async function getUserByMail(
+  email: string,
+): Promise<DbUser | undefined> {
   const rows = await sql<
     DbUser[]
   >`SELECT * FROM users WHERE email = ${email} LIMIT 1`;
-  return rows[0] ?? null;
+  return rows[0];
 }
 
 export async function insertUser(user: NewDbUser) {

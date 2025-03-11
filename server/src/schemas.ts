@@ -9,3 +9,8 @@ export const RegistrationSchema = v.object({
   phone_number: v.string(),
   city: v.string(),
 });
+
+export const LoginSchema = v.object({
+  email: v.pipe(v.string(), v.email()),
+  password: v.string(),
+});

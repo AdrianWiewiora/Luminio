@@ -7,9 +7,10 @@ import {
   NewDbUser,
 } from "./models/users.ts";
 import { RegistrationErrorResponse, UserResponse } from "common/responses";
-import { hash } from "@felix/bcrypt";
+import { hash, verify } from "@felix/bcrypt";
 import * as v from "@valibot/valibot";
-import { RegistrationSchema } from "./schemas.ts";
+import { LoginSchema, RegistrationSchema } from "./schemas.ts";
+import { createSession } from "./models/sessions.ts";
 
 export const router = new Router();
 
@@ -59,6 +60,22 @@ router.post("/api/register", async (ctx) => {
 
   // Sukces
   ctx.response.body = {};
+});
+
+// Login
+router.post("/api/login", async (ctx) => {
+  const request = v.parse(LoginSchema, await ctx.request.body.json());
+
+  const user = await getUserByMail(request.email);
+  if (user && await verify(request.password, user.password_hash)) {
+    const session = await createSession(user.id);
+    ctx.cookies.set("SESSION", session.id);
+    ctx.response.body = {};
+    return;
+  } else {
+    ctx.response.status = 400;
+    ctx.response.body = { message: "Niepoprawny email lub hasło" };
+  }
 });
 
 // GET wybranego użytkownika
