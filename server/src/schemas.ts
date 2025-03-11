@@ -6,4 +6,6 @@ export const RegistrationSchema = v.object({
   user_description: v.string(),
   email: v.pipe(v.string(), v.email()),
   password: v.string(),
+  phone_number: v.string(),
+  city: v.string(),
 });

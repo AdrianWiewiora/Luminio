@@ -6,3 +6,8 @@ export interface UserResponse {
   last_name: string;
   user_description: string;
 }
+
+// Zwracany z /api/register po nieudanej rejestracji (status code 400)
+export interface RegistrationErrorResponse {
+  message: string;
+}

@@ -7,7 +7,8 @@ export interface RegistrationRequest {
   email: string;
   password: string;
   user_description: string;
-  // avatar_id: number; nie znamy id profilowego przy tworzeniu użytkownika (FIXME)
+  phone_number: string;
+  city: string;
 }
 
 export interface PostPhotoRequest {}
