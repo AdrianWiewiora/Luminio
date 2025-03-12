@@ -1,0 +1,37 @@
+.container {
+    position: sticky;
+    width: 330px;
+    top: 272px;
+    height: 100vh ;
+    background: var(--background2);
+    box-sizing: border-box;
+    flex-shrink: 0; 
+    padding: 24px;
+
+    &__upload {
+
+        &--h2 {
+            color: var(--white-text);
+            font-family: Inter;
+            font-size: 1.25rem;
+            font-style: normal;
+            font-weight: 200;
+            line-height: normal;
+            margin-top: 8px;
+        }
+    }
+
+    &__edit {
+
+        &--h2 {
+            color: var(--white-text);
+            font-family: Inter;
+            font-size: 1.25rem;
+            font-style: normal;
+            font-weight: 200;
+            line-height: normal;
+            margin-top: 8px;
+        }
+    }
+}
+
