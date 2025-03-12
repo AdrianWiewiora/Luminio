@@ -47,7 +47,7 @@ export { default as Community15 } from "./community/community15.png";
 export { default as Community16 } from "./community/community16.png";
 export { default as Community17 } from "./community/community17.png";
 export { default as Community18 } from "./community/community18.png";
-
+export { default as Community19 } from "./community/community19.png";
 
 // Export gallery
 export { default as image1 } from "./gallery/image1.png";
