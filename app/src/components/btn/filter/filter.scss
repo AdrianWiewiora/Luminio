@@ -1,0 +1,10 @@
+.filter-btn {
+    padding: 8px 16px;
+    background-color: var(--main-background);
+    border-radius: 8px;
+    border: 1px solid var(--gray-text);
+}
+
+.filter-btn:hover {
+    cursor: pointer;
+}

@@ -1,0 +1,10 @@
+.navigation {
+    display: flex;
+    gap: 48px;
+    transition: 0.15s ease-in-out;
+}
+
+.navigation > span:hover {
+    color: var(--white-text);
+    cursor: pointer;
+}

@@ -1,0 +1,49 @@
+.access-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+
+    &__content {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        width: 50%;
+        height: 100vh;
+        padding-top: 64px;
+        gap: 48px;
+        background-color: var(--main-background);
+
+        &--img {
+            width: 360px;
+            height: 76px;
+        }
+    }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 586px;
+    gap: 40px;
+
+    &__label {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+        font-size: 1.2rem;
+        color: var(--white-text);
+
+        &--input {
+            height: 40px;
+            padding: 0 10px;
+            border-radius: 8px;
+            border: 2px solid var(--background3);
+            background: var(--background2);
+            outline: none;
+            letter-spacing: 1px;
+        }
+    }
+}
+

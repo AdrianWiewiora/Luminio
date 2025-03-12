@@ -1,0 +1,28 @@
+@use "./styles/mixins";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  text-decoration: none;
+  color: var(--gray-text);
+}
+
+:root {
+  --pink: #F752FA;
+  --purple: #4B19BF;
+  --main-gradient: linear-gradient(92deg, #7940FF 2.84%, #F752FA 101.77%); //Przy gradiencie używać background:
+  --hover-gradient: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(92deg, #7940FF 2.84%, #F752FA 101.77%);
+  --blue: #5F68D8;
+  --white-text: #fff;
+  --gray-text: #8F96AB;
+  --main-background: #0B0C14;
+  --background2: #12121C;
+  --background3: #202038;
+}
+
+body {
+  background-color: var(--main-background);
+}
