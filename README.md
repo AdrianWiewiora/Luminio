@@ -17,10 +17,10 @@ It allows users to create and manage photo albums, add contact details, and incl
 ### Without Docker
 ### ReactApp
 Install dependencies:
-npm install
+deno install
 
 Start App:
-npm run dev
+deno task dev
 
 ### Deno server
 
