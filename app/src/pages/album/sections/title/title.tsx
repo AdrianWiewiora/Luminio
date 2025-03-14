@@ -1,6 +1,6 @@
 import './title.scss';
 
-import StarRating from '../../../../components/review/starRating/starRating';
+import StarRating from '../../../../components/reviews/starRating/starRating';
 
 function Title () {
 
@@ -18,7 +18,15 @@ function Title () {
                     15.06.2024
                 </div>
             </div>
-            Zdjęcia ślubne Agaty i Łukasza to wyjątkowa kolekcja uchwycająca najpiękniejsze chwile ich wielkiego dnia. Album pełen jest emocji, wzruszeń i radości, które towarzyszyły im podczas ceremonii oraz przyjęcia. Każde ujęcie oddaje magiczną atmosferę tej niezwykłej uroczystości, pełnej miłości i rodzinnego ciepła. Ślub odbył się 15 czerwca 2024 roku w malowniczej miejscowości Kazimierz Dolny, w otoczeniu natury i zabytkowej architektury. Te fotografie to nie tylko wspomnienia, ale także zapis niepowtarzalnej historii dwojga ludzi rozpoczynających wspólną drogę życia.
+            <p className="head__p">
+                Zdjęcia ślubne Agaty i Łukasza to wyjątkowa kolekcja uchwycająca najpiękniejsze
+                 chwile ich wielkiego dnia. Album pełen jest emocji, wzruszeń i radości, które
+                  towarzyszyły im podczas ceremonii oraz przyjęcia. Każde ujęcie oddaje magiczną
+                   atmosferę tej niezwykłej uroczystości, pełnej miłości i rodzinnego ciepła.
+                    Ślub odbył się 15 czerwca 2024 roku w malowniczej miejscowości Kazimierz Dolny,
+                     w otoczeniu natury i zabytkowej architektury. Te fotografie to nie tylko wspomnienia,
+                      ale także zapis niepowtarzalnej historii dwojga ludzi rozpoczynających wspólną drogę życia.
+            </p>
         </section>
     );
 }

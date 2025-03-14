@@ -1,8 +1,8 @@
 import './reviews.scss';
 import { useState } from 'react';
-import profile from '../../../../assets/img/community/community13.png';
-import Review from '../../../../components/review/review'
-import StarRating from '../../../../components/review/starRating/starRating';
+import profile from '../../assets/img/community/community13.png';
+import SingleReview from './singleReview/singleReview'
+import StarRating from './starRating/starRating';
 
 function Reviews(){
     const [rating, setRating] = useState(0);
@@ -19,13 +19,15 @@ function Reviews(){
                 </div>
                 <div className="reviews__new-review--else">
                     <StarRating rating={rating} onChange={setRating} />
-                    <span className="reviews__new-review--else--submit">Dodaj komentarz</span>
+                    <span className="reviews__new-review--else--submit">
+                        Dodaj komentarz
+                    </span>
                 </div>
             </div>
             <div className="reviews__grid">
-                <Review />
-                <Review />
-                <Review />
+                <SingleReview />
+                <SingleReview />
+                <SingleReview />
             </div>
         </section>
     );

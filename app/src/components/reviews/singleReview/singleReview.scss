@@ -25,9 +25,12 @@
                 border-radius: 50%;
             }
 
-            &--name {
+            &--h1 {
                 font-size: 1.25rem;
-                color: var(--white-text)
+                color: var(--white-text);
+                font-style: italic;
+                font-weight: 500;
+                line-height: normal;
             }
         }
 
@@ -36,9 +39,19 @@
             align-items: center;
             justify-content: space-between;
             gap: 16px;
+
             &--date {
-                color: var(--white-text)
+                color: var(--white-text);
+                font-style: italic;
+                font-weight: 500;
+                line-height: normal;
             }
         }
+    }
+
+    &__content {
+        font-style: italic;
+        font-weight: 500;
+        line-height: normal;
     }
 }
