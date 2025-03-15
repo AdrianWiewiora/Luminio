@@ -1,6 +1,6 @@
 FROM denoland/deno:latest
+WORKDIR /server
+COPY . . 
+RUN deno cache src/main.ts
 EXPOSE 8000
-WORKDIR /app
-COPY . .
-RUN deno cache server.ts
-CMD ["deno", "run", "--allow-net", "--allow-env", "--allow-read ", "--allow-ffi " , "server.ts"]
+CMD ["deno", "run", "--allow-net", "--allow-env", "--allow-read", "--allow-ffi", "--allow-write", "src/main.ts"]

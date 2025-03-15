@@ -1,0 +1,50 @@
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: server-container
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./server:/server
+      - ./common:/common
+      - ./migrations:/migrations
+    environment:
+      - IS_DOCKER=true
+    depends_on:
+      - postgres
+    networks:
+      - deno
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: luminio
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - deno
+
+  frontend:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: frontend-container
+    ports:
+      - "5173:5173"
+    environment:
+      - IS_DOCKER=true
+    networks:
+      - deno
+
+volumes:
+  postgres-data:
+
+networks:
+  deno: {}

@@ -1,6 +1,9 @@
 FROM denoland/deno:latest
-EXPOSE 8000
 WORKDIR /app
-COPY . .
-RUN deno cache server.ts
-CMD ["deno", "run", "--allow-net", "--allow-env", "server.ts"]
+COPY deno.json deno.lock vite.config.ts /app/
+COPY src /app/src
+COPY public /app/public
+COPY index.html /app/
+RUN deno install
+EXPOSE 5173
+CMD ["deno", "task", "dev"]
