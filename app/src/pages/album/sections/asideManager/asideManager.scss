@@ -1,36 +1,62 @@
 .container {
     position: sticky;
+    top: 0;
     width: 330px;
-    top: 272px;
     height: 100vh ;
     background: var(--background2);
     box-sizing: border-box;
     flex-shrink: 0; 
     padding: 24px;
 
-    &__upload {
+    &__sticky{
+        position: sticky;
+        top: 32px;
 
-        &--h2 {
-            color: var(--white-text);
-            font-family: Inter;
-            font-size: 1.25rem;
-            font-style: normal;
-            font-weight: 200;
-            line-height: normal;
-            margin-top: 8px;
+        &--section {
+
+            &--h2 {
+                color: var(--white-text);
+                font-size: 1.25rem;
+                font-weight: 200;
+                margin-top: 8px;
+            }
+
+            &--item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 28px;
+                gap: 4px;
+                margin-left: -112px;
+                color: var(--gray-text);
+                font-size: 1.25rem;
+                font-weight: 400;
+                transition: 0.15s ease-in-out;
+
+                &--icon {
+                    height: 48px;
+                    width: 48px;
+                    fill: none;
+                    stroke: var(--gray-text);
+                    stroke-width: 1.5;
+                    stroke-linecap: round;
+                    stroke-linejoin: round;
+                    transition: 0.15s ease-in-out;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    color: var(--white-text);
+
+                    .container__sticky--section--item--icon {
+                        stroke: var(--white-text);
+                    }
+                }
+            }
         }
-    }
 
-    &__edit {
-
-        &--h2 {
-            color: var(--white-text);
-            font-family: Inter;
-            font-size: 1.25rem;
-            font-style: normal;
-            font-weight: 200;
-            line-height: normal;
-            margin-top: 8px;
+        &--btn {
+            padding: 0 70px;
         }
     }
 }
