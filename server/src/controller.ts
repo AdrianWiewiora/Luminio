@@ -23,6 +23,7 @@ router.get("/api/users", async (ctx) => {
       first_name: user.first_name,
       last_name: user.last_name,
       user_description: user.user_description,
+      city: user.city
     };
   });
 
@@ -87,6 +88,7 @@ router.get("/api/users/:id", async (ctx) => {
     first_name: user.first_name,
     last_name: user.last_name,
     user_description: user.user_description,
+    city: user.city,
   };
   ctx.response.body = response;
 });
