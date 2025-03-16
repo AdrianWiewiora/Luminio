@@ -25,6 +25,10 @@ deno task dev
 ### Deno server
 
 Start server:
-deno run --allow-net --allow-env --allow-read --allow-ffi main.ts
+deno run --allow-net --allow-env --allow-read --allow-ffi --allow-write main.ts
 
 ### With Docker
+docker-compose up --build
+
+Note:
+On the first run, the server may not work immediately as the database is still being prepared. If you encounter issues, stop the container and run it again. 
