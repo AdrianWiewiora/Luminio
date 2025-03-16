@@ -1,7 +1,7 @@
 import "./picturePopup.scss";
 import test from "../../../assets/img/test.png";
 import { FaRegCircleXmark } from "react-icons/fa6";
-import Review from "../../review/review";
+import SingleReview from "../../reviews/singleReview/singleReview";
 
 interface PicturePopupProps {
     onClose: () => void;
@@ -25,8 +25,8 @@ function PicturePopup({ onClose }: PicturePopupProps) {
                     </span>
                 </div>
                 <div className="picture-popup__content--commentary">
-                    <Review />
-                    <Review />
+                    <SingleReview />
+                    <SingleReview />
                 </div>
             </div>
         </section>

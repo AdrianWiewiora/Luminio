@@ -9,17 +9,38 @@
     background-color: var(--background2);
     color: var(--white-text);
     font-size: 1.2rem;
+    text-decoration: none;
+    overflow: hidden;
 }
 
 .cta-button::before {
     content: "";
     position: absolute;
     inset: 0;
-    padding: 2px; 
-    border-radius: inherit; 
+    padding: 2px;
+    border-radius: inherit;
     background: var(--main-gradient); 
+    background-size: 300% 300%;
     -webkit-mask: linear-gradient(white 0 0) content-box, linear-gradient(white 0 0);
     -webkit-mask-composite: destination-out;
     mask-composite: exclude;
-    pointer-events: none; 
+    pointer-events: none;
+    background-position: 0% 50%;
+    transition: background-position 0.5s ease-in-out;
+}
+
+.cta-button:hover::before {
+    animation: borderFlow 1.5s linear infinite;
+}
+
+@keyframes borderFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }

@@ -3,10 +3,10 @@ import { FaRegCircleXmark } from "react-icons/fa6";
 import { Community19 } from "../../../assets/img/imgExport";
 
 const navElements = [
-    { id: 1, name: "Podstawowe informacje" },
-    { id: 2, name: "W sieci" },
-    { id: 3, name: "Kontakt" },
-    { id: 4, name: "O mnie" }
+    { id: 0, name: "Podstawowe informacje" },
+    { id: 1, name: "W sieci" },
+    { id: 2, name: "Kontakt" },
+    { id: 3, name: "O mnie" }
 ]
 
 interface ProfilePopupProps {

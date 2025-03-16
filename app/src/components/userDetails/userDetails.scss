@@ -5,6 +5,7 @@
     background: var(--background2);
     padding: 56px;
     gap: 40px;
+    z-index: 3;
 
     &__profile {
         height: 208px;
@@ -17,7 +18,6 @@
     &__container {
         display: flex;
         flex-direction: column;
-        font-size: 1.25rem;
         gap: 16px;
 
         &--h1 {
@@ -68,34 +68,59 @@
                 font-size: 1.25rem;
                 color: var(--white-text);
                 font-weight: 200;
+            }
 
-                .SingleStar {
-                    width: 20px;
-                    height: 20px;
-                }
-
+            &--icon {
+                height: 24px;
+                width: 24px;
+                fill: #D1C1A9;
+                margin-left: 8px;
             }
         }
 
         &--link {
             display: flex;
             justify-content: space-between;
-            transition: color 0.15s ease;
-            font-size: 1.25rem;
 
-            &:hover {
+            &--span{
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 1.25rem;
+                transition: 0.15s ease-in-out;
+
+                &--icon {
+                    background-color: var(--gray-text);
+                    fill: var(--background3);
+                    border-radius: 50%;
+                    height: 20px;
+                    width: 20px;
+                    padding: 1px;
+                    transition: 0.15s ease-in-out;
+                }
+            }
+
+            &--share-icon {
+                height: 24px;
+                width: 24px;
+                transition: 0.15s ease-in-out;
+            }
+
+            &:hover &--span {
                 color: var(--white-text); 
             }
 
-            .ShareBracket {
-                height: 24px;
-                width: 24px;
-                transition: fill 0.15s ease;
-            }
-
-            &:hover .ShareBracket{
+            &:hover &--share-icon{
                 fill: var(--white-text); 
             }
+
+            &:hover &--span--icon {
+                background-color: var(--white-text);
+            }
+        }
+
+        &--p {
+            font-size: 1.25rem;
         }
     }
 }

@@ -4,10 +4,10 @@ import "./searchGrid.scss";
 import FilterBtn from "../../btn/filter/filter";
 
 const filterOptions = [
-    { id: 1, name: "Ślubne" },
-    { id: 2, name: "Krajobrazy" },
-    { id: 3, name: "Portrety" },
-    { id: 4, name: "Architektura" }
+    { id: 0, name: "Ślubne" },
+    { id: 1, name: "Krajobrazy" },
+    { id: 2, name: "Portrety" },
+    { id: 3, name: "Architektura" }
 ];
 
 import {

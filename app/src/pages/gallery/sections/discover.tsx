@@ -6,9 +6,9 @@ import { PiSlidersBold } from "react-icons/pi";
 import FilterBtn from "../../../components/btn/filter/filter";
 
 const filtrList = [
-    { id: 1, icon: CiCamera, name: "Zdjęcia" },
-    { id: 2, icon: CiFolderOn, name: "Albumy" },
-    { id: 3, icon: FaRegUser, name: "Twórcy" },
+    { id: 0, icon: CiCamera, name: "Zdjęcia" },
+    { id: 1, icon: CiFolderOn, name: "Albumy" },
+    { id: 2, icon: FaRegUser, name: "Twórcy" },
 ];
 
 function Discover() {

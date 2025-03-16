@@ -11,7 +11,7 @@ function LogIn(){
         <main className="access-container">
             <section className="access-container__content">
                 <Link to="/">
-                    <img src={Logo} alt="logo"/>
+                    <img src={Logo} alt="logo" className="access-container__content--logo"/>
                 </Link>
                 <LoginForm />
                 <FormFooter />
