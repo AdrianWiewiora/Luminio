@@ -1,22 +1,20 @@
 import "./access.scss";
 import Submit from "../../components/btn/submit/submit";
+import FormInput from "../../components/inputs/formInput/formInput";
 
-const regiFields = [
-    { id: 1, label: "Email", type: "email" },
-    { id: 2, label: "Imię", type: "text" },
-    { id: 3, label: "Nazwisko", type: "text" },
-    { id: 4, label: "Hasło", type: "password" },
-    { id: 5, label: "Potwórz Hasło", type: "password" }
+const regiForm = [
+    { id: "Email", label: "Email", type: "email" },
+    { id: "Imię", label: "Imię", type: "text" },
+    { id: "Nazwisko", label: "Nazwisko", type: "text" },
+    { id: "Hasło", label: "Hasło", type: "password" },
+    { id: "Potwórz Hasło", label: "otwórz Hasło", type: "password" }
   ];
 
 function RegistrationForm() {
   return (
     <form className="form" >
-        {regiFields.map(({ id, label, type }) => (
-            <label key={id} className="form__label">
-                {label}
-                <input type={type} className="form__label--input" required />
-            </label>
+        {regiForm.map(({ id, label, type }) => (
+          <FormInput key={id} id={id} label={label} type={type} />
         ))}
         <Submit title="Zarejestruj się" />
     </form>

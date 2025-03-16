@@ -4,7 +4,7 @@ import Logo from "../../../../assets/img/logo.png";
 import { Info1, Info2, Info3 } from '../../../../assets/img/imgExport';
 
 const contentData: Record<number, { headline: string; text: string; imgSrc: string; alt: string }> = {
-    1: {
+    0: {
         headline: "Twórz, Inspiruj. Zarabiaj.",
         text: `Dodawaj swoje najlepsze zdjęcia i organizuj je w profesjonalne katalogi, 
         które w pełni oddadzą Twój styl i umiejętności. Twórz unikalne kolekcje, 
@@ -15,7 +15,7 @@ const contentData: Record<number, { headline: string; text: string; imgSrc: stri
         imgSrc: Info1,
         alt: "Camera lens"
     },
-    2: {
+    1: {
         headline: "Znajdź idealnego fotografa.",
         text: `Szukasz fotografa, który uchwyci najważniejsze chwile w Twoim życiu? 
         Przeglądaj portfolio najlepszych twórców, porównuj ich styl i znajdź idealnego specjalistę 
@@ -24,7 +24,7 @@ const contentData: Record<number, { headline: string; text: string; imgSrc: stri
         imgSrc: Info2,
         alt: "Photography studio"
     },
-    3: {
+    2: {
         headline: "Odkrywaj. Wybieraj. Rezerwuj.",
         text: `Fotografia to Twoje hobby? Odkrywaj prace utalentowanych twórców, poznawaj nowe techniki 
         i czerp inspiracje z unikalnych kolekcji zdjęć. 
@@ -36,9 +36,9 @@ const contentData: Record<number, { headline: string; text: string; imgSrc: stri
 };
 
 const navItems = [
-    { id: 1, name: "Dla fotografów" },
-    { id: 2, name: "Dla klientów" },
-    { id: 3, name: "Dla pasjonatów" }
+    { id: 0, name: "Dla fotografów" },
+    { id: 1, name: "Dla klientów" },
+    { id: 2, name: "Dla pasjonatów" }
 ];
 
 function Info() {

@@ -10,7 +10,7 @@ function FormFooter(){
                     <Link to="">
                         Pomoc
                     </Link>
-                    <Link to="/registration">
+                    <Link to="/registration" className="form-footer__links--regi">
                         Zarejestruj się
                     </Link>
                 </div>

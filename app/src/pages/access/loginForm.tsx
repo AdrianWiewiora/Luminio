@@ -1,23 +1,21 @@
 import "./access.scss";
 import Submit from "../../components/btn/submit/submit";
+import FormInput from "../../components/inputs/formInput/formInput";
 
 const loginForm = [
-    { id: 1, label: "Email", type: "email" },
-    { id: 2, label: "Password", type: "password" }
-]
+    { id: "email", label: "Email", type: "email" },
+    { id: "password", label: "Password", type: "password" }
+];
 
 function LoginForm() {
-  return (
-    <form className="form" >
-        {loginForm.map(({ id, label, type }) => (
-            <label key={id} className="form__label">
-                {label}
-                <input type={type} className="form__label--input" required />
-            </label>
-        ))}
-        <Submit title="Zaloguj się" />
-    </form>
-  );
+    return (
+        <form className="form">
+            {loginForm.map(({ id, label, type }) => (
+                <FormInput key={id} id={id} label={label} type={type} />
+            ))}
+            <Submit title="Zaloguj się" />
+        </form>
+    );
 }
 
 export default LoginForm;

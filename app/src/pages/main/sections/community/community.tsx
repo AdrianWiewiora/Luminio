@@ -24,26 +24,25 @@ import {
 
 
 const scrollItems = [
-    { id: 1, name: Community1 },
-    { id: 2, name: Community2 },
-    { id: 3, name: Community3 },
-    { id: 4, name: Community4 },
-    { id: 5, name: Community5 },
-    { id: 6, name: Community6 },
-    { id: 7, name: Community7 },
-    { id: 8, name: Community8 },
-    { id: 9, name: Community9 },
-    { id: 10, name: Community10 },
-    { id: 11, name: Community11 },
-    { id: 12, name: Community12 },
-    { id: 13, name: Community13 },
-    { id: 14, name: Community14 },
-    { id: 15, name: Community15 },
-    { id: 16, name: Community16 },
-    { id: 17, name: Community17 },
-    { id: 18, name: Community18 }
+    { id: 0, name: Community1 },
+    { id: 1, name: Community2 },
+    { id: 2, name: Community3 },
+    { id: 3, name: Community4 },
+    { id: 4, name: Community5 },
+    { id: 5, name: Community6 },
+    { id: 6, name: Community7 },
+    { id: 7, name: Community8 },
+    { id: 8, name: Community9 },
+    { id: 9, name: Community10 },
+    { id: 10, name: Community11 },
+    { id: 11, name: Community12 },
+    { id: 12, name: Community13 },
+    { id: 13, name: Community14 },
+    { id: 14, name: Community15 },
+    { id: 15, name: Community16 },
+    { id: 16, name: Community17 },
+    { id: 17, name: Community18 }
 ];
-
 
 function Community(){
     return(

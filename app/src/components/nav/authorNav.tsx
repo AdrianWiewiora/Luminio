@@ -1,10 +1,10 @@
 import "./authorNav.scss";
 
 const navElements = [
-    { id: 1, name: "Kolekcje zdjęć", action: "viewPicture" },
-    { id: 2, name: "Dostosuj profil", action: "customizeProfile" },
-    { id: 3, name: "Dodaj" },
-    { id: 4, name: "Robocze" }
+    { id: 0, name: "Kolekcje zdjęć", action: "viewPicture" },
+    { id: 1, name: "Dostosuj profil", action: "customizeProfile" },
+    { id: 2, name: "Dodaj" },
+    { id: 3, name: "Robocze" }
 ];
 
 interface AuthorNavProps {
