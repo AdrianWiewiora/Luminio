@@ -1,6 +1,6 @@
 import "./access.scss";
-import Submit from "../../components/btn/submit/submit";
-import FormInput from "../../components/inputs/formInput/formInput";
+import Submit from "../../components/btn/submit/submit.tsx";
+import FormInput from "../../components/inputs/formInput/formInput.tsx";
 
 const loginForm = [
     { id: "email", label: "Email", type: "email" },

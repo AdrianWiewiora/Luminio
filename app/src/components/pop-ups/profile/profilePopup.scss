@@ -19,6 +19,7 @@
         background-color: var(--background3);
         padding: 40px;
         border-radius: 8px;
+        overflow-y: scroll;
 
         &--button {
             position: absolute;
@@ -46,7 +47,7 @@
             }
         }
 
-        &--form {
+        &--section {
             display: flex;
             flex-direction: column;
 
@@ -59,9 +60,35 @@
                     flex-direction: column;
                     gap: 16px;
 
-                    & img{
+                    & img {
                         width: 160px;
                         height: 160px;
+                    }
+
+                    &--change-img {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 8px;
+                    }
+                }
+
+                &--form {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 16px;
+
+                    &--options {
+                        display: flex;
+                        align-items: center;
+                        gap: 24px;
+                        color: var(--gray-text);
+                        transition: 0.15s ease-in-out;
+                    }
+
+                    &--options:hover {
+                        color: var(--white-text);
+                        cursor: pointer;
                     }
                 }
             }

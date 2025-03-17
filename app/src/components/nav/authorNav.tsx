@@ -1,18 +1,23 @@
 import "./authorNav.scss";
 
 const navElements = [
-    { id: 0, name: "Kolekcje zdjęć", action: "viewPicture" },
+    { id: 0, name: "Kolekcje zdjęć", action: "openAlbumPopup" }, // Teraz otwiera AlbumPopup
     { id: 1, name: "Dostosuj profil", action: "customizeProfile" },
-    { id: 2, name: "Dodaj" },
-    { id: 3, name: "Robocze" }
+    { id: 2, name: "Dodaj", action: "openPicturePopup" }, // Obsługuje PicturePopup
+    { id: 3, name: "Robocze" } // Brak akcji dla Robocze
 ];
 
 interface AuthorNavProps {
     onCustomizeProfileClick: () => void;
-    onViewPictureClick: () => void;
+    onAlbumPopupClick: () => void;
+    onPicturePopupClick: () => void;
 }
 
-function AuthorNav({ onCustomizeProfileClick, onViewPictureClick }: AuthorNavProps) {
+function AuthorNav({ 
+    onCustomizeProfileClick, 
+    onAlbumPopupClick, 
+    onPicturePopupClick 
+}: AuthorNavProps) {
     return (
         <nav className="navigation">
             {navElements.map(({ id, name, action }) => (
@@ -20,7 +25,8 @@ function AuthorNav({ onCustomizeProfileClick, onViewPictureClick }: AuthorNavPro
                     key={id}
                     onClick={
                         action === "customizeProfile" ? onCustomizeProfileClick
-                        : action === "viewPicture" ? onViewPictureClick
+                        : action === "openAlbumPopup" ? onAlbumPopupClick
+                        : action === "openPicturePopup" ? onPicturePopupClick
                         : undefined
                     }
                 >

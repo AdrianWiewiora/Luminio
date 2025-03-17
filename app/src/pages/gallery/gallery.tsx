@@ -1,8 +1,8 @@
 import "./gallery.scss";
 
-import Header from "../../components/header/header";
-import Discover from "./sections/discover";
-import AuthorTile from "../../components/authorTile/authorTile";
+import Header from "../../components/header/header.tsx";
+import Discover from "./sections/discover.tsx";
+import AuthorTile from "../../components/authorTile/authorTile.tsx";
 
 function Gallery(){
     return(
