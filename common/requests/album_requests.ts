@@ -1,19 +1,30 @@
-export interface CreateAlbumRequest {
-    user_id: number;
-    name: string;
-    description: string;
-    service_id: number;
-    is_public: boolean;
-}
+import * as v from "@valibot/valibot";
 
-export interface UpdateAlbumRequest {
-    album_id: number;
-    name?: string;
-    description?: string;
-    service_id?: number;
-    is_public?: boolean;
-}
-export interface AddPhotoToAlbumRequest {
-    photo_id: number;
-    album_id: number;
-}
+export const CreateAlbumSchema = v.object({
+  user_id: v.number(),
+  name: v.string(),
+  description: v.string(),
+  service_id: v.number(),
+  is_public: v.boolean(),
+});
+
+export type CreateAlbumRequest = v.InferOutput<typeof CreateAlbumSchema>;
+
+export const UpdateAlbumSchema = v.object({
+  album_id: v.number(),
+  name: v.optional(v.string()),
+  description: v.optional(v.string()),
+  service_id: v.optional(v.number()),
+  is_public: v.optional(v.boolean()),
+});
+
+export type UpdateAlbumRequest = v.InferOutput<typeof UpdateAlbumSchema>;
+
+export const AddPhotoToAlbumSchema = v.object({
+  photo_id: v.number(),
+  album_id: v.number(),
+});
+
+export type AddPhotoToAlbumRequest = v.InferOutput<
+  typeof AddPhotoToAlbumSchema
+>;

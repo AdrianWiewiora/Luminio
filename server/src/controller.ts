@@ -6,10 +6,14 @@ import {
   insertUser,
   NewDbUser,
 } from "./models/users.ts";
-import { RegistrationErrorResponse, UserResponse } from "common/responses";
 import { hash, verify } from "@felix/bcrypt";
 import * as v from "@valibot/valibot";
-import { LoginSchema, RegistrationSchema } from "./schemas.ts";
+import {
+  LoginSchema,
+  RegistrationErrorResponse,
+  RegistrationSchema,
+  UserResponse,
+} from "common";
 import { createSession } from "./models/sessions.ts";
 
 export const router = new Router();
@@ -23,7 +27,7 @@ router.get("/api/users", async (ctx) => {
       first_name: user.first_name,
       last_name: user.last_name,
       user_description: user.user_description,
-      city: user.city
+      city: user.city,
     };
   });
 
