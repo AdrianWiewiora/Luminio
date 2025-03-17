@@ -37,6 +37,8 @@ services:
       - "5173:5173"
     environment:
       - IS_DOCKER=true
+    volumes:
+      - ./app/src:/app/src
     networks:
       - deno
 

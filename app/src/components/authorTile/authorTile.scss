@@ -2,8 +2,10 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     width: 33%;
     height: 380px;
+    padding-bottom: 40px;
     border: 2px solid var(--background3);
     background-color: var(--background2);
 
@@ -41,8 +43,23 @@
 
     &__author-data {
         display: flex;
-        gap: 48px;
-        padding: 0 80px;
-        border-right: 1px solid var(--gray-text);
+        width: 100%;
+        padding-top: 10px;
+
+        &--single-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 33%;
+            height: 56px;
+            gap: 8px;
+            padding: 0 48px;
+            border-left: 2px solid var(--gray-text);
+        }
+
+        &--single-info:first-child {
+            border-left: none;
+        }
     }
 }

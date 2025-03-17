@@ -1,0 +1,21 @@
+.textarea-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+    font-size: 1.2rem;
+    color: var(--white-text);
+    
+    &__textarea {
+        width: 646px;
+        height: 160px;
+        border-radius: 8px;
+        padding: 5px;
+        border: 2px solid var(--background3);
+        background: var(--background2);
+        resize: none; /* Blokuje zmianę rozmiaru przez użytkownika */
+        overflow-y: auto; /* Włącza przewijanie pionowe */
+        overflow-x: hidden; /* Blokuje przewijanie poziome */
+        direction: ltr; /* Zapewnia poprawne przewijanie */
+    }
+}

@@ -1,5 +1,5 @@
 import "./authorTile.scss";
-import { Community1 } from "../../assets/img/imgExport";
+import { Community1 } from "../../assets/img/imgExport.tsx";
 
 function AuthorTile() {
     return(
@@ -14,7 +14,18 @@ function AuthorTile() {
                 </h2>
             </div>
             <div className="author-tile__author-data">
-                
+                <div className="author-tile__author-data--single-info">
+                    <p>4.7</p>
+                    <p>Ocena</p>
+                </div>
+                <div className="author-tile__author-data--single-info">
+                    <p>134</p>
+                    <p>Opinie</p>
+                </div>
+                <div className="author-tile__author-data--single-info">
+                    <p>15</p>
+                    <p>Komentarze</p>
+                </div>
             </div>
         </div>
     );

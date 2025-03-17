@@ -1,4 +1,4 @@
-.popup-overlay {
+.album-popup {
     position: fixed;
     top: 0;
     left: 0;
@@ -31,6 +31,56 @@
 
             &--icon {
                 font-size: 1.5rem;
+            }
+        }
+
+        &--img-section {
+            display: flex;
+            flex-direction: column;
+            width: 30%;
+            gap: 18px;
+
+            &--title {
+                color: var(--gray-text);
+                font-weight: 500;
+            }
+
+            &--img {
+                width: 369px;
+                height: 319px;
+                border-radius: 24px;
+            }
+
+            &--change {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: var(--gray-text);
+                transition: 0.15s ease-in-out;
+            }
+
+            &--change:hover {
+                color: var(--white-text);
+                cursor: pointer;
+            }
+        }
+
+        &--form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            &--options {
+                display: flex;
+                align-items: center;
+                gap: 24px;
+                color: var(--gray-text);
+                transition: 0.15s ease-in-out;
+            }
+
+            &--options:hover {
+                color: var(--white-text);
+                cursor: pointer;
             }
         }
     }

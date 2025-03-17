@@ -1,0 +1,45 @@
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &__checkbox {
+        display: flex;
+        align-items: center;
+        width: fit-content;
+        gap: 5px;
+        cursor: pointer;
+        position: relative;
+
+        &--input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        &--custom {
+            width: 25px;
+            height: 25px;
+            border: 2px solid var(--background3);
+            border-radius: 8px;
+            background: var(--background2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease-in-out;
+        }
+
+        &--input:checked + &--custom {
+            background: #ffffff;
+            border-color: #ffffff;
+
+            &:after {
+                content: "✔";
+                font-size: 16px;
+                color: #1a1a1f;
+                font-weight: bold;
+            }
+        }
+    }
+}

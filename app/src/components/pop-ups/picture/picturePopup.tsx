@@ -1,7 +1,7 @@
 import "./picturePopup.scss";
 import test from "../../../assets/img/test.png";
 import { FaRegCircleXmark } from "react-icons/fa6";
-import SingleReview from "../../reviews/singleReview/singleReview";
+import SingleReview from "../../reviews/singleReview/singleReview.tsx";
 
 interface PicturePopupProps {
     onClose: () => void;
