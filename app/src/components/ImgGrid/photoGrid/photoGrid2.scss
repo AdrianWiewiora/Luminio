@@ -1,0 +1,24 @@
+.my-masonry-grid {
+  display: flex;
+  width: auto;
+}
+
+.my-masonry-grid_column {
+  margin-left: 24px;
+
+  background-clip: padding-box;
+
+  img {
+    width: 100%; 
+    display: block;
+    max-height: 400px; 
+    min-height: 250px; 
+    object-fit: cover; 
+    margin-top: 24px;
+
+    &:hover {
+      transform: scale(1.05);
+      transition: transform 0.5s ease-in-out;
+    }
+  }
+}
