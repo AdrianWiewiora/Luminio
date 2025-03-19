@@ -15,3 +15,5 @@ serviceRouter.get("/api/services", async (ctx) => {
 
   ctx.response.body = response;
 });
+
+//TODO reszta routów
