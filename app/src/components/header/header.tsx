@@ -5,8 +5,8 @@ import Logo from '../../assets/img/logo.png';
 
 const navItems = [
     { id: 1, name: <Link to="/gallery">Ekspolruj</Link> },
-    { id: 2, name: "Znajdź fotografie" },
-    { id: 3, name: "Losuj" }
+    { id: 2, name: <Link to="/gallery">Albumy</Link> },
+    { id: 3, name: <Link to="/gallery">Znajdź fotografa</Link> }
 ]
 
 function Header(){

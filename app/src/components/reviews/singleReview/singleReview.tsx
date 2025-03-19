@@ -1,6 +1,6 @@
 import './singleReview.scss';
 import profile from '../../../assets/img/community/community9.png';
-import StarRating from '../starRating/starRating';
+import StarRating from '../starRating/starRating.tsx';
 
 function singleReview() {
     return (

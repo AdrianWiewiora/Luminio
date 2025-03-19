@@ -6,7 +6,7 @@ import Info from './sections/info/info.tsx';
 import Community from './sections/community/community.tsx';
 import SearchGrid from '../../components/ImgGrid/searchGrid/searchGrid.tsx';
 import MainGrid from '../../components/ImgGrid/mainGrid/mainGrid.tsx';
-import DynamicGrid from "../../components/ImgGrid/dynamicGrid/dynamicGrid.tsx";
+import Footer from "../../components/footers/main/footer.tsx";
 
 
 function Main() {
@@ -18,9 +18,8 @@ function Main() {
         <Community />
         <SearchGrid />
         <MainGrid />
-
         <Info />
-        <DynamicGrid/>
+        <Footer />
       </div>
     );
   }

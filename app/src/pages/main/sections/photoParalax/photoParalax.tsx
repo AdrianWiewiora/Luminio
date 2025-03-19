@@ -1,5 +1,5 @@
 import './photoParalax.scss';
-import { paralax1, paralax2, paralax3, paralax4, paralax5, paralax6, paralax7, paralax8, paralax9, paralax10, paralax11, paralax12 } from '../../../../assets/img/imgExport';
+import { paralax1, paralax2, paralax3, paralax4, paralax5, paralax6, paralax7, paralax8, paralax9, paralax10, paralax11, paralax12 } from '../../../../assets/img/imgExport.tsx';
 
 const paralaxImages = [
   { id: 0, name: paralax1 },

@@ -1,8 +1,8 @@
 import './reviews.scss';
 import { useState } from 'react';
 import profile from '../../assets/img/community/community13.png';
-import SingleReview from './singleReview/singleReview'
-import StarRating from './starRating/starRating';
+import SingleReview from './singleReview/singleReview.tsx'
+import StarRating from './starRating/starRating.tsx';
 
 function Reviews(){
     const [rating, setRating] = useState(0);

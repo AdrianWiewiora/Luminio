@@ -1,6 +1,6 @@
 import './title.scss';
 
-import StarRating from '../../../../components/reviews/starRating/starRating';
+import StarRating from '../../../../components/reviews/starRating/starRating.tsx';
 
 function Title () {
 

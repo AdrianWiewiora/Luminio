@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Masonry from "https://esm.sh/react-masonry-css@1.0.16";
-import { image1, image2, image3, image4, image5, image6, image7, image8 } from "../../../assets/img/imgExport";
+import { image1, image2, image3, image4, image5, image6, image7, image8 } from "../../../assets/img/imgExport.tsx";
 import "./photoGrid2.scss";
 
 const allImages = [

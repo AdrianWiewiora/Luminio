@@ -1,8 +1,13 @@
 import {Link} from "react-router-dom";
 import "./formFooter.scss";
-import SectionDivider from "../../../assets/svg/SectionDivider"
+import SectionDivider from "../../../assets/svg/SectionDivider.tsx"
 
-function FormFooter(){
+type LinkProps = {
+    link: string;
+    title: string;
+};
+
+function FormFooter({title, link}: LinkProps){
     return(
         <footer className="form-footer">
             <SectionDivider />
@@ -10,8 +15,8 @@ function FormFooter(){
                     <Link to="">
                         Pomoc
                     </Link>
-                    <Link to="/registration" className="form-footer__links--regi">
-                        Zarejestruj się
+                    <Link to={link} className="form-footer__links--regi">
+                        {title}
                     </Link>
                 </div>
         </footer>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Gallery } from "react-grid-gallery";
 import "./searchGrid.scss";
-import FilterBtn from "../../btn/filter/filter";
+import FilterBtn from "../../btn/filter/filter.tsx";
 
 const filterOptions = [
     { id: 0, name: "Ślubne" },
@@ -19,7 +19,7 @@ import {
     image6,
     image7,
     image8
-} from "../../../assets/img/imgExport";
+} from "../../../assets/img/imgExport.tsx";
 
 
 function SearchGrid() {

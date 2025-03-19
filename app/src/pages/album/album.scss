@@ -1,16 +1,10 @@
-.album {
+.album-wrapper {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
 
-    &__wrapper {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-
-        &--content {
-            flex-grow: 1;
-            min-width: 0;
-        }
+    &__content {
+        flex-grow: 1;
+        min-width: 0;
     }
 }

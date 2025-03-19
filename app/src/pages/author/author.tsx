@@ -50,8 +50,6 @@ function Author() {
             {isProfilePopupOpen && <ProfilePopup onClose={toggleProfilePopup} />}
             {isPicturePopupOpen && <PicturePopup onClose={togglePicturePopup} />}
             {isAlbumPopupOpen && <AlbumPopup onClose={toggleAlbumPopup} />}
-
-            
         </div>
     );
 }
