@@ -28,7 +28,7 @@ function Header(){
             </div>
             <section className="header__btn-container">
                 <div className="header__btn-container--log-in">
-                    <Link to="/LogIn" className="header__btn-container--log-in--text">
+                    <Link to="/login" className="header__btn-container--log-in--text">
                         Zaloguj się
                     </Link>
                 </div>

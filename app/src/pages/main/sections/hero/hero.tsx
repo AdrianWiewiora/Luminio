@@ -1,5 +1,5 @@
 import './hero.scss';
-import CtaButton from '../../../../components/btn/CTA/ctaButton';
+import CtaButton from '../../../../components/btn/CTA/ctaButton.tsx';
 
 function Hero(){
     return(
