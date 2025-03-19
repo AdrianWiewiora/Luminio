@@ -14,7 +14,7 @@ function LogIn(){
                     <img src={Logo} alt="logo" className="access-container__content--logo"/>
                 </Link>
                 <LoginForm />
-                <FormFooter />
+                <FormFooter link="/registration" title="Zarejestruj się" />
             </section>
             <AccessImg />
         </main>

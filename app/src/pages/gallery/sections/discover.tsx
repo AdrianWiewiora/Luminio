@@ -3,7 +3,7 @@ import { CiCamera, CiFolderOn } from "react-icons/ci";
 import { FaRegUser } from "react-icons/fa6";
 import { PiSlidersBold } from "react-icons/pi";
 
-import FilterBtn from "../../../components/btn/filter/filter";
+import FilterBtn from "../../../components/btn/filter/filter.tsx";
 
 const filtrList = [
     { id: 0, icon: CiCamera, name: "Zdjęcia" },

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./info.scss";
 import Logo from "../../../../assets/img/logo.png";
-import { Info1, Info2, Info3 } from '../../../../assets/img/imgExport';
+import { Info1, Info2, Info3 } from '../../../../assets/img/imgExport.tsx';
 
 const contentData: Record<number, { headline: string; text: string; imgSrc: string; alt: string }> = {
     0: {

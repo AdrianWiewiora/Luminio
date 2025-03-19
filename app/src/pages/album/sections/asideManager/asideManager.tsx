@@ -2,7 +2,7 @@ import './asideManager.scss';
 import { TbPhotoPlus } from "react-icons/tb";
 import { IoSettingsOutline } from "react-icons/io5";
 
-import Submit from '../../../../components/btn/submit/submit';
+import Submit from '../../../../components/btn/submit/submit.tsx';
 
 function AsideManager () {
 

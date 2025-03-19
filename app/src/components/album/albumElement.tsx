@@ -5,17 +5,17 @@ import { FaStar, FaCog } from "react-icons/fa";
 
 const AlbumElement: React.FC = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-    let timeoutId: NodeJS.Timeout;
+    let timeoutId: number;
 
     const handleMouseEnter = () => {
-        clearTimeout(timeoutId); // Cancel
+        clearTimeout(timeoutId); 
         setMenuOpen(true);
     };
 
     const handleMouseLeave = () => {
         timeoutId = setTimeout(() => {
             setMenuOpen(false);
-        }, 1000); // Delay 1s
+        }, 1000); 
     };
 
     return (
