@@ -1,0 +1,31 @@
+.grid-container-dynamic {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    padding: 0 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .grid-item-dynamic {
+    width: 100%;
+    height: 300px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    will-change: transform;
+    transition: transform 0.2s ease-out;
+  }
+  
+  
+  .grid-item-dynamic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .grid-item-dynamic:hover img {
+    filter: brightness(50%);
+  }
+  
+  
