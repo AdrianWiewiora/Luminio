@@ -5,7 +5,7 @@ import {
   getUserByMail,
   insertUser,
   NewDbUser,
-} from "./models/users.ts";
+} from "./../models/users.ts";
 import { hash, verify } from "@felix/bcrypt";
 import * as v from "@valibot/valibot";
 import {
@@ -14,12 +14,13 @@ import {
   RegistrationSchema,
   UserResponse,
 } from "common";
-import { createSession } from "./models/sessions.ts";
+import { createSession, getUserBySession } from "./../models/sessions.ts";
+import { cloneState } from "https://jsr.io/@oak/oak/17.1.4/utils/clone_state.ts";
 
-export const router = new Router();
+export const userRouter = new Router();
 
 // Przykładowy endpoint zwracający wszystkich użytkowników
-router.get("/api/users", async (ctx) => {
+userRouter.get("/api/users", async (ctx) => {
   const users = await getAllUsers();
   const response: UserResponse[] = users.map((user) => {
     return {
@@ -35,7 +36,7 @@ router.get("/api/users", async (ctx) => {
 });
 
 // Przykładowa rejestracja
-router.post("/api/register", async (ctx) => {
+userRouter.post("/api/register", async (ctx) => {
   const body = await ctx.request.body.json();
   const request = v.parse(RegistrationSchema, body);
 
@@ -68,7 +69,7 @@ router.post("/api/register", async (ctx) => {
 });
 
 // Login
-router.post("/api/login", async (ctx) => {
+userRouter.post("/api/login", async (ctx) => {
   const request = v.parse(LoginSchema, await ctx.request.body.json());
 
   const user = await getUserByMail(request.email);
@@ -83,8 +84,37 @@ router.post("/api/login", async (ctx) => {
   }
 });
 
+userRouter.get("/api/users/me", async (ctx) => {
+    const session = await ctx.cookies.get("SESSION");
+  
+    if (session !== undefined) {
+      const user = await getUserBySession(session);
+      if (user !== undefined) {
+        const response: UserResponse = {
+          id: user.id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          user_description: user.user_description,
+          city: user.city,
+        };
+        ctx.response.body = response;
+      }
+      else{
+            ctx.response.body = { message: "Żaden użytkownik nie jest powiązany z sesją" };
+            ctx.response.status = 400;
+            return;
+      }
+    }
+    else{
+        ctx.response.body = { message: "Brak sesji" };
+        ctx.response.status = 400;
+        return;
+  }
+  });
+  
+
 // GET wybranego użytkownika
-router.get("/api/users/:id", async (ctx) => {
+userRouter.get("/api/users/:id", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
   const user = await getUser(id);
   const response: UserResponse = {
@@ -96,3 +126,4 @@ router.get("/api/users/:id", async (ctx) => {
   };
   ctx.response.body = response;
 });
+

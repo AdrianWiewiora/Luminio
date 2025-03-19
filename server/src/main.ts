@@ -1,7 +1,7 @@
 import { Application } from "@oak/oak";
 import { HOSTNAME } from "../config.ts";
 import { PORT } from "../config.ts";
-import { router } from "./controller.ts";
+import { router } from "./controllers/controller.ts";
 import { migrate } from "./migrations.ts";
 import { oakCors } from "../deps.ts";
 

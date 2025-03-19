@@ -6,43 +6,49 @@ export interface UserResponse {
   first_name: string;
   last_name: string;
   user_description: string;
-  city:string;
+  city: string;
 }
 
-export interface LinksResponse {
-  portfolio_url: string;
-  linkedin_url: string;
-  instagram_url: string;
-  dribble_url: string;
-  other_url: string;
+export interface ServiceResponse {
+  id: number;
+  name: string;
+}
+
+export interface ContactResponse {
+  id:number;
+  user_id:number;
+  name:string;
+  contact_info:string;
 }
 
 //nie jestem pewny czy dobrze jest lista zdjęć
 export interface AlbumResponse {
   id: number;
   user_id: number;
-  name:string;
-  description:string;
-  service_id:number;
-  photos:PhotoResponse[];
+  name: string;
+  description: string;
+  service_id: number;
+  photos: PhotoResponse[];
 }
 
-export interface PhotoResponse {}//TODO
+export interface PhotoResponse {} //TODO
 
-export interface AlbumReviewResponse{
+export interface AlbumReviewResponse {
   album_id: number;
+  user_id: number;
   body: string;
   value: number;
 }
 
-export interface PhotoReviewResponse{
+export interface PhotoReviewResponse {
   photo_id: number;
+  user_id: number;
   body: string;
   value: number;
 }
-
 
 // Zwracany z /api/register po nieudanej rejestracji (status code 400)
 export interface RegistrationErrorResponse {
   message: string;
 }
+
