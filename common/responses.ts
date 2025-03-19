@@ -51,3 +51,4 @@ export interface PhotoReviewResponse {
 export interface RegistrationErrorResponse {
   message: string;
 }
+
