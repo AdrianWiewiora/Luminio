@@ -5,7 +5,7 @@ import {
   getUserByMail,
   insertUser,
   NewDbUser,
-} from "./models/users.ts";
+} from "./../models/users.ts";
 import { hash, verify } from "@felix/bcrypt";
 import * as v from "@valibot/valibot";
 import {
@@ -14,12 +14,12 @@ import {
   RegistrationSchema,
   UserResponse,
 } from "common";
-import { createSession } from "./models/sessions.ts";
+import { createSession } from "./../models/sessions.ts";
 
-export const router = new Router();
+export const userRouter = new Router();
 
 // Przykładowy endpoint zwracający wszystkich użytkowników
-router.get("/api/users", async (ctx) => {
+userRouter.get("/api/users", async (ctx) => {
   const users = await getAllUsers();
   const response: UserResponse[] = users.map((user) => {
     return {
@@ -35,7 +35,7 @@ router.get("/api/users", async (ctx) => {
 });
 
 // Przykładowa rejestracja
-router.post("/api/register", async (ctx) => {
+userRouter.post("/api/register", async (ctx) => {
   const body = await ctx.request.body.json();
   const request = v.parse(RegistrationSchema, body);
 
@@ -68,7 +68,7 @@ router.post("/api/register", async (ctx) => {
 });
 
 // Login
-router.post("/api/login", async (ctx) => {
+userRouter.post("/api/login", async (ctx) => {
   const request = v.parse(LoginSchema, await ctx.request.body.json());
 
   const user = await getUserByMail(request.email);
@@ -84,7 +84,7 @@ router.post("/api/login", async (ctx) => {
 });
 
 // GET wybranego użytkownika
-router.get("/api/users/:id", async (ctx) => {
+userRouter.get("/api/users/:id", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
   const user = await getUser(id);
   const response: UserResponse = {
