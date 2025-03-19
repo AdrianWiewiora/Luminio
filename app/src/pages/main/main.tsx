@@ -6,8 +6,8 @@ import PhotoParalax from './sections/photoParalax/photoParalax';
 import Info from './sections/info/info';
 import Community from './sections/community/community';
 import SearchGrid from '../../components/ImgGrid/searchGrid/searchGrid';
-import PhotoGrid from '../../components/ImgGrid/photoGrid/photoGridMain';
-import GalleryGrid from '../../components/ImgGrid/photoGrid/photoGrid2';
+import MainGrid from '../../components/ImgGrid/mainGrid/mainGrid';
+import DynamicGrid from "../../components/ImgGrid/dynamicGrid/dynamicGrid.tsx";
 
 
 function Main() {
@@ -16,11 +16,12 @@ function Main() {
         <Header />
         <Hero />
         <PhotoParalax />
-        <Info />
         <Community />
         <SearchGrid />
-        <GalleryGrid/>
+        <MainGrid />
+
         <Info />
+        <DynamicGrid/>
       </div>
     );
   }
