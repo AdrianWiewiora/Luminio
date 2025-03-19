@@ -7,7 +7,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./server/src:/server/sr
+      - ./server/src:/server/src
       - ./common:/common
       - ./migrations:/migrations
     depends_on:

@@ -4,6 +4,7 @@ import FormInput from "../../inputs/formInput/formInput.tsx";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { GoPencil } from "react-icons/go";
 import { Community19 } from "../../../assets/img/imgExport.tsx";
+import { useState } from "react";
 
 const navElements = [
     { id: 0, name: "Podstawowe informacje" },
@@ -30,6 +31,14 @@ interface ProfilePopupProps {
 }
 
 function ProfilePopup({ onClose }: ProfilePopupProps) {
+    const [formData, setFormData] = useState(
+        Object.fromEntries(ProfileForm.map(({ id }) => [id, ""]))
+    );
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value });
+    };
+
     return (
         <section className="profile-popup" onClick={onClose}>
             <div className="profile-popup__content" onClick={(e) => e.stopPropagation()}>
@@ -56,7 +65,14 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                         </div>
                         <form className="profile-popup__content--section--basic-info--form">
                             {ProfileForm.map(({ id, label, type }) => (
-                                <FormInput key={id} id={id} label={label} type={type} />
+                                <FormInput
+                                    key={id}
+                                    id={id}
+                                    label={label}
+                                    type={type}
+                                    value={formData[id] || ""}
+                                    onChange={handleChange}
+                                />
                             ))}
                             <div className="profile-popup__content--section--basic-info--form--options">
                                 <p> 
