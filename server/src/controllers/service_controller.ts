@@ -1,6 +1,6 @@
 import { Router } from "@oak/oak/router";
 import { getAllServices } from "../models/services.ts";
-import { ServiceResponse } from "../../../common/responses.ts"
+import { ServiceResponse } from "../../../common/responses.ts";
 
 export const serviceRouter = new Router();
 

@@ -58,7 +58,7 @@ function RegistrationForm() {
 
         console.log("Dane do rejestracji:", dataToSend);
 
-        const response = await fetch("http://localhost:8000/api/register", {
+        const response = await fetch("/api/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
