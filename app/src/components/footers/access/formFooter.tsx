@@ -10,7 +10,9 @@ type LinkProps = {
 function FormFooter({title, link}: LinkProps){
     return(
         <footer className="form-footer">
-            <SectionDivider />
+            <div className="form-footer__divider">
+                <SectionDivider />
+            </div>
             <div className="form-footer__links">
                     <Link to="">
                         Pomoc
