@@ -27,12 +27,7 @@ export const UpdateUserSchema = v.object({
   password: v.optional(v.string()),
   user_description: v.optional(v.string()),
   phone_number: v.optional(v.string()),
-  city: v.optional(v.string()),
-  portfolio_url: v.optional(v.string()),
-  linkedin_url: v.optional(v.string()),
-  instagram_url: v.optional(v.string()),
-  dribble_url: v.optional(v.string()),
-  other_url: v.optional(v.string()),
+  city: v.optional(v.string())
 });
 
 export type UpdateUserRequest = v.InferOutput<typeof UpdateUserSchema>;
