@@ -14,3 +14,13 @@ export interface DbContact extends NewDbContact {
 export async function getContactsByUser(id: number): Promise<DbContact[]> {
   return await sql<DbContact[]>`SELECT * FROM contacts WHERE user_id = ${id}`;
 }
+
+export async function updateContacts(contacts: NewDbContact[]) {
+  await sql`INSERT INTO contacts 
+  ${sql(contacts)}
+  ON CONFLICT (id)
+  DO UPDATE SET
+  user_id = EXCLUDED.user_id,
+  name = EXCLUDED.name,
+  contact_info = EXCLUDED.contact_info;`;
+}

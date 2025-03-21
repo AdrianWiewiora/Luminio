@@ -91,6 +91,27 @@ userRouter.post("/api/login", async (ctx) => {
   }
 });
 
+// Logout
+userRouter.post("/api/logout", async (ctx) => {
+  const session = await ctx.cookies.get("SESSION");
+  if (session === undefined) {
+    ctx.response.body = { message: "Brak sesji" };
+    ctx.response.status = 400;
+    return;
+  }
+  const logged_user = await getUserBySession(session);
+  if (logged_user === undefined) {
+    ctx.response.body = {
+      message: "Żaden użytkownik nie jest powiązany z sesją",
+    };
+    ctx.response.status = 400;
+    return;
+  }
+  await deleteSession(logged_user.id);
+  ctx.cookies.delete("SESSION");
+  ctx.response.body = {};
+});
+
 userRouter.get("/api/users/me", async (ctx) => {
   const session = await ctx.cookies.get("SESSION");
 
