@@ -1,16 +1,26 @@
 import "./authorTile.scss";
 import { Community1 } from "../../assets/img/imgExport.tsx";
+import { useNavigate } from 'react-router-dom'; 
 
-function AuthorTile() {
-    return(
-        <div className="author-tile">
-            <div className="author-tile__banner">
+interface AuthorTileProps {
+    authorId: number; 
+    name: string; 
+}
 
-            </div>
+function AuthorTile({ authorId, name }: AuthorTileProps) {
+    const navigate = useNavigate(); 
+
+    const handleClick = () => {
+        navigate(`/author/${authorId}`);
+    };
+
+    return (
+        <div className="author-tile" onClick={handleClick}> 
+            <div className="author-tile__banner"></div>
             <div className="author-tile__profile">
                 <img src={Community1} alt="Community" className="author-tile__profile--img"/>
                 <h2 className="author-tile__profile--name">
-                    Adam Kowalski
+                    {name} 
                 </h2>
             </div>
             <div className="author-tile__author-data">

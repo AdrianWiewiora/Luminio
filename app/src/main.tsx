@@ -9,6 +9,7 @@ import Registration from './pages/access/registration.tsx'
 import Gallery from './pages/gallery/gallery.tsx'
 import Album from './pages/album/album.tsx'
 import Author from './pages/author/author.tsx'
+import NotFound from "./pages/notFound/notFound.tsx"
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -19,7 +20,8 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/registration" element={<Registration />}/>
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/album" element={<Album />}/>
-        <Route path="/author" element={<Author />}/>
+        <Route path="/author/:id" element={<Author />} />
+        <Route path="*" element={<NotFound />} /> 
       </Routes>
     </BrowserRouter>
   </StrictMode>,
