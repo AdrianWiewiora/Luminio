@@ -30,8 +30,8 @@ contactRouter.put("/api/users/:id/contacts", async (ctx) => {
   const request = v.parse(v.array(UpdateContactSchema), body);
 
   const logged_user = await getLoggedInUser(ctx);
-  if (!logged_user)return;
-  
+  if (!logged_user) return;
+
   if (
     logged_user.id !== user_id ||
     request.some((contact) => contact.user_id !== logged_user.id)
