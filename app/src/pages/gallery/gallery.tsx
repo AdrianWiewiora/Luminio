@@ -5,6 +5,8 @@ import Header from "../../components/header/header.tsx";
 import Discover from "./sections/discover.tsx";
 import AuthorTile from "../../components/authorTile/authorTile.tsx";
 import Footer from "../../components/footers/main/footer.tsx";
+import DynamicGrid from "../../components/ImgGrid/dynamicGrid/dynamicGrid.tsx";
+import AlbumElement from "../../components/album/albumElement.tsx";
 
 interface Author {
     id: number;
@@ -12,16 +14,19 @@ interface Author {
     last_name: string;
 }
 
+type SelectedView = 'photos' | 'albums' | 'authors';
+
 function Gallery() {
-    const [authors, setAuthors] = useState<Author[]>([]); 
+    const [authors, setAuthors] = useState<Author[]>([]);
+    const [selectedView, setSelectedView] = useState<SelectedView>('photos');
 
     useEffect(() => {
         const fetchAuthors = async () => {
             try {
-                const response = await fetch('/api/users'); 
+                const response = await fetch('/api/users');
                 if (response.ok) {
                     const data = await response.json();
-                    setAuthors(data); 
+                    setAuthors(data);
                 }
             } catch (error) {
                 console.error("Błąd podczas pobierania listy autorów:", error);
@@ -31,17 +36,17 @@ function Gallery() {
         fetchAuthors();
     }, []);
 
+    const handleViewChange = (view: SelectedView) => {
+        setSelectedView(view);
+    };
+
     return (
         <div>
             <Header />
-            <Discover />
-            {authors.map((author) => (
-                <AuthorTile 
-                    key={author.id} 
-                    authorId={author.id} 
-                    name={`${author.first_name} ${author.last_name}`} 
-                />
-            ))}
+            <Discover onViewChange={handleViewChange} />
+            <div className="gallery-content">
+                <DynamicGrid view={selectedView} authors={authors} />
+            </div>
             <Footer />
         </div>
     );
