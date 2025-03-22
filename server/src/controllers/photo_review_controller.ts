@@ -65,18 +65,25 @@ photoReviewRouter.get("/api/photos/:id/photo_reviews", async (ctx) => {
 });
 
 // Stwórz nowy review
-photoReviewRouter.post("/api/photos/:id/photo_reviews", async (ctx) => {
+photoReviewRouter.post("/api/photo_reviews", async (ctx) => {
   const body = await ctx.request.body.json();
   const request = v.parse(CreatePhotoReviewSchema, body);
 
   const logged_user = await getLoggedInUser(ctx);
   if (!logged_user) return;
 
-  const commented_photo_id = Number.parseInt(ctx.params.id, 10);
-  const photo_reviews = await getPhotoReviewsByPhoto(commented_photo_id);
+  const photo_reviews = await getPhotoReviewsByPhoto(request.photo_id);
   if (photo_reviews.map((review) => review.id).includes(logged_user.id)) {
     ctx.response.body = {
       message: "Komentarz użytkownika na tym zdjęciu już istnieje",
+    };
+    ctx.response.status = 400;
+    return;
+  }
+
+  if (request.user_id !== logged_user.id) {
+    ctx.response.body = {
+      message: "próba modyfikacji niezalogowanego użytkownika",
     };
     ctx.response.status = 400;
     return;
@@ -99,11 +106,22 @@ photoReviewRouter.put("/api/photo_reviews/:id", async (ctx) => {
   const body = await ctx.request.body.json();
   const request = v.parse(UpdatePhotoReviewSchema, body);
 
+  const logged_user = await getLoggedInUser(ctx);
+  if (!logged_user) return;
+
   const comment_id = Number.parseInt(ctx.params.id, 10);
   const comment = await getPhotoReview(comment_id);
   if (!comment) {
     ctx.response.body = {
       message: "Aktualizowany komentarz nie istnieje",
+    };
+    ctx.response.status = 400;
+    return;
+  }
+
+  if (comment.user_id !== logged_user.id) {
+    ctx.response.body = {
+      message: "próba modyfikacji niezalogowanego użytkownika",
     };
     ctx.response.status = 400;
     return;
@@ -125,9 +143,21 @@ photoReviewRouter.put("/api/photo_reviews/:id", async (ctx) => {
 photoReviewRouter.delete("/api/photo_reviews/:id", async (ctx) => {
   const comment_id = Number.parseInt(ctx.params.id, 10);
   const comment = await getPhotoReview(comment_id);
+
+  const logged_user = await getLoggedInUser(ctx);
+  if (!logged_user) return;
+
   if (!comment) {
     ctx.response.body = {
       message: "Usuwany komentarz nie istnieje",
+    };
+    ctx.response.status = 400;
+    return;
+  }
+
+  if (comment.user_id !== logged_user.id) {
+    ctx.response.body = {
+      message: "próba modyfikacji niezalogowanego użytkownika",
     };
     ctx.response.status = 400;
     return;

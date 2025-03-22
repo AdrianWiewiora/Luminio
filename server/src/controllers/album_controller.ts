@@ -60,6 +60,8 @@ albumRouter.post("/api/albums", async (ctx) => {
     ctx.response.body = {
       message: "próba modyfikacji niezalogowanego użytkownika",
     };
+    ctx.response.status = 400;
+    return;
   }
 
   const album: NewDbAlbum = {
@@ -107,9 +109,21 @@ albumRouter.put("/api/albums/:id", async (ctx) => {
 albumRouter.delete("/api/albums/:id", async (ctx) => {
   const album_id = Number.parseInt(ctx.params.id, 10);
   const album = await getAlbum(album_id);
+
+  const logged_user = await getLoggedInUser(ctx);
+  if (!logged_user) return;
+
   if (!album) {
     ctx.response.body = {
       message: "Usuwany album nie istnieje",
+    };
+    ctx.response.status = 400;
+    return;
+  }
+
+  if (album.user_id !== logged_user.id) {
+    ctx.response.body = {
+      message: "próba modyfikacji niezalogowanego użytkownika",
     };
     ctx.response.status = 400;
     return;

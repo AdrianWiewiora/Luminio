@@ -65,18 +65,25 @@ albumReviewRouter.get("/api/albums/:id/album_reviews", async (ctx) => {
 });
 
 // Stwórz nowy review
-albumReviewRouter.post("/api/albums/:id/album_reviews", async (ctx) => {
+albumReviewRouter.post("/api/album_reviews", async (ctx) => {
   const body = await ctx.request.body.json();
   const request = v.parse(CreateAlbumReviewSchema, body);
 
   const logged_user = await getLoggedInUser(ctx);
   if (!logged_user) return;
 
-  const commented_album_id = Number.parseInt(ctx.params.id, 10);
-  const album_reviews = await getAlbumReviewsByAlbum(commented_album_id);
+  const album_reviews = await getAlbumReviewsByAlbum(request.album_id);
   if (album_reviews.map((review) => review.id).includes(logged_user.id)) {
     ctx.response.body = {
-      message: "Komentarz użytkownika na tym zdjęciu już istnieje",
+      message: "Komentarz użytkownika na tym albumie już istnieje",
+    };
+    ctx.response.status = 400;
+    return;
+  }
+
+  if (request.user_id !== logged_user.id) {
+    ctx.response.body = {
+      message: "próba modyfikacji niezalogowanego użytkownika",
     };
     ctx.response.status = 400;
     return;
@@ -99,11 +106,22 @@ albumReviewRouter.put("/api/album_reviews/:id", async (ctx) => {
   const body = await ctx.request.body.json();
   const request = v.parse(UpdateAlbumReviewSchema, body);
 
+  const logged_user = await getLoggedInUser(ctx);
+  if (!logged_user) return;
+
   const comment_id = Number.parseInt(ctx.params.id, 10);
   const comment = await getAlbumReview(comment_id);
   if (!comment) {
     ctx.response.body = {
       message: "Aktualizowany komentarz nie istnieje",
+    };
+    ctx.response.status = 400;
+    return;
+  }
+
+  if (comment.user_id !== logged_user.id) {
+    ctx.response.body = {
+      message: "próba modyfikacji niezalogowanego użytkownika",
     };
     ctx.response.status = 400;
     return;
@@ -125,9 +143,21 @@ albumReviewRouter.put("/api/album_reviews/:id", async (ctx) => {
 albumReviewRouter.delete("/api/album_reviews/:id", async (ctx) => {
   const comment_id = Number.parseInt(ctx.params.id, 10);
   const comment = await getAlbumReview(comment_id);
+
+  const logged_user = await getLoggedInUser(ctx);
+  if (!logged_user) return;
+
   if (!comment) {
     ctx.response.body = {
       message: "Usuwany komentarz nie istnieje",
+    };
+    ctx.response.status = 400;
+    return;
+  }
+
+  if (comment.user_id !== logged_user.id) {
+    ctx.response.body = {
+      message: "próba modyfikacji niezalogowanego użytkownika",
     };
     ctx.response.status = 400;
     return;
