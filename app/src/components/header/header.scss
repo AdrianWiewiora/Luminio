@@ -37,6 +37,10 @@
                     & > a:hover {
                         color: var(--white-text);
                     }
+
+                    .active {
+                        color: var(--white-text); // Podświetlenie aktywnej opcji
+                    }
                 }
             }
         }

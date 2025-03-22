@@ -1,9 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./header.scss";
 import Logo from '../../assets/img/logo.png';
 
-// Definiujemy typ dla danych użytkownika
 interface UserData {
     id: number;
     first_name: string;
@@ -13,15 +12,22 @@ interface UserData {
 }
 
 const navItems = [
-    { id: 1, name: <Link to="/gallery">Eksploruj</Link> },
-    { id: 2, name: <Link to="/gallery">Albumy</Link> },
-    { id: 3, name: <Link to="/gallery">Znajdź fotografa</Link> }
+    { id: 1, name: "Eksploruj", view: "photos" },
+    { id: 2, name: "Albumy", view: "albums" },
+    { id: 3, name: "Znajdź fotografa", view: "authors" }
 ];
 
 function Header() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userData, setUserData] = useState<UserData | null>(null); // Określamy typ dla userData
+    const [userData, setUserData] = useState<UserData | null>(null);
+    const view = searchParams.get("view") || "photos"; // Pobierz aktualny parametr `view` z URL
+    const [activeView, setActiveView] = useState<string>(view); // Synchronizuj z parametrem `view`
+
+    useEffect(() => {
+        setActiveView(view); // Aktualizuj `activeView`, gdy parametr `view` się zmienia
+    }, [view]);
 
     useEffect(() => {
         const checkSession = async () => {
@@ -31,8 +37,7 @@ function Header() {
                 });
 
                 if (response.ok) {
-                    const userData: UserData = await response.json(); // Określamy typ dla userData
-                    console.log("User data:", userData);
+                    const userData: UserData = await response.json();
                     setIsLoggedIn(true);
                     setUserData(userData);
                 } else {
@@ -55,6 +60,10 @@ function Header() {
         navigate("/");
     };
 
+    const handleNavClick = (view: string) => {
+        navigate(`/gallery?view=${view}`);
+    };
+
     return (
         <header className="header">
             <div className="header__nav-container">
@@ -63,9 +72,14 @@ function Header() {
                 </Link>
                 <nav className="header__nav-container--nav">
                     <ul className="header__nav-container--nav--ul">
-                        {navItems.map(({ id, name }) => (
+                        {navItems.map(({ id, name, view }) => (
                             <li key={id} className="header__nav-container--nav--ul--li">
-                                {name}
+                                <span 
+                                    onClick={() => handleNavClick(view)}
+                                    className={activeView === view ? "active" : ""}
+                                >
+                                    {name}
+                                </span>
                             </li>
                         ))}
                     </ul>

@@ -48,14 +48,29 @@
                 gap: 10px;
                 font-size: 1.25rem;
                 transition: 0.15s ease-in-out;
+                color: var(--gray-text); 
 
                 &:hover {
                     color: var(--white-text);
                     cursor: pointer;
+
+                    .discover__filter--options--single-option--icon {
+                        fill: var(--white-text);
+                    }
+                }
+
+                &.active {
+                    color: var(--white-text); 
+
+                    .discover__filter--options--single-option--icon {
+                        fill: var(--white-text); 
+                    }
                 }
 
                 &--icon{
                     font-size: 1.75rem;
+                    transition: 0.15s ease-in-out;
+                    fill: var(--gray-text); 
                 }
 
                 &--filter {
