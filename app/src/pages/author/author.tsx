@@ -22,7 +22,7 @@ interface User {
 
 function Author() {
     const { id: userId } = useParams(); 
-    const navigate = useNavigate(); // Hook do nawigacji
+    const navigate = useNavigate();
     const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
     const [isPicturePopupOpen, setIsPicturePopupOpen] = useState(false);
     const [isAlbumPopupOpen, setIsAlbumPopupOpen] = useState(false);

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import "./dynamicGrid.scss";
 import { image1, image2, image3, image4, image5, image6, image7, image8 } from "../../../assets/img/imgExport.tsx";
 import AlbumElement from "../../album/albumElement.tsx";
@@ -65,7 +66,9 @@ const DynamicGrid = ({ view, authors }: DynamicGridProps) => {
                         <img src={item.data} alt={`Dynamic Grid item ${index}`} loading="lazy" className="grid-container-dynamic__grid-item-dynamic--img"/>
                     )}
                     {item.type === 'album' && (
-                        <AlbumElement />
+                        <Link to="/album">
+                            <AlbumElement />
+                        </Link>
                     )}
                     {item.type === 'author' && (
                         <AuthorTile authorId={item.data.id} name={`${item.data.first_name} ${item.data.last_name}`} />

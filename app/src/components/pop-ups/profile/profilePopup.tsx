@@ -1,6 +1,7 @@
 import "./profilePopup.scss";
 import Submit from "../../btn/submit/submit.tsx";
 import FormInput from "../../inputs/formInput/formInput.tsx";
+import TextArea from "../../inputs/textarea/textArea.tsx";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { GoPencil } from "react-icons/go";
 import { Community19 } from "../../../assets/img/imgExport.tsx";
@@ -104,6 +105,7 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                                     onChange={handleChange}
                                 />
                             ))}
+                            <TextArea label="Opis"/>
                             <div className="profile-popup__content--section--basic-info--form--options">
                                 <p> 
                                     Anuluj
