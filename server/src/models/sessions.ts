@@ -19,8 +19,7 @@ export async function getUserBySession(
 ): Promise<DbUser | undefined> {
   const rows = await sql<
     DbUser[]
-  >`SELECT * FROM sessions s LEFT JOIN users u ON s.user_id = u.id WHERE s.id = ${session_uuid} LIMIT 1`;
-
+  >`SELECT u.* FROM sessions s LEFT JOIN users u ON s.user_id = u.id WHERE s.id = ${session_uuid} LIMIT 1`;
   return rows[0];
 }
 

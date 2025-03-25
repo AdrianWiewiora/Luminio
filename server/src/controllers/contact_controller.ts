@@ -1,13 +1,17 @@
 import { Router } from "@oak/oak/router";
-import { getContactsByUser } from "../models/contacts.ts";
+import { getContactsByUser, updateContacts } from "../models/contacts.ts";
 import { ContactResponse } from "../../../common/responses.ts";
+import { UpdateContactSchema } from "../../../common/requests/contact_requests.ts";
+import { getLoggedInUser } from "../auth.ts";
+import * as v from "@valibot/valibot";
 
 export const contactRouter = new Router();
 
+//get contacts by user
 contactRouter.get("/api/users/:id/contacts", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
-  const services = await getContactsByUser(id);
-  const response: ContactResponse[] = services.map((contact) => {
+  const contacts = await getContactsByUser(id);
+  const response: ContactResponse[] = contacts.map((contact) => {
     return {
       id: contact.id,
       user_id: contact.user_id,
@@ -17,4 +21,38 @@ contactRouter.get("/api/users/:id/contacts", async (ctx) => {
   });
 
   ctx.response.body = response;
+});
+
+//if contact has id - update, if not - insert
+contactRouter.put("/api/users/:id/contacts", async (ctx) => {
+  const user_id = Number.parseInt(ctx.params.id, 10);
+  const body = await ctx.request.body.json();
+  const request = v.parse(v.array(UpdateContactSchema), body);
+
+  const logged_user = await getLoggedInUser(ctx);
+  if (!logged_user) return;
+
+  if (
+    logged_user.id !== user_id ||
+    request.some((contact) => contact.user_id !== logged_user.id)
+  ) {
+    ctx.response.body = {
+      message: "Próba modyfikacji niezalogowanego użytkownika",
+    };
+    ctx.response.status = 400;
+    return;
+  }
+  const old_contacts = await getContactsByUser(user_id);
+  if (
+    request.some((contact) =>
+      old_contacts.map((c) => c.name).includes(contact.name)
+    )
+  ) {
+    ctx.response.body = { message: "Ten kontakt już istnieje" };
+    ctx.response.status = 400;
+    return;
+  }
+  await updateContacts(request);
+
+  ctx.response.body = {};
 });

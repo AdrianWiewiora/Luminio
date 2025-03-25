@@ -28,12 +28,13 @@ export interface AlbumResponse {
   name: string;
   description: string;
   service_id: number;
-  photos: PhotoResponse[];
+  is_public: boolean;
 }
 
 export interface PhotoResponse {} //TODO
 
 export interface AlbumReviewResponse {
+  id: number;
   album_id: number;
   user_id: number;
   body: string;
@@ -41,6 +42,7 @@ export interface AlbumReviewResponse {
 }
 
 export interface PhotoReviewResponse {
+  id: number;
   photo_id: number;
   user_id: number;
   body: string;

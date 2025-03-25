@@ -14,7 +14,19 @@ services:
       - postgres
     networks:
       - deno
+    develop:
+      watch:
+        - action: restart
+          path: ./server/src
+          target: /server/src
 
+        - action: restart
+          path: ./common
+          target: /common
+
+        - action: restart
+          path: ./migrations
+          target: /migrations
   postgres:
     image: postgres:latest
     container_name: postgres-container

@@ -4,14 +4,14 @@ import FormInput from "../../inputs/formInput/formInput.tsx";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { GoPencil } from "react-icons/go";
 import { Community19 } from "../../../assets/img/imgExport.tsx";
-import { useState } from "react";
+import { useState, useEffect } from "react"; 
 
 const navElements = [
     { id: 0, name: "Podstawowe informacje" },
     { id: 1, name: "W sieci" },
     { id: 2, name: "Kontakt" },
     { id: 3, name: "O mnie" }
-]
+];
 
 const ProfileForm = [
     { id: "Imię", label: "Imię", type: "text" },
@@ -32,8 +32,38 @@ interface ProfilePopupProps {
 
 function ProfilePopup({ onClose }: ProfilePopupProps) {
     const [formData, setFormData] = useState(
-        Object.fromEntries(ProfileForm.map(({ id }) => [id, ""]))
-    );
+        Object.fromEntries(ProfileForm.map(({ id }) => [id, ""])
+    ));
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await fetch('/api/users/me', {
+                    credentials: 'include', 
+                });
+                if (response.ok) {
+                    const userData = await response.json();
+
+                    setFormData({
+                        "Imię": userData.first_name || "",
+                        "Nazwisko": userData.last_name || "",
+                        "Lokalizacja": userData.city || "",
+                        "Portfolio": userData.portfolio || "",
+                        "Linkedin": userData.linkedin || "",
+                        "Instagram": userData.instagram || "",
+                        "Dribbble": userData.dribbble || "",
+                        "Inne": userData.other || "",
+                        "Telefon": userData.phone || "",
+                        "Email": userData.email || "",
+                    });
+                }
+            } catch (error) {
+                console.error("Błąd podczas pobierania danych użytkownika:", error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });

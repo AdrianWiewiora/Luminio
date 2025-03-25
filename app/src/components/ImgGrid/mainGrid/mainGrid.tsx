@@ -8,13 +8,13 @@ const allImages = [
   image1, image2, image3, image4, image5, image6, image7, image8,
 ];
 
-const MainGrid = () => {
+function MainGrid(){
   useEffect(() => {
     let lastScrollY = window.scrollY;
 
     const handleScroll = () => {
-      const gridContainer = document.querySelector(".grid-container");
-      const gridItems = document.querySelectorAll(".grid-item");
+      const gridContainer = document.querySelector(".grid");
+      const gridItems = document.querySelectorAll(".grid__item");
       const containerRect = gridContainer.getBoundingClientRect();
       const scrollY = window.scrollY;
 
@@ -59,12 +59,12 @@ const MainGrid = () => {
   }, []);
 
   return (
-    <div className="grid-container">
+    <section className="grid">
       {allImages.map((img, index) => (
-        <div key={index} className="grid-item" style={{ backgroundImage: `url(${img})` }}>
+        <div key={index} className="grid__item" style={{ backgroundImage: `url(${img})` }}>
         </div>
       ))}
-    </div>
+    </section>
   );
 };
 

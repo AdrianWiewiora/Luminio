@@ -2,6 +2,7 @@ import { useState } from "react";
 import Submit from "../../components/btn/submit/submit.tsx";
 import FormInput from "../../components/inputs/formInput/formInput.tsx";
 import { LoginRequest } from "../../../../common/requests/user_requests.ts";
+import { useNavigate } from "react-router-dom";
 
 const loginForm = [
     { id: "email", label: "Email", type: "email" },
@@ -11,6 +12,7 @@ const loginForm = [
 function LoginForm() {
     const [formData, setFormData] = useState<LoginRequest>({ email: "", password: "" });
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -21,7 +23,7 @@ function LoginForm() {
         setError(null);
 
         try {
-            const response = await fetch("http://localhost:8000/api/login", {
+            const response = await fetch("/api/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
@@ -32,8 +34,7 @@ function LoginForm() {
                 const data = await response.json();
                 throw new Error(data.message || "Błąd logowania");
             }
-
-            window.location.href = "/";
+            navigate("/");
         } catch (error: any) {
             setError(error.message);
         }

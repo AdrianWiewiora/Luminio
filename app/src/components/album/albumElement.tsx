@@ -3,7 +3,7 @@ import { useState } from "react";
 import { paralax10 } from "../../assets/img/imgExport.tsx";
 import { FaStar, FaCog } from "react-icons/fa";
 
-const AlbumElement: React.FC = () => {
+function AlbumElement() {
     const [menuOpen, setMenuOpen] = useState(false);
     let timeoutId: number;
 

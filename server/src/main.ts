@@ -11,10 +11,10 @@ console.log("Migrations complete");
 
 const app = new Application();
 app.use(oakCors({
-    origin: ["http://127.0.0.1:5173", "http://localhost:5173"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
+  origin: ["http://127.0.0.1:5173", "http://localhost:5173"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 }));
 app.use(router.routes());
 app.use(router.allowedMethods());

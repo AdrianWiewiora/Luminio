@@ -16,7 +16,7 @@ export interface NewDbUser {
 // Dane te dopiero są znane po pobraniu usera z bazy
 export interface DbUser extends NewDbUser {
   id: number;
-  created_at: number;
+  created_at: string;
 }
 
 export async function getAllUsers(): Promise<DbUser[]> {
@@ -41,4 +41,14 @@ export async function getUserByMail(
 
 export async function insertUser(user: NewDbUser) {
   await sql`INSERT INTO users ${sql(user)}`;
+}
+
+export async function updateUser(user: NewDbUser, id: number) {
+  await sql`UPDATE users
+  SET ${sql(user)}
+  WHERE id = ${id};`;
+}
+
+export async function deleteUser(id: number) {
+  await sql`DELETE FROM users WHERE id = ${id}`;
 }
