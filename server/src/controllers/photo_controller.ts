@@ -7,9 +7,16 @@ import * as v from "@valibot/valibot";
 import { sql } from "../db.ts";
 import { getLoggedInUser } from "../auth.ts";
 
-export const photoRouter = new Router();
+export const photosRouter = new Router();
 
-photoRouter.post("/api/photo", async (ctx) => {
+photosRouter.get("/api/photos/:uuid", async (ctx) => {
+  // TODO: this is unsafe
+  const file_path = path.join(UPLOADS_DIR, ctx.params.uuid);
+  const file = await Deno.readFile(file_path);
+  ctx.response.body = file;
+});
+
+photosRouter.post("/api/photos", async (ctx) => {
   const user = await getLoggedInUser(ctx);
   if (!user) {
     return;
