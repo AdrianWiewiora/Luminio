@@ -17,6 +17,7 @@ const navElements = [
 const ProfileForm = [
     { id: "Imię", label: "Imię", type: "text" },
     { id: "Nazwisko", label: "Nazwisko", type: "text" },
+    { id: "Miasto", label: "Miasto", type: "text" },
     { id: "Lokalizacja", label: "Lokalizacja", type: "text" },
     { id: "Portfolio", label: "Portfolio", type: "text" },
     { id: "Linkedin", label: "Linkedin", type: "text" },
@@ -33,8 +34,11 @@ interface ProfilePopupProps {
 
 function ProfilePopup({ onClose }: ProfilePopupProps) {
     const [formData, setFormData] = useState(
-        Object.fromEntries(ProfileForm.map(({ id }) => [id, ""])
-    ));
+        Object.fromEntries([
+            ...ProfileForm.map(({ id }) => [id, ""]),
+            ["Opis", ""]
+        ])
+    );
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -48,7 +52,8 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                     setFormData({
                         "Imię": userData.first_name || "",
                         "Nazwisko": userData.last_name || "",
-                        "Lokalizacja": userData.city || "",
+                        "Miasto": userData.city || "",
+                        "Lokalizacja": userData.location || "",
                         "Portfolio": userData.portfolio || "",
                         "Linkedin": userData.linkedin || "",
                         "Instagram": userData.instagram || "",
@@ -56,6 +61,7 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                         "Inne": userData.other || "",
                         "Telefon": userData.phone || "",
                         "Email": userData.email || "",
+                        "Opis": userData.description || "",
                     });
                 }
             } catch (error) {
@@ -66,9 +72,71 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
         fetchUserData();
     }, []);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
+
+    const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        try {
+          const userResponse = await fetch('/api/users/me', {
+            credentials: 'include'
+          });
+          
+          if (!userResponse.ok) {
+            throw new Error("Nie udało się pobrać danych użytkownika");
+          }
+          
+          const userData = await userResponse.json();
+          const userId = userData.id;
+      
+          const response = await fetch(`/api/users/${userId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              first_name: formData["Imię"],
+              last_name: formData["Nazwisko"],
+              city: formData["Miasto"],
+              location: formData["Lokalizacja"],
+              portfolio: formData["Portfolio"],
+              linkedin: formData["Linkedin"],
+              instagram: formData["Instagram"],
+              dribbble: formData["Dribbble"],
+              other: formData["Inne"],
+              phone: formData["Telefon"],
+              email: formData["Email"],
+              description: formData["Opis"]
+            })
+          });
+      
+          const responseText = await response.text(); 
+          
+          try {
+            const responseData = responseText ? JSON.parse(responseText) : {};
+            
+            if (!response.ok) {
+              console.error("Błąd serwera:", responseData);
+              throw new Error(responseData.message || "Błąd podczas aktualizacji danych");
+            }
+      
+            console.log("Dane zostały zaktualizowane:", responseData);
+            onClose();
+          } catch (jsonError) {
+            console.error("Serwer zwrócił nieprawidłowy JSON:", responseText);
+            throw new Error("Nieprawidłowa odpowiedź serwera");
+          }
+        } catch (error) {
+          console.error("Błąd podczas wysyłania danych:", error);
+        }
+      };
 
     return (
         <section className="profile-popup" onClick={onClose}>
@@ -94,7 +162,10 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                                 <GoPencil /> Zmień
                             </span>
                         </div>
-                        <form className="profile-popup__content--section--basic-info--form">
+                        <form 
+                            className="profile-popup__content--section--basic-info--form"
+                            onSubmit={handleSubmit} 
+                        >
                             {ProfileForm.map(({ id, label, type }) => (
                                 <FormInput
                                     key={id}
@@ -102,12 +173,18 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                                     label={label}
                                     type={type}
                                     value={formData[id] || ""}
-                                    onChange={handleChange}
+                                    onChange={handleInputChange}
+                                    required={false}
                                 />
                             ))}
-                            <TextArea label="Opis"/>
+                            <TextArea 
+                                id="Opis"
+                                label="Opis"
+                                value={formData["Opis"] || ""}
+                                onChange={handleTextAreaChange}
+                            />
                             <div className="profile-popup__content--section--basic-info--form--options">
-                                <p> 
+                                <p onClick={onClose}> 
                                     Anuluj
                                 </p>
                                 <Submit title="Zaktualizuj profil" />

@@ -6,9 +6,10 @@ type FormInputProps = {
     type: string;
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    required?: boolean; 
 };
 
-function FormInput({ id, label, type, value, onChange }: FormInputProps) {
+function FormInput({ id, label, type, value, onChange, required = false }: FormInputProps) {
     return (
         <label htmlFor={id} className="form-label">
             {label}
@@ -16,7 +17,7 @@ function FormInput({ id, label, type, value, onChange }: FormInputProps) {
                 id={id}
                 type={type}
                 className="form-label__input"
-                required
+                required={required} 
                 value={value}
                 onChange={onChange}
             />
