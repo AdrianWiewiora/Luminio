@@ -8,9 +8,6 @@ const filterOptions = [
     { id: 3, name: "Architektura" }
 ];
 
-
-
-
 function SearchGrid() {
     return(
         <section className="search-grid">

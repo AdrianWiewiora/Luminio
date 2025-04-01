@@ -1,9 +1,9 @@
 import "./authorNav.scss";
 
 const navElements = [
-    { id: 0, name: "Kolekcje zdjęć", action: "openAlbumPopup" }, 
+    { id: 0, name: "Kolekcje zdjęć", action: "openPicturePopup" }, 
     { id: 1, name: "Dostosuj profil", action: "customizeProfile" },
-    { id: 2, name: "Dodaj", action: "openPicturePopup" }, 
+    { id: 2, name: "Dodaj", action: "openAlbumPopup" }, 
     { id: 3, name: "Robocze" } 
 ];
 

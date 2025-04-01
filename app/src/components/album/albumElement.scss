@@ -1,7 +1,6 @@
 .album {
     width: 400px;
-    height: 350px;
-    padding: 36px 0;
+    height: 314px;
     border-radius: 16px;
     overflow: hidden;
     position: relative;
@@ -130,7 +129,6 @@
         padding: 4px 8px;
         border-radius: 8px;
         color: var(--gray-text);
-        font-size: 1rem;
 
         .star_icon {
             margin-left: 4px;

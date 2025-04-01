@@ -1,0 +1,43 @@
+import { Link } from "react-router-dom";
+import "./albumGrid.scss";
+import AlbumElement from "../../album/albumElement.tsx";
+
+interface Album {
+    id: number;
+    user_id: number;
+    name: string;
+    description?: string;
+    service_id?: number;
+    is_public: boolean;
+}
+
+interface AlbumGridProps {
+    albums: Album[];
+    loggedUserId?: number | null;
+    onEditClick?: (albumId: number) => void;
+}
+
+const AlbumGrid = ({ albums, loggedUserId, onEditClick }: AlbumGridProps) => {
+    return (
+        <section className="grid-album-container">
+            {albums.map((album) => (
+                <div key={album.id} className="grid-album-container__item">
+                    <Link to={`/album/${album.id}`}>
+                        <AlbumElement
+                            albumId={album.id}
+                            title={album.name}
+                            isPublic={album.is_public}
+                            userId={album.user_id}
+                            loggedUserId={loggedUserId}
+                            description={album.description}
+                            serviceId={album.service_id}
+                            onEditClick={onEditClick}
+                        />
+                    </Link>
+                </div>
+            ))}
+        </section>
+    );
+};
+
+export default AlbumGrid;

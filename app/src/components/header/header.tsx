@@ -20,7 +20,7 @@ const navItems = [
 function Header() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const location = useLocation(); // Dodaj useLocation
+    const location = useLocation(); 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState<UserData | null>(null);
     const view = searchParams.get("view") || "photos"; 
@@ -30,10 +30,9 @@ function Header() {
         setActiveView(view); 
     }, [view]);
 
-    // Resetuj activeView, gdy użytkownik opuszcza stronę /gallery
     useEffect(() => {
         if (!location.pathname.startsWith("/gallery")) {
-            setActiveView(""); // Resetuj activeView
+            setActiveView(""); 
         }
     }, [location.pathname]);
 
@@ -86,7 +85,7 @@ function Header() {
 
     const handleProfileClick = () => {
         if (userData) {
-            navigate(`/author/${userData.id}`); // Przekieruj do widoku autora z ID użytkownika
+            navigate(`/author/${userData.id}`); 
         }
     };
 

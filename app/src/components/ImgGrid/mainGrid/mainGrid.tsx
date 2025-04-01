@@ -18,7 +18,6 @@ function MainGrid(){
       const containerRect = gridContainer.getBoundingClientRect();
       const scrollY = window.scrollY;
 
-      // Checking if the grid is within the viewport
       if (containerRect.top < window.innerHeight && containerRect.bottom > 0) {
         const smoothScroll = (scrollY - lastScrollY) * 0.1;
         lastScrollY += smoothScroll;
@@ -26,21 +25,18 @@ function MainGrid(){
         gridItems.forEach((item, index) => {
           const row = Math.floor(index / 4);
           const col = index % 4;
-          const rowSpeed = 5;   //speed for row
-          const colSpeed = col % 2 === 0 ? 6 : 3; //spedd for column
+          const rowSpeed = 5;  
+          const colSpeed = col % 2 === 0 ? 6 : 3; 
 
-          //Calculating effect for each element(col and row)
           let yPos = -((lastScrollY - gridContainer.offsetTop) / rowSpeed) + row * 5;
           let yOffset = (scrollY - gridContainer.offsetTop) / colSpeed;
 
-          // Limit the effect for main conteiner
           const itemRect = item.getBoundingClientRect();
           if (itemRect.top < containerRect.top) {
             yPos = 0;
             yOffset = 0;
           }
 
-          // Fade-out the grid photos
           let opacity = 1;
           if (containerRect.bottom <= window.innerHeight) {
             let fadeStart = window.innerHeight - containerRect.bottom;
