@@ -8,7 +8,9 @@
     "jsr:@std/assert@0.221": "0.221.0",
     "jsr:@std/assert@1": "1.0.11",
     "jsr:@std/bytes@1": "1.0.5",
+    "jsr:@std/bytes@^1.0.5": "1.0.5",
     "jsr:@std/crypto@1": "1.0.4",
+    "jsr:@std/crypto@^1.0.4": "1.0.4",
     "jsr:@std/encoding@0.221": "0.221.0",
     "jsr:@std/encoding@1": "1.0.7",
     "jsr:@std/encoding@^1.0.7": "1.0.7",
@@ -21,6 +23,7 @@
     "jsr:@std/path@0.221": "0.221.0",
     "jsr:@std/path@1": "1.0.8",
     "jsr:@std/path@^1.0.8": "1.0.8",
+    "jsr:@std/uuid@^1.0.5": "1.0.5",
     "jsr:@valibot/valibot@~0.42.1": "0.42.1",
     "npm:path-to-regexp@^6.3.0": "6.3.0",
     "npm:postgres@^3.4.5": "3.4.5"
@@ -45,8 +48,8 @@
       "integrity": "49805b55603c3627a9d6235c0655aa2b6222d3036b3a13ff0380c16368f607ac",
       "dependencies": [
         "jsr:@std/assert@1",
-        "jsr:@std/bytes",
-        "jsr:@std/crypto",
+        "jsr:@std/bytes@1",
+        "jsr:@std/crypto@1",
         "jsr:@std/encoding@1",
         "jsr:@std/http",
         "jsr:@std/media-types"
@@ -57,7 +60,7 @@
       "dependencies": [
         "jsr:@oak/commons",
         "jsr:@std/assert@1",
-        "jsr:@std/bytes",
+        "jsr:@std/bytes@1",
         "jsr:@std/http",
         "jsr:@std/media-types",
         "jsr:@std/path@1",
@@ -122,6 +125,13 @@
     "@std/path@1.0.8": {
       "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
     },
+    "@std/uuid@1.0.5": {
+      "integrity": "d0b8da73ec1934c32346e3a090d526f77dded587664859afabae0cc2c782428b",
+      "dependencies": [
+        "jsr:@std/bytes@^1.0.5",
+        "jsr:@std/crypto@^1.0.4"
+      ]
+    },
     "@valibot/valibot@0.42.1": {
       "integrity": "ba0f6f7964aaeec0e4b1f793d575061f325ae6254cbb9d7ff01fb65068a0a23b"
     }
@@ -134,6 +144,16 @@
       "integrity": "sha512-cDWgoah1Gez9rN3H4165peY9qfpEo+SA61oQv65O3cRUE1pOEoJWwddwcqKE8XZYjbblOJlYDlLV4h67HrEVDg=="
     }
   },
+  "remote": {
+    "https://deno.land/x/cors@v1.2.2/abcCors.ts": "cdf83a7eaa69a1bf3ab910d18b9422217902fac47601adcaf0afac5a61845d48",
+    "https://deno.land/x/cors@v1.2.2/attainCors.ts": "7d6aba0f942495cc31119604e0895c9bb8edd8f8baa7fe78e6c655bd0b4cbf59",
+    "https://deno.land/x/cors@v1.2.2/cors.ts": "0e2d9167e3685f9bcf48f565e312b6e1883fa458f7337e5ce7bc2e3b29767980",
+    "https://deno.land/x/cors@v1.2.2/mithCors.ts": "3a359d6e716e0410ede278ab54d875b293a2d66d838aaa7cfbf9ddc1e9e990d3",
+    "https://deno.land/x/cors@v1.2.2/mod.ts": "2b351913f56d77ad80cb3b8633d4539c9eeddb426dae79437ada0e6a9cb4f1a6",
+    "https://deno.land/x/cors@v1.2.2/oakCors.ts": "1348dc7673c61b85d2e80559a7b44f8e0246eaa6bcc6ec744fafe5d9b13b5c71",
+    "https://deno.land/x/cors@v1.2.2/opineCors.ts": "fb5790115c26b7061d84b8d6c17d258a1e241bcab75b0bc3ca1fdb2e57bc5072",
+    "https://deno.land/x/cors@v1.2.2/types.ts": "97546633ccc7f0df7a29bacba5d91dc6f61decdd1b65258300244dba905d34b8"
+  },
   "workspace": {
     "dependencies": [
       "jsr:@felix/bcrypt@^1.0.5",
@@ -141,6 +161,7 @@
       "jsr:@std/assert@1",
       "jsr:@std/fs@^1.0.14",
       "jsr:@std/path@^1.0.8",
+      "jsr:@std/uuid@^1.0.5",
       "jsr:@valibot/valibot@~0.42.1",
       "npm:postgres@^3.4.5"
     ]

@@ -1,10 +1,10 @@
 import {Link} from "react-router-dom";
 import './access.scss';
 
-import LoginForm from "./loginForm";
+import LoginForm from "./loginForm.tsx";
 import Logo from '../../assets/img/logo.png';
-import FormFooter from "../../components/footers/access/formFooter";
-import AccessImg from "../../components/accessImg/accessImg";
+import FormFooter from "../../components/footers/access/formFooter.tsx";
+import AccessImg from "../../components/accessImg/accessImg.tsx";
 
 function LogIn(){
     return(
@@ -14,7 +14,7 @@ function LogIn(){
                     <img src={Logo} alt="logo" className="access-container__content--logo"/>
                 </Link>
                 <LoginForm />
-                <FormFooter />
+                <FormFooter link="/registration" title="Zarejestruj się" />
             </section>
             <AccessImg />
         </main>

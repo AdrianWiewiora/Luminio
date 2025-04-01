@@ -1,5 +1,5 @@
 import "./community.scss";
-import CtaButton from "../../../../components/btn/CTA/ctaButton";
+import CtaButton from "../../../../components/btn/CTA/ctaButton.tsx";
 
 import {
     Community1,
@@ -20,7 +20,7 @@ import {
     Community16,
     Community17,
     Community18
-} from "../../../../assets/img/imgExport";
+} from "../../../../assets/img/imgExport.tsx";
 
 
 const scrollItems = [
@@ -41,7 +41,9 @@ const scrollItems = [
     { id: 14, name: Community15 },
     { id: 15, name: Community16 },
     { id: 16, name: Community17 },
-    { id: 17, name: Community18 }
+    { id: 17, name: Community18 },
+    { id: 18, name: Community18 },
+    { id: 19, name: Community18 }
 ];
 
 function Community(){

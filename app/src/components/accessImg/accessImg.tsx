@@ -1,6 +1,6 @@
 import "./accessImg.scss";
 import { useState } from "react";
-import { logReg1, logReg2, logReg3, logReg4, logReg5, logReg6, logReg7, logReg8, logReg9 } from "../../assets/img/imgExport";
+import { logReg1, logReg2, logReg3, logReg4, logReg5, logReg6, logReg7, logReg8, logReg9 } from "../../assets/img/imgExport.tsx";
 
 type ImageType = {
     id: number;

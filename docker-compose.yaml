@@ -7,14 +7,26 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./server/src:/server/sr
+      - ./server/src:/server/src
       - ./common:/common
       - ./migrations:/migrations
     depends_on:
       - postgres
     networks:
       - deno
+    develop:
+      watch:
+        - action: restart
+          path: ./server/src
+          target: /server/src
 
+        - action: restart
+          path: ./common
+          target: /common
+
+        - action: restart
+          path: ./migrations
+          target: /migrations
   postgres:
     image: postgres:latest
     container_name: postgres-container

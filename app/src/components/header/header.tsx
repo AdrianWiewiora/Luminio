@@ -1,44 +1,148 @@
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "./header.scss";
 import Logo from '../../assets/img/logo.png';
 
-const navItems = [
-    { id: 1, name: <Link to="/gallery">Ekspolruj</Link> },
-    { id: 2, name: "Znajdź fotografie" },
-    { id: 3, name: "Losuj" }
-]
+interface UserData {
+    id: number;
+    first_name: string;
+    last_name: string;
+    user_description?: string;
+    city?: string;
+}
 
-function Header(){
-    return(
+const navItems = [
+    { id: 1, name: "Eksploruj", view: "photos" },
+    { id: 2, name: "Albumy", view: "albums" },
+    { id: 3, name: "Znajdź fotografa", view: "authors" }
+];
+
+function Header() {
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const location = useLocation(); // Dodaj useLocation
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userData, setUserData] = useState<UserData | null>(null);
+    const view = searchParams.get("view") || "photos"; 
+    const [activeView, setActiveView] = useState<string>(view); 
+
+    useEffect(() => {
+        setActiveView(view); 
+    }, [view]);
+
+    // Resetuj activeView, gdy użytkownik opuszcza stronę /gallery
+    useEffect(() => {
+        if (!location.pathname.startsWith("/gallery")) {
+            setActiveView(""); // Resetuj activeView
+        }
+    }, [location.pathname]);
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await fetch("http://localhost:8000/api/users/me", {
+                    credentials: "include",
+                });
+
+                if (response.ok) {
+                    const userData: UserData = await response.json();
+                    setIsLoggedIn(true);
+                    setUserData(userData);
+                } else {
+                    setIsLoggedIn(false);
+                    setUserData(null);
+                }
+            } catch (error) {
+                setIsLoggedIn(false);
+                setUserData(null);
+            }
+        };
+
+        checkSession();
+    }, []);
+
+    const handleLogout = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/api/logout", {
+                method: "POST",
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                setIsLoggedIn(false);
+                setUserData(null);
+                navigate("/");
+            } else {
+                console.error("Błąd podczas wylogowywania:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Błąd podczas wylogowywania:", error);
+        }
+    };
+
+    const handleNavClick = (view: string) => {
+        navigate(`/gallery?view=${view}`);
+    };
+
+    const handleProfileClick = () => {
+        if (userData) {
+            navigate(`/author/${userData.id}`); // Przekieruj do widoku autora z ID użytkownika
+        }
+    };
+
+    return (
         <header className="header">
             <div className="header__nav-container">
                 <Link to="/">
-                    <img src={Logo} alt="logo" className="header__nav-container--logo"/>
+                    <img src={Logo} alt="logo" className="header__nav-container--logo" />
                 </Link>
                 <nav className="header__nav-container--nav">
                     <ul className="header__nav-container--nav--ul">
-                        {navItems.map(({id, name}) => (
-                        <li key={id} className="header__nav-container--nav--ul--li">
-                            {name}
-                        </li>
+                        {navItems.map(({ id, name, view }) => (
+                            <li key={id} className="header__nav-container--nav--ul--li">
+                                <span 
+                                    onClick={() => handleNavClick(view)}
+                                    className={activeView === view ? "active" : ""}
+                                >
+                                    {name}
+                                </span>
+                            </li>
                         ))}
                     </ul>
                 </nav>
             </div>
             <section className="header__btn-container">
-                <div className="header__btn-container--log-in">
-                    <Link to="/LogIn" className="header__btn-container--log-in--text">
-                        Zaloguj się
-                    </Link>
-                </div>
-                <Link to="/registration">
-                    <div className="header__btn-container--sign-in">
-                        <span className="header__btn-container--sign-in--text">
-                            Zarejestruj się
-                        </span>
+                {!isLoggedIn ? (
+                    <>
+                        <div className="header__btn-container--log-in">
+                            <Link to="/login" className="header__btn-container--log-in--text">
+                                Zaloguj się
+                            </Link>
+                        </div>
+                        <Link to="/registration">
+                            <div className="header__btn-container--sign-in">
+                                <span className="header__btn-container--sign-in--text">
+                                    Zarejestruj się
+                                </span>
+                            </div>
+                        </Link>
+                    </>
+                ) : (
+                    <div className="header__btn-container">
+                        {userData ? `${userData.first_name} ${userData.last_name}` : "Użytkownik"}
+                        <div className="header__btn-container--trigger">
+                            <div className="trigger-circle"></div>
+                            <ul className="header__btn-container--profile">
+                                <li onClick={handleProfileClick} className="header__btn-container--profile-item">
+                                    Mój profil
+                                </li>
+                                <li onClick={handleLogout} className="header__btn-container--log-in--log-out">
+                                    Wyloguj 
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </Link>
+                )}
             </section>
         </header>
     );
