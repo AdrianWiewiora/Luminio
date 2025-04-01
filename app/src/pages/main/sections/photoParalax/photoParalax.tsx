@@ -1,10 +1,9 @@
 import './photoParalax.scss';
-import { paralax1, paralax2, paralax3, paralax4, paralax5, paralax6, paralax7, paralax8, paralax9, paralax10, paralax11, paralax12 } from '../../../../assets/img/imgExport';
+import { paralax1, paralax2, paralax3, paralax4, paralax5, paralax6, paralax7, paralax8, paralax9, paralax10, paralax11, paralax12 } from '../../../../assets/img/imgExport.tsx';
 import { useEffect } from 'react';
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "@studio-freight/lenis";
-
+import { gsap } from "https://esm.sh/gsap@3.12.2";
+import { ScrollTrigger } from "https://esm.sh/gsap@3.12.2/ScrollTrigger";
+import Lenis from "https://esm.sh/@studio-freight/lenis@1.0.0";
 
 gsap.registerPlugin(ScrollTrigger);
 
