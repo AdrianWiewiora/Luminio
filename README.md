@@ -34,6 +34,9 @@ Build the Docker containers once:
 Start the containers:
 `docker-compose up`
 
+To develop app on backend:
+`docker-compose up --watch`
+
 Note 1:
  **After the initial build, only use `docker-compose up`**. 
  Changes made in the following folders will automatically be reloaded:
