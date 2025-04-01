@@ -95,7 +95,7 @@ function PhotoParalax() {
   }, []);
 
   return (
-    <section className="section">
+    <section className="photo-parallax section">
       <div className="columns">
         {[paralaxColumn1, paralaxColumn2, paralaxColumn3].map((column, colIndex) => (
           <div className="column" key={colIndex}>
