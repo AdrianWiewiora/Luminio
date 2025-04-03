@@ -27,6 +27,11 @@ export async function getAlbum(id: number): Promise<DbAlbum> {
   >`SELECT * FROM albums WHERE id = ${id} LIMIT 1`;
   return rows[0];
 }
+export async function getAlbums(): Promise<DbAlbum[]> {
+  return  await sql<
+    DbAlbum[]
+  >`SELECT * FROM albums`;
+}
 
 export async function insertAlbum(album: NewDbAlbum) {
   await sql`INSERT INTO albums ${sql(album)}`;

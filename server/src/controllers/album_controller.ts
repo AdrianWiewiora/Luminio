@@ -6,6 +6,7 @@ import {
   insertAlbum,
   NewDbAlbum,
   updateAlbum,
+  getAlbums
 } from "../models/albums.ts";
 import { AlbumResponse } from "../../../common/responses.ts";
 import { CreateAlbumSchema, UpdateAlbumSchema } from "common";
@@ -18,6 +19,23 @@ export const albumRouter = new Router();
 albumRouter.get("/api/users/:id/albums", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
   const albums = await getAlbumsByUser(id);
+  const response: AlbumResponse[] = albums.map((album) => {
+    return {
+      id: album.id,
+      user_id: album.user_id,
+      name: album.name,
+      description: album.description,
+      service_id: album.tag,
+      is_public: album.is_public,
+    };
+  });
+
+  ctx.response.body = response;
+});
+
+//get albums by user
+albumRouter.get("/api/albums", async (ctx) => {
+  const albums = await getAlbums();
   const response: AlbumResponse[] = albums.map((album) => {
     return {
       id: album.id,
