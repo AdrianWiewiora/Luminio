@@ -1,14 +1,17 @@
 import './title.scss';
-
 import StarRating from '../../../../components/reviews/starRating/starRating.tsx';
 
-function Title () {
+interface TitleProps {
+    title?: string;
+    description?: string;
+}
 
+function Title({ title = "", description = "" }: TitleProps) {
     return (
         <section className="head">
             <div className="head__details">
                 <h1 className="head__details--h1">
-                    "Zdjęcia ślubne Agaty i Łukasza"
+                    {title || "Brak tytułu"}
                 </h1>
                 <div className="head__details--info">
                     <div className="head__details--info--rating">
@@ -18,15 +21,11 @@ function Title () {
                     15.06.2024
                 </div>
             </div>
-            <p className="head__p">
-                Zdjęcia ślubne Agaty i Łukasza to wyjątkowa kolekcja uchwycająca najpiękniejsze
-                 chwile ich wielkiego dnia. Album pełen jest emocji, wzruszeń i radości, które
-                  towarzyszyły im podczas ceremonii oraz przyjęcia. Każde ujęcie oddaje magiczną
-                   atmosferę tej niezwykłej uroczystości, pełnej miłości i rodzinnego ciepła.
-                    Ślub odbył się 15 czerwca 2024 roku w malowniczej miejscowości Kazimierz Dolny,
-                     w otoczeniu natury i zabytkowej architektury. Te fotografie to nie tylko wspomnienia,
-                      ale także zapis niepowtarzalnej historii dwojga ludzi rozpoczynających wspólną drogę życia.
-            </p>
+            {description && (
+                <p className="head__p">
+                    {description}
+                </p>
+            )}
         </section>
     );
 }

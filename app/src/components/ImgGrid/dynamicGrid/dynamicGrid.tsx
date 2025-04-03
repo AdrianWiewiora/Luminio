@@ -39,7 +39,6 @@ const DynamicGrid = ({ view, authors }: DynamicGridProps) => {
             { type: 'album', data: { id: 3, title: "Portrety" } },
         ];
 
-        // Mapowanie wartości `view` na odpowiadające wartości `item.type`
         const typeMap = {
             photos: 'photo',
             albums: 'album',
