@@ -16,5 +16,9 @@ export default defineConfig({
         rewrite: (path) => path,
       }
     },
+    watch: {
+      usePolling: true,
+      interval: 100,
+    },
   },
 })
