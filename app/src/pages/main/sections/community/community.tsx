@@ -51,8 +51,8 @@ function Community(){
         <section className="community-container">
             <div className="community-container__content">
                 <h2 className="community-container__content--h2">
-                    Zostań częścią <br/>
-                    naszej kreatywnej <br/>
+                    Zostań częścią <br className="br-hide-on-mobile" />
+                    naszej <span className="community-container__content--h2--gradient">kreatywnej</span> <br className="br-hide-on-mobile" />
                     społeczności
                 </h2>
                 <CtaButton />
