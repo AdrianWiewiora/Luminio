@@ -181,6 +181,7 @@
         right: 24px;
         top: 40px;
         transform: translateY(-50%);
+        cursor: pointer;
     }
 
     .mobile-menu {
@@ -200,6 +201,11 @@
             li {
                 padding: 10px;
                 text-align: center;
+                cursor: pointer;
+    
+                &.active {
+                    color: var(--white-text);
+                }
             }
         }
 

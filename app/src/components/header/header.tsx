@@ -132,9 +132,12 @@ function Header() {
                 <div className="mobile-menu">
                     <ul className="mobile-menu__list">
                         {navItems.map(({ id, name, view }) => (
-                            <li key={id} onClick={() => handleNavClick(view)}>
-                                {name}
-                            </li>
+                            <li 
+                            key={id} 
+                            onClick={() => handleNavClick(view)}
+                            className={activeView === view ? "active" : ""}>
+                            {name}
+                        </li>
                         ))}
                     </ul>
                     {!isLoggedIn && (
