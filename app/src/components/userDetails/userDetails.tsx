@@ -1,10 +1,12 @@
-import './userDetails.scss'
+import './userDetails.scss';
 import { PiShare } from "react-icons/pi";
 import { GoStarFill } from "react-icons/go";
 import { TiSocialInstagram, TiSocialLinkedin } from "react-icons/ti";
 import { MdLink } from "react-icons/md";
 import { FaDribbble } from "react-icons/fa";
 import { RiFolderUserLine } from "react-icons/ri";
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import profile from '../../assets/img/community/community19.png';
 
@@ -31,16 +33,56 @@ const socialsItems = [
     { id: 5, name: "Other", value: "https://github.com/" },
 ];
 
-function userDetails() {
+interface UserData {
+    id: number;
+    first_name: string;
+    last_name: string;
+    city: string;
+    user_description: string;
+    email: string;
+    phone: string;
+    linkedin: string;
+    instagram: string;
+    dribbble: string;
+    portfolio: string;
+    other: string;
+}
+
+function UserDetails() {
+    const { id: userId } = useParams();
+    const [userData, setUserData] = useState<UserData | null>(null);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await fetch(`/api/users/${userId}`);
+                if (response.ok) {
+                    const data: UserData = await response.json();
+                    setUserData(data);
+                } else {
+                    console.error("Błąd podczas pobierania danych użytkownika:", response.statusText);
+                }
+            } catch (error) {
+                console.error("Błąd podczas pobierania danych użytkownika:", error);
+            }
+        };
+
+        fetchUserData();
+    }, [userId]);
+
+    if (!userData) {
+        return <div>Ładowanie...</div>;
+    }
+
     return (
         <aside className="aside">
             <img src={profile} alt="profile" className="aside__profile" />
             <div className="aside__container">
                 <h1 className="aside__container--h1">
-                    Jan Kowalski
+                    {userData.first_name} {userData.last_name}
                 </h1>
                 <h2 className="aside__container--h2">
-                    Rzeszów, Podkarpackie, Polska
+                    {userData.city}
                 </h2>
                 <ul className="aside__container--services-ul">
                     {serviceItems.map(({id, name}) => (
@@ -69,27 +111,29 @@ function userDetails() {
                 <div className="aside__container--item">
                     Telefon 
                     <span className="aside__container--item--value"> 
-                        111 222 333
+                        {userData.phone}
                     </span>
                 </div>
                 <div className="aside__container--item">
                     Email 
                     <span className="aside__container--item--value">
-                        nazwa@host.com
+                        {userData.email}
                     </span>
                 </div>
 
                 <h2 className="aside__container--h2">
                     W sieci
                 </h2>
-                {socialsItems.map(({ id, name, value }) => (
+                {[
+                    { id: 1, name: "Linkedin", value: userData.linkedin, icon: <TiSocialLinkedin className="aside__container--link--span--icon" /> },
+                    { id: 2, name: "Instagram", value: userData.instagram, icon: <TiSocialInstagram className="aside__container--link--span--icon" /> },
+                    { id: 3, name: "Portfolio", value: userData.portfolio, icon: <RiFolderUserLine className="aside__container--link--span--icon" /> },
+                    { id: 4, name: "Dribbble", value: userData.dribbble, icon: <FaDribbble className="aside__container--link--span--icon" /> },
+                    { id: 5, name: "Other", value: userData.other, icon: <MdLink className="aside__container--link--span--icon" /> },
+                ].map(({ id, name, value, icon }) => (
                     <a href={value} key={id} className="aside__container--link" target="_blank" rel="noopener noreferrer">
                         <span className="aside__container--link--span">
-                            {name === "Linkedin" && <TiSocialLinkedin className="aside__container--link--span--icon" />}
-                            {name === "Instagram" && <TiSocialInstagram className="aside__container--link--span--icon" />}
-                            {name === "Other" && <MdLink className="aside__container--link--span--icon" />}
-                            {name === "Dribbble" && <FaDribbble className="aside__container--link--span--icon" />}
-                            {name === "Portfolio" && <RiFolderUserLine className="aside__container--link--span--icon" />}
+                            {icon}
                             {name}
                         </span>
                         <PiShare className="aside__container--link--share-icon" />
@@ -100,13 +144,11 @@ function userDetails() {
                     O mnie
                 </h2>
                 <p className="aside__container--p">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores officiis nisi,
-                     sint quia ea inventore soluta voluptas obcaecati aliquam provident velit sit illum
-                      qui similique quas praesentium quisquam eaque libero.
+                    {userData.user_description}
                 </p>
             </div>
         </aside>
     );
 }
 
-export default userDetails;
+export default UserDetails;

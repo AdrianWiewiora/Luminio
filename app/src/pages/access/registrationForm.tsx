@@ -24,9 +24,9 @@ function RegistrationForm() {
         city: ""
     });
 
-    const [confirmPassword, setConfirmPassword] = useState(""); // Osobny stan
+    const [confirmPassword, setConfirmPassword] = useState(""); 
     const [errorMessage, setErrorMessage] = useState("");
-    const [showDialog, setShowDialog] = useState(false); // Stan do pokazywania dialogu
+    const [showDialog, setShowDialog] = useState(false); 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;

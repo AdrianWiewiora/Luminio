@@ -1,4 +1,4 @@
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./header.scss";
 import Logo from '../../assets/img/logo.png';
@@ -20,15 +20,21 @@ const navItems = [
 function Header() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const location = useLocation(); 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState<UserData | null>(null);
-    const view = searchParams.get("view") || "photos"; // Pobierz aktualny parametr `view` z URL
-    const [activeView, setActiveView] = useState<string>(view); // Synchronizuj z parametrem `view`
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const view = searchParams.get("view") || "photos"; 
+    const [activeView, setActiveView] = useState<string>(view); 
 
     useEffect(() => {
-        setActiveView(view); // Aktualizuj `activeView`, gdy parametr `view` się zmienia
+        setActiveView(view); 
     }, [view]);
+
+    useEffect(() => {
+        if (!location.pathname.startsWith("/gallery")) {
+            setActiveView(""); 
+        }
+    }, [location.pathname]);
 
     useEffect(() => {
         const checkSession = async () => {
@@ -53,18 +59,35 @@ function Header() {
 
         checkSession();
     }, []);
+  
+    const handleLogout = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/api/logout", {
+                method: "POST",
+                credentials: "include",
+            });
 
-    const handleLogout = () => {
-        document.cookie = 'SESSION=; Max-Age=0; Path=/; Secure; SameSite=Strict';
-        setIsLoggedIn(false);
-        setUserData(null);
-        navigate("/");
-        setIsMobileMenuOpen(false);
+            if (response.ok) {
+                setIsLoggedIn(false);
+                setUserData(null);
+                navigate("/");
+            } else {
+                console.error("Błąd podczas wylogowywania:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Błąd podczas wylogowywania:", error);
+        }
     };
 
     const handleNavClick = (view: string) => {
         navigate(`/gallery?view=${view}`);
         setIsMobileMenuOpen(false);
+    };
+
+    const handleProfileClick = () => {
+        if (userData) {
+            navigate(`/author/${userData.id}`); 
+        }
     };
 
     return (
@@ -116,9 +139,9 @@ function Header() {
                         <div className="header__btn-container--trigger">
                             <div className="trigger-circle"></div>
                             <ul className="header__btn-container--profile">
-                                <Link to="#">
+                                <li onClick={handleProfileClick} className="header__btn-container--profile-item">
                                     Mój profil
-                                </Link>
+                                </li>
                                 <li onClick={handleLogout} className="header__btn-container--log-in--log-out">
                                     Wyloguj 
                                 </li>

@@ -2,11 +2,12 @@ import { Router } from "@oak/oak/router";
 import { getContactsByUser, updateContacts } from "../models/contacts.ts";
 import { ContactResponse } from "../../../common/responses.ts";
 import { UpdateContactSchema } from "../../../common/requests/contact_requests.ts";
-import { getUserBySession } from "../models/sessions.ts";
+import { getLoggedInUser } from "../auth.ts";
 import * as v from "@valibot/valibot";
 
 export const contactRouter = new Router();
 
+//get contacts by user
 contactRouter.get("/api/users/:id/contacts", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
   const contacts = await getContactsByUser(id);
@@ -28,20 +29,9 @@ contactRouter.put("/api/users/:id/contacts", async (ctx) => {
   const body = await ctx.request.body.json();
   const request = v.parse(v.array(UpdateContactSchema), body);
 
-  const session = await ctx.cookies.get("SESSION");
-  if (session === undefined) {
-    ctx.response.body = { message: "Brak sesji" };
-    ctx.response.status = 400;
-    return;
-  }
-  const logged_user = await getUserBySession(session);
-  if (logged_user === undefined) {
-    ctx.response.body = {
-      message: "Żaden użytkownik nie jest powiązany z sesją",
-    };
-    ctx.response.status = 400;
-    return;
-  }
+  const logged_user = await getLoggedInUser(ctx);
+  if (!logged_user) return;
+
   if (
     logged_user.id !== user_id ||
     request.some((contact) => contact.user_id !== logged_user.id)

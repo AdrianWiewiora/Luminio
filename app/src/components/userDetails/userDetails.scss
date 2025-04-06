@@ -46,11 +46,12 @@
             align-items: center;
             gap: 16px 24px;
             padding: 24px 0;
+            user-select: none;
 
             &--li {
                 border-radius: 8px;
                 font-size: 1.25rem;
-                border: 1px solid var(--white-text);
+                border: 1px solid var(--gray-text);
                 padding: 12px 16px;
                 list-style-type: none;
                 white-space: nowrap;
@@ -61,6 +62,7 @@
             display: flex;
             justify-content: space-between;
             font-size: 1.25rem;
+            user-select: none;
 
             &--value {
                 display: flex;
@@ -68,6 +70,7 @@
                 font-size: 1.25rem;
                 color: var(--white-text);
                 font-weight: 200;
+                user-select: all;
             }
 
             &--icon {
@@ -81,6 +84,7 @@
         &--link {
             display: flex;
             justify-content: space-between;
+            cursor: pointer;
 
             &--span{
                 display: flex;
@@ -110,7 +114,7 @@
                 color: var(--white-text); 
             }
 
-            &:hover &--share-icon{
+            &:hover &--share-icon {
                 fill: var(--white-text); 
             }
 
@@ -121,6 +125,59 @@
 
         &--p {
             font-size: 1.25rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        width: 100%;
+        padding: 32px 24px;
+        gap: 24px;
+
+        &__profile {
+            height: 160px;
+            width: 160px;
+            margin-top: -120px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        &__container {
+            gap: 12px;
+
+            &--h1 {
+                font-size: 1.75rem;
+                text-align: center;
+                margin-bottom: 0;
+            }
+
+            &--h2 {
+                font-size: 1rem;
+                text-align: center;
+                margin-top: 4px;
+            }
+
+            &--services-ul {
+                justify-content: center;
+                gap: 12px;
+                padding: 16px 0;
+
+                &--li {
+                    font-size: 1rem;
+                    padding: 8px 12px;
+                }
+            }
+
+            &--item,
+            &--link,
+            &--p {
+                font-size: 1rem;
+            }
+
+            &--item--icon,
+            &--link--share-icon {
+                height: 20px;
+                width: 20px;
+            }
         }
     }
 }
