@@ -25,6 +25,7 @@ function Header() {
     const [userData, setUserData] = useState<UserData | null>(null);
     const view = searchParams.get("view") || "photos"; 
     const [activeView, setActiveView] = useState<string>(view); 
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         setActiveView(view); 
@@ -39,7 +40,7 @@ function Header() {
     useEffect(() => {
         const checkSession = async () => {
             try {
-                const response = await fetch("http://localhost:8000/api/users/me", {
+                const response = await fetch("/api/users/me", {
                     credentials: "include",
                 });
 
@@ -62,7 +63,7 @@ function Header() {
   
     const handleLogout = async () => {
         try {
-            const response = await fetch("http://localhost:8000/api/logout", {
+            const response = await fetch("/api/logout", {
                 method: "POST",
                 credentials: "include",
             });
@@ -172,7 +173,9 @@ function Header() {
                     {isLoggedIn && (
                         <div className="mobile-menu__auth">
                             <span>{userData?.first_name} {userData?.last_name}</span>
-                            <li onClick={handleLogout}>Wyloguj</li>
+                            <span onClick={handleLogout} className="mobile-menu__auth--logout">
+                                Wyloguj
+                            </span>
                         </div>
                     )}
                 </div>

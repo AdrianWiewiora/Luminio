@@ -210,10 +210,18 @@
         }
 
         &__auth {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
             margin-top: 8px;
             padding-top: 8px;
             border-top: 1px solid var(--background2);
             text-align: center;
+
+            &--logout:hover {
+                color: var(--white-text);
+                cursor: pointer;
+            }
 
             a {
                 display: block;
