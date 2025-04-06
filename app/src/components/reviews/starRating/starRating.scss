@@ -3,6 +3,11 @@
     min-width: 128px;
     gap: 8px;
 
+    @media (max-width: 768px) {
+        max-width: 40px;
+        gap: 4px;
+    }
+
     .star {
 
         &--animated {
