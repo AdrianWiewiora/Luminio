@@ -54,9 +54,8 @@ function Discover({ onViewChange }: DiscoverProps) {
                     Odkryj wyjątkowe <br /> treści
                 </h1>
                 <span className="discover__head--text">
-                    Przeglądaj tysiące zdjęć od utalentowanych fotografów z całego świata. Filtruj według kategorii,
-                    <br />
-                    stylu i tematyki, aby znaleźć idealne ujęcie dla siebie.
+                    Przeglądaj tysiące zdjęć od utalentowanych fotografów z całego świata.
+                    Filtruj według kategorii, stylu i tematyki, aby znaleźć idealne ujęcie dla siebie.
                 </span>
             </div>
             <div className="discover__filter">
