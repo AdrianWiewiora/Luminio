@@ -1,4 +1,4 @@
-import "./albumPopup.scss";
+import "./albumpopup.scss";
 import FormInput from "../../inputs/formInput/formInput.tsx";
 import Submit from "../../btn/submit/submit.tsx";
 import TextArea from "../../inputs/textarea/textArea.tsx";

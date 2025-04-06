@@ -11,16 +11,17 @@
 }
 
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 1024px) {
     .navigation {
         gap: 24px;
         justify-content: center;
         row-gap: 16px;
         padding: 16px;
+        flex-wrap: wrap;
     }
     
     .navigation > span {
         padding: 8px 0;
-        white-space: nowrap;
+        white-space: normal;
     }
 }

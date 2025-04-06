@@ -31,14 +31,19 @@
     &__grid-item-dynamic:hover img {
         filter: brightness(50%);
     }
-  
-    @media (max-width: 768px) {
+
+    @media (max-width: 1024px) {
       grid-template-columns: repeat(2, 1fr);
       padding: 0 16px 40px 16px;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(1, 1fr);
   
       &__grid-item-dynamic {
         min-height: 250px;
       }
     }
+
   }
   

@@ -31,8 +31,8 @@
         }
 
         &--input:checked + &--custom {
-            background: #ffffff;
-            border-color: #ffffff;
+            background: var(--blue);
+            border-color: var(--background3);
 
             &:after {
                 content: "✔";

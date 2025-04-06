@@ -187,6 +187,7 @@
     .mobile-menu {
         display: none;
         position: absolute;
+        z-index: 1000;
         top: 80px;
         left: 0;
         width: 100%;
@@ -202,6 +203,7 @@
                 padding: 10px;
                 text-align: center;
                 cursor: pointer;
+                font-size: 1.2rem;
     
                 &.active {
                     color: var(--white-text);
@@ -212,15 +214,20 @@
         &__auth {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 16px;
             margin-top: 8px;
             padding-top: 8px;
             border-top: 1px solid var(--background2);
             text-align: center;
 
-            &--logout:hover {
-                color: var(--white-text);
+            &--profile, &--logout {
+                padding: 8px;
                 cursor: pointer;
+                font-size: 1.2rem;
+    
+                &:hover {
+                    color: var(--white-text);
+                }
             }
 
             a {

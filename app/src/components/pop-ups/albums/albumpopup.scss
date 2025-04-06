@@ -16,14 +16,23 @@
         justify-content: space-between;
         width: 60vw;
         height: 80vh;
-        background-color: var(--background3);
+        background-color: var(--main-background);
         padding: 40px;
         border-radius: 8px;
+        overflow-y: auto;
+
+        @media (max-width: 1024px) {
+            width: 100vw;
+            height: 100vh;
+            flex-direction: column;
+            padding: 30px 20px;
+            gap: 30px;
+        }
 
         &--button {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 16px;
+            right: 16px;
             background: none;
             border: none;
             font-size: 24px;
@@ -40,15 +49,33 @@
             width: 30%;
             gap: 18px;
 
+            @media (max-width: 1024px) {
+                width: 100%;
+                align-items: center;
+            }
+
             &--title {
                 color: var(--gray-text);
                 font-weight: 500;
+                font-size: 1.2rem;
+
+                @media (max-width: 1024px) {
+                    text-align: center;
+                }
             }
 
             &--img {
                 width: 369px;
                 height: 319px;
                 border-radius: 24px;
+                object-fit: cover;
+
+                @media (max-width: 1024px) {
+                    width: 100%;
+                    max-width: 320px;
+                    height: auto;
+                    aspect-ratio: 1/1;
+                }
             }
 
             &--change {
@@ -57,11 +84,16 @@
                 gap: 8px;
                 color: var(--gray-text);
                 transition: 0.15s ease-in-out;
-            }
 
-            &--change:hover {
-                color: var(--white-text);
-                cursor: pointer;
+                &:hover {
+                    color: var(--white-text);
+                    cursor: pointer;
+                }
+
+                @media (max-width: 1024px) {
+                    justify-content: center;
+                    width: 100%;
+                }
             }
         }
 
@@ -69,6 +101,12 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+            width: 60%;
+
+            @media (max-width: 1024px) {
+                width: 100%;
+                padding: 40px;
+            }
 
             &--options {
                 display: flex;
@@ -76,11 +114,17 @@
                 gap: 24px;
                 color: var(--gray-text);
                 transition: 0.15s ease-in-out;
-            }
 
-            &--options:hover {
-                color: var(--white-text);
-                cursor: pointer;
+                @media (max-width: 1024px) {
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 16px;
+                }
+
+                &:hover {
+                    color: var(--white-text);
+                    cursor: pointer;
+                }
             }
         }
     }

@@ -172,7 +172,10 @@ function Header() {
                     )}
                     {isLoggedIn && (
                         <div className="mobile-menu__auth">
-                            <span>{userData?.first_name} {userData?.last_name}</span>
+                            {/* {userData?.first_name} {userData?.last_name} */}
+                            <span onClick={handleProfileClick} className="mobile-menu__auth--logout">
+                                Mój profil
+                            </span>
                             <span onClick={handleLogout} className="mobile-menu__auth--logout">
                                 Wyloguj
                             </span>
