@@ -7,15 +7,22 @@
     color: var(--white-text);
     
     &__textarea {
-        width: 646px;
+        width: 400px;
         height: 160px;
         border-radius: 8px;
         padding: 5px;
-        border: 2px solid var(--background3);
+        border: 1px solid var(--background3);
         background: var(--background2);
         resize: none; /* Blokuje zmianę rozmiaru przez użytkownika */
         overflow-y: auto; /* Włącza przewijanie pionowe */
         overflow-x: hidden; /* Blokuje przewijanie poziome */
         direction: ltr; /* Zapewnia poprawne przewijanie */
+
+        @media (max-width: 768px) {
+            width:  400px;
+            height: 160px;
+            padding: 16px;
+            font-size: 1.1rem;
+        }
     }
 }
