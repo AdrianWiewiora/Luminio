@@ -29,6 +29,7 @@ export interface AlbumResponse {
   description: string;
   service_id: number;
   is_public: boolean;
+  cover_id: number;
 }
 
 export interface PhotoResponse {} //TODO
