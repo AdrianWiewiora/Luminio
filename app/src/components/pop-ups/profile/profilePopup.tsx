@@ -177,12 +177,14 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                                     required={false}
                                 />
                             ))}
+                            <div profile-popup__content--section--basic-info--textforminput>
                             <TextArea 
                                 id="Opis"
                                 label="Opis"
                                 value={formData["Opis"] || ""}
                                 onChange={handleTextAreaChange}
                             />
+                            </div>
                             <div className="profile-popup__content--section--basic-info--form--options">
                                 <p onClick={onClose}> 
                                     Anuluj

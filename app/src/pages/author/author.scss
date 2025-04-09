@@ -1,10 +1,17 @@
 .content {
     display: flex;
+    gap: 40px;
+    font-size: 1.25rem;
 
-    &__item-grid{
-        display: flex;
+    & > *:first-child {
+        flex: 0 0 auto;
+    }
+
+    & > *:last-child {
+        flex: 1;
+    }
+
+    @media (max-width: 768px) {
         flex-direction: column;
-        padding: 80px 24px;
-        font-size: 1.25rem;
     }
 }

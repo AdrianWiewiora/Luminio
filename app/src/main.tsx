@@ -19,7 +19,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/login" element={<LogIn />}/>
         <Route path="/registration" element={<Registration />}/>
         <Route path="/gallery" element={<Gallery />} />
-        <Route path="/album" element={<Album />}/>
+        <Route path="/album/:id" element={<Album />} />
         <Route path="/author/:id" element={<Author />} />
         <Route path="*" element={<NotFound />} /> 
       </Routes>

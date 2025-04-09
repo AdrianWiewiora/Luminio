@@ -20,27 +20,27 @@ const navItems = [
 function Header() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const location = useLocation(); // Dodaj useLocation
+    const location = useLocation(); 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState<UserData | null>(null);
     const view = searchParams.get("view") || "photos"; 
     const [activeView, setActiveView] = useState<string>(view); 
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         setActiveView(view); 
     }, [view]);
 
-    // Resetuj activeView, gdy użytkownik opuszcza stronę /gallery
     useEffect(() => {
         if (!location.pathname.startsWith("/gallery")) {
-            setActiveView(""); // Resetuj activeView
+            setActiveView(""); 
         }
     }, [location.pathname]);
 
     useEffect(() => {
         const checkSession = async () => {
             try {
-                const response = await fetch("http://localhost:8000/api/users/me", {
+                const response = await fetch("/api/users/me", {
                     credentials: "include",
                 });
 
@@ -60,10 +60,10 @@ function Header() {
 
         checkSession();
     }, []);
-
+  
     const handleLogout = async () => {
         try {
-            const response = await fetch("http://localhost:8000/api/logout", {
+            const response = await fetch("/api/logout", {
                 method: "POST",
                 credentials: "include",
             });
@@ -82,11 +82,12 @@ function Header() {
 
     const handleNavClick = (view: string) => {
         navigate(`/gallery?view=${view}`);
+        setIsMobileMenuOpen(false);
     };
 
     const handleProfileClick = () => {
         if (userData) {
-            navigate(`/author/${userData.id}`); // Przekieruj do widoku autora z ID użytkownika
+            navigate(`/author/${userData.id}`); 
         }
     };
 
@@ -96,6 +97,12 @@ function Header() {
                 <Link to="/">
                     <img src={Logo} alt="logo" className="header__nav-container--logo" />
                 </Link>
+
+                {/* Hamburger menu - mobile */}
+                <div className="hamburger" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                    ☰
+                </div>
+
                 <nav className="header__nav-container--nav">
                     <ul className="header__nav-container--nav--ul">
                         {navItems.map(({ id, name, view }) => (
@@ -144,6 +151,35 @@ function Header() {
                     </div>
                 )}
             </section>
+
+            {isMobileMenuOpen && (
+                <div className="mobile-menu">
+                    <ul className="mobile-menu__list">
+                        {navItems.map(({ id, name, view }) => (
+                            <li 
+                            key={id} 
+                            onClick={() => handleNavClick(view)}
+                            className={activeView === view ? "active" : ""}>
+                            {name}
+                        </li>
+                        ))}
+                    </ul>
+                    {!isLoggedIn && (
+                        <div className="mobile-menu__auth">
+                            <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>Zaloguj się</Link>
+                            <Link to="/registration" onClick={() => setIsMobileMenuOpen(false)}>Zarejestruj się</Link>
+                        </div>
+                    )}
+                    {isLoggedIn && (
+                        <div className="mobile-menu__auth">
+                            <span>{userData?.first_name} {userData?.last_name}</span>
+                            <span onClick={handleLogout} className="mobile-menu__auth--logout">
+                                Wyloguj
+                            </span>
+                        </div>
+                    )}
+                </div>
+            )}
         </header>
     );
 }

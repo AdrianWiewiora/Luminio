@@ -70,3 +70,39 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .reviews {
+        padding: 16px;
+        gap: 64px;
+
+        &__new-review {
+            flex-direction: column;
+            gap: 16px;
+
+            &--writebox {
+                width: 100%;
+                gap: 16px;
+                padding: 16px;
+                flex-direction: column;
+                align-items: flex-start;
+
+                &--profile {
+                    height: 56px;
+                    width: 56px;
+                }
+            }
+
+            &--else {
+                width: 100%;
+                flex-direction: row;
+                justify-content: flex-end;
+                gap: 16px;
+
+                &--submit {
+                    padding: 8px 16px;
+                }
+            }
+        }
+    }
+}
