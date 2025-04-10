@@ -12,14 +12,14 @@ import Footer from "../../components/footers/main/footer.tsx";
 function Main() {
     return (
       <div>
-        {/* <Header /> */}
+        <Header />
         <Hero />
         <PhotoParalax />
         <Info />
         <Community />
         <SearchGrid />
         <MainGrid />
-        {/* <Footer /> */}
+        <Footer />
       </div>
     );
   }
