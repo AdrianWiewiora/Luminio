@@ -2,7 +2,6 @@
     display: flex;
     width: 100%;
     height: 415px;
-    margin-top: 120px;
     background-image: url("../../../../assets//img/background/CommunityBackground.png");
     background-size: cover;
     background-repeat: no-repeat;
@@ -20,6 +19,14 @@
             color: var(--white-text);
             font-size: 3rem;
             font-weight: 700;
+            &--gradient {
+                font-size: inherit;
+                background: linear-gradient(92deg, #7940FF 2.84%, #F752FA 101.77%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                color: transparent; 
+            }
         }
     }
 
@@ -30,5 +37,83 @@
         grid-template-columns: 80px 80px 80px 80px 80px;
         column-gap: 48px;
         width: 50%;
+    }
+
+    @media (max-width: 1300px) {
+        &__content {
+            width: 40%;
+        }
+        
+        &__img-scroll{
+            column-gap: 36px;
+            width: 60%;
+        }
+    }
+
+    @media (max-width: 1100px) {
+        &__content {
+
+            &--h2 {
+                font-size: 2rem;
+                font-weight: 600;
+            }
+        }
+
+        &__img-scroll{
+            column-gap: 12px;
+        }
+    }
+
+    @media (max-width: 800px) {
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: center;
+        align-items: center;
+        gap: 24px;
+
+        &__content {
+            width: 90%;
+            margin-bottom: 24px;
+
+        }
+
+        &__img-scroll > :nth-child(n+11) {
+            display: none;
+        }
+
+        &__img-scroll{
+            gap: 12px;
+            width: 90%;
+        }
+    }
+    .br-hide-on-mobile {
+        display: none;
+    }
+    
+    @media (max-width: 500px) {
+        &__content {
+            width: 90%;
+
+            &--h2 {
+                font-size: 1.5rem;
+            }
+        }
+        &__img-scroll{
+            grid-template-columns: 80px 80px 80px 80px;
+        }
+
+        &__img-scroll > :nth-child(n+9) {
+            display: none;
+        }
+
+        &__img-scroll{
+            column-gap: 8px;
+            gap: 8px;
+        }
+    }
+
+    .scroll-item {
+        width: 72px;
+        height: 72px;
     }
 }

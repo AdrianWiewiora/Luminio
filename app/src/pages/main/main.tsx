@@ -15,10 +15,10 @@ function Main() {
         <Header />
         <Hero />
         <PhotoParalax />
+        <Info />
         <Community />
         <SearchGrid />
         <MainGrid />
-        <Info />
         <Footer />
       </div>
     );
