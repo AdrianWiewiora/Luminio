@@ -1,13 +1,13 @@
 services:
   server:
     build:
-      context: ./server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: server.dockerfile
     container_name: server-container
     ports:
       - "8000:8000"
     volumes:
-      - ./server/src:/server/src
+      - ./server/src:/LuminioServ/server/src
       - ./common:/common
       - ./migrations:/migrations
     depends_on:
@@ -17,8 +17,8 @@ services:
     develop:
       watch:
         - action: restart
-          path: ./server/src
-          target: /server/src
+          path: ./LuminioServ/server/src
+          target: /LuminioServ/server/src
 
         - action: restart
           path: ./common
@@ -43,15 +43,15 @@ services:
 
   frontend:
     build:
-      context: ./app
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: app.dockerfile
     container_name: frontend-container
     ports:
       - "5173:5173"
     environment:
       - IS_DOCKER=true
     volumes:
-      - ./app/src:/app/src
+      - ./app/src:/LuminioApp/app/src
     networks:
       - deno
 
