@@ -8,7 +8,7 @@ import UserDetails from '../../components/userDetails/userDetails.tsx';
 import AuthorNav from '../../components/nav/authorNav.tsx';
 import ProfilePopup from '../../components/pop-ups/profile/profilePopup.tsx';
 import PicturePopup from '../../components/pop-ups/picture/picturePopup.tsx';
-import AlbumPopup from "../../components/pop-ups/albums/albumPopup.tsx";
+import AlbumPopup from "../../components/pop-ups/albums/createAlbumPopup.tsx";
 import AlbumGrid from "../../components/ImgGrid/albumGrid/albumGrid.tsx";
 
 interface User {
@@ -194,9 +194,8 @@ function Author() {
                 <AlbumPopup
                     onClose={toggleAlbumPopup}
                     userId={loggedUserId}
-                    albumData={editingAlbum || undefined}
+                    albumData={editingAlbum}
                     onAlbumUpdated={handleAlbumUpdated}
-                    mode={editingAlbum ? 'edit' : 'create'}
                 />
             )}
         </div>

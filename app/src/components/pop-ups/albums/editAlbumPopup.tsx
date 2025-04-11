@@ -9,10 +9,10 @@ import { paralax10 } from "../../../assets/img/imgExport.tsx";
 import { useState, useEffect } from "react";
 import { UpdateAlbumRequest } from "../../../../../common/requests/album_requests.ts";
 
-interface AlbumPopupProps {
+interface AlbumEditPopupProps {
     onClose: () => void;
     userId: number;
-    albumData?: {
+    albumData: {
         id: number;
         name: string;
         description: string;
@@ -20,7 +20,6 @@ interface AlbumPopupProps {
         is_public: boolean;
     };
     onAlbumUpdated?: () => void;
-    mode?: 'create' | 'edit';
 }
 
 interface CheckboxOption {
@@ -36,13 +35,12 @@ const CheckboxOptions: CheckboxOption[] = [
     { id: "Rodzinne", title: "Rodzinne", serviceId: 4 },
 ];
 
-function AlbumPopup({ 
+function AlbumEditPopup({ 
     onClose, 
     userId, 
     albumData, 
-    onAlbumUpdated,
-    mode = 'create' 
-}: AlbumPopupProps) {
+    onAlbumUpdated
+}: AlbumEditPopupProps) {
     const [formData, setFormData] = useState<Omit<UpdateAlbumRequest, 'album_id'>>({
         user_id: userId,
         name: "",
@@ -104,12 +102,8 @@ function AlbumPopup({
     
             console.log('Wysyłane dane:', JSON.stringify(requestData, null, 2));
     
-            const endpoint = (mode === 'edit' && albumData?.id) 
-                ? `/api/albums/${albumData.id}`
-                : '/api/albums';
-    
-            const response = await fetch(endpoint, {
-                method: mode === 'edit' ? 'PUT' : 'POST',
+            const response = await fetch(`/api/albums/${albumData.id}`, {
+                method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
                     "X-Requested-With": "XMLHttpRequest"
@@ -127,13 +121,13 @@ function AlbumPopup({
                     body: errorText
                 });
                 
-                throw new Error(`Błąd serwera podczas ${mode === 'edit' ? 'aktualizacji' : 'tworzenia'} albumu (status ${response.status})`);
+                throw new Error(`Błąd serwera podczas aktualizacji albumu (status ${response.status})`);
             }
     
             const responseData = await response.json();
             console.log('Sukces:', responseData);
     
-            setSuccessMessage(`Album "${formData.name}" został ${mode === 'edit' ? 'zaktualizowany' : 'utworzony'}!`);
+            setSuccessMessage(`Album "${formData.name}" został zaktualizowany!`);
             setIsSuccess(true);
             
             onAlbumUpdated?.();
@@ -202,7 +196,7 @@ function AlbumPopup({
                                 <p onClick={onClose}> 
                                     Anuluj
                                 </p>
-                                <Submit title={mode === 'edit' ? "Zapisz zmiany" : "Utwórz album"} />
+                                <Submit title="Zapisz zmiany" />
                             </div>
                         </form>
                     </>
@@ -212,4 +206,4 @@ function AlbumPopup({
     );
 }
 
-export default AlbumPopup;
+export default AlbumEditPopup;
