@@ -9,11 +9,23 @@ import { getLoggedInUser } from "../auth.ts";
 
 export const photosRouter = new Router();
 
-photosRouter.get("/api/photos/:uuid", async (ctx) => {
-  // TODO: this is unsafe
-  const file_path = path.join(UPLOADS_DIR, ctx.params.uuid);
-  const file = await Deno.readFile(file_path);
-  ctx.response.body = file;
+photosRouter.get("/api/photos/:id", async (ctx) => {
+  const id = Number(ctx.params.id);
+
+  const result = await sql`
+    SELECT file_path FROM photos WHERE id = ${id}
+  `;
+
+  const fileName = result[0].file_path;
+  const filePath = path.join(UPLOADS_DIR, fileName);
+
+  try {
+    const file = await Deno.readFile(filePath);
+    ctx.response.status = 200;
+    ctx.response.body = file;
+  } catch (err) {
+    console.error("Błąd odczytu pliku:", err);
+  }
 });
 
 photosRouter.post("/api/photos", async (ctx) => {

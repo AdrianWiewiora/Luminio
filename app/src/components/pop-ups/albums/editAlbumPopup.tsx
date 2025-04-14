@@ -6,7 +6,7 @@ import Checkbox from "../../inputs/checkbox/checkbox.tsx";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { GoPencil } from "react-icons/go";
 import { paralax10 } from "../../../assets/img/imgExport.tsx";
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { UpdateAlbumRequest } from "../../../../../common/requests/album_requests.ts";
 
 interface AlbumEditPopupProps {
@@ -18,6 +18,7 @@ interface AlbumEditPopupProps {
         description: string;
         service_id: number;
         is_public: boolean;
+        cover_image?: string;
     };
     onAlbumUpdated?: () => void;
 }
@@ -41,28 +42,27 @@ function AlbumEditPopup({
     albumData, 
     onAlbumUpdated
 }: AlbumEditPopupProps) {
-    const [formData, setFormData] = useState<Omit<UpdateAlbumRequest, 'album_id'>>({
+    const [formData, setFormData] = useState<Omit<UpdateAlbumRequest, 'album_id'> & { file: File | null }>({
         user_id: userId,
-        name: "",
-        description: "",
-        service_id: 0,
-        is_public: true,
+        name: albumData.name,
+        description: albumData.description,
+        service_id: albumData.service_id,
+        is_public: albumData.is_public,
+        file: null
     });
     const [isSuccess, setIsSuccess] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const [preview, setPreview] = useState(albumData.cover_image || paralax10);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
-    useEffect(() => {
-        if (albumData) {
-            setFormData({
-                user_id: userId,
-                name: albumData.name,
-                description: albumData.description || "",
-                service_id: albumData.service_id,
-                is_public: albumData.is_public,
-            });
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setFormData(prev => ({ ...prev, file }));
+            setPreview(URL.createObjectURL(file));
         }
-    }, [albumData, userId]);
+    };
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData(prev => ({ ...prev, name: e.target.value }));
@@ -91,41 +91,36 @@ function AlbumEditPopup({
         }
     
         try {
-            const requestData = {
+            const formDataToSend = new FormData();
+            formDataToSend.append("user_id", userId.toString());
+            formDataToSend.append("name", formData.name);
+            formDataToSend.append("description", formData.description || "");
+            formDataToSend.append("service_id", formData.service_id.toString());
+            formDataToSend.append("is_public", formData.is_public.toString());
+            
+            if (formData.file) {
+                formDataToSend.append("file", formData.file);
+            }
+
+            console.log("Dane formularza:", {
                 user_id: userId,
-                name: formData.name.trim(),
-                description: formData.description.trim(),
+                name: formData.name,
+                description: formData.description,
                 service_id: formData.service_id,
                 is_public: formData.is_public,
-                tag: formData.service_id 
-            };
-    
-            console.log('Wysyłane dane:', JSON.stringify(requestData, null, 2));
+                file: formData.file?.name
+            });
     
             const response = await fetch(`/api/albums/${albumData.id}`, {
                 method: 'PUT',
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest"
-                },
-                credentials: 'include',
-                body: JSON.stringify(requestData),
+                body: formDataToSend,
+                credentials: 'include'
             });
     
             if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Pełna odpowiedź serwera:', {
-                    status: response.status,
-                    statusText: response.statusText,
-                    headers: Object.fromEntries(response.headers.entries()),
-                    body: errorText
-                });
-                
-                throw new Error(`Błąd serwera podczas aktualizacji albumu (status ${response.status})`);
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Błąd HTTP: ${response.status}`);
             }
-    
-            const responseData = await response.json();
-            console.log('Sukces:', responseData);
     
             setSuccessMessage(`Album "${formData.name}" został zaktualizowany!`);
             setIsSuccess(true);
@@ -155,48 +150,59 @@ function AlbumEditPopup({
                     </div>
                 ) : (
                     <>
-                        <div className="album-popup__content--img-section">
-                            <h2 className="album-popup__content--img-section--title">
-                                Okładka projektu
-                            </h2>
-                            <img src={paralax10} alt="album image" className="album-popup__content--img-section--img"/>
-                            <span className="album-popup__content--img-section--change">
-                                <GoPencil /> Zmień
-                            </span>
-                        </div>
                         {error && (
                             <div className="album-popup__error">
                                 {error}
                             </div>
                         )}
                         <form className="album-popup__content--form" onSubmit={handleSubmit}>
-                            <FormInput 
-                                id="name" 
-                                label="Tytuł projektu" 
-                                type="text" 
-                                value={formData.name}
-                                onChange={handleNameChange}
-                                required
-                            />
-                            <TextArea 
-                                id="description" 
-                                label="Opis" 
-                                value={formData.description}
-                                onChange={handleDescriptionChange}
-                            />
-                            {CheckboxOptions.map(({ id, title, serviceId }) => (
-                                <Checkbox 
-                                    key={id} 
-                                    title={title} 
-                                    checked={formData.service_id === serviceId}
-                                    onChange={(isChecked: boolean) => handleCheckboxChange(serviceId, isChecked)}
+                            <div className="album-popup__content--form--img-section">
+                                <h2 className="album-popup__content--form--img-section--title">
+                                    Okładka projektu
+                                </h2>
+                                <img src={preview} alt="album image" className="album-popup__content--form--img-section--img"/>
+                                <span onClick={() => fileInputRef.current?.click()} className="album-popup__content--form--img-section--change">
+                                    <GoPencil /> Zmień okładkę
+                                </span>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    onChange={handleFileChange}
+                                    accept="image/*"
+                                    style={{ display: 'none' }}
                                 />
-                            ))}
-                            <div className="album-popup__content--form--options">
-                                <p onClick={onClose}> 
-                                    Anuluj
-                                </p>
-                                <Submit title="Zapisz zmiany" />
+                            </div>
+                            <div className="album-popup__content--form--inputs">
+                                <div className="album-popup__content--form--inputs--body">
+                                    <FormInput 
+                                        id="name" 
+                                        label="Tytuł projektu" 
+                                        type="text" 
+                                        value={formData.name}
+                                        onChange={handleNameChange}
+                                        required
+                                    />
+                                    <TextArea 
+                                        id="description" 
+                                        label="Opis" 
+                                        value={formData.description}
+                                        onChange={handleDescriptionChange}
+                                    />
+                                    {CheckboxOptions.map(({ id, title, serviceId }) => (
+                                        <Checkbox 
+                                            key={id} 
+                                            title={title} 
+                                            checked={formData.service_id === serviceId}
+                                            onChange={(isChecked: boolean) => handleCheckboxChange(serviceId, isChecked)}
+                                        />
+                                    ))}
+                                </div>
+                                <div className="album-popup__content--form--inputs--options">
+                                    <p onClick={onClose}> 
+                                        Anuluj
+                                    </p>
+                                    <Submit title="Zapisz zmiany" />
+                                </div>
                             </div>
                         </form>
                     </>

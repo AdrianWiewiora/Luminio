@@ -8,7 +8,8 @@ import UserDetails from '../../components/userDetails/userDetails.tsx';
 import AuthorNav from '../../components/nav/authorNav.tsx';
 import ProfilePopup from '../../components/pop-ups/profile/profilePopup.tsx';
 import PicturePopup from '../../components/pop-ups/picture/picturePopup.tsx';
-import AlbumPopup from "../../components/pop-ups/albums/createAlbumPopup.tsx";
+import CreateAlbumPopup from "../../components/pop-ups/albums/createAlbumPopup.tsx";
+import EditAlbumPopup from "../../components/pop-ups/albums/editAlbumPopup.tsx";
 import AlbumGrid from "../../components/ImgGrid/albumGrid/albumGrid.tsx";
 
 interface User {
@@ -134,6 +135,26 @@ function Author() {
         }
     };
 
+    const handleDeleteAlbum = async (albumId: number) => {
+        const confirmDelete = window.confirm("Czy na pewno chcesz usunąć ten album?");
+        if (!confirmDelete) return;
+    
+        try {
+            const response = await fetch(`/api/albums/${albumId}`, {
+                method: "DELETE",
+                credentials: "include",
+            });
+    
+            if (response.ok) {
+                setAlbums(prev => prev.filter(album => album.id !== albumId));
+            } else {
+                console.error("Nie udało się usunąć albumu:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Błąd podczas usuwania albumu:", error);
+        }
+    };
+
     const handleAlbumUpdated = () => {
         fetchAlbums();
         setIsAlbumPopupOpen(false);
@@ -184,6 +205,7 @@ function Author() {
                             albums={albums} 
                             loggedUserId={loggedUserId}
                             onEditClick={handleEditAlbum}
+                            onDeleteClick={handleDeleteAlbum}
                         />
                     )}
                 </div>
@@ -191,12 +213,20 @@ function Author() {
             {isProfilePopupOpen && <ProfilePopup onClose={toggleProfilePopup} />}
             {isPicturePopupOpen && <PicturePopup onClose={togglePicturePopup} />}
             {isAlbumPopupOpen && loggedUserId && (
-                <AlbumPopup
-                    onClose={toggleAlbumPopup}
-                    userId={loggedUserId}
-                    albumData={editingAlbum}
-                    onAlbumUpdated={handleAlbumUpdated}
-                />
+                editingAlbum ? (
+                    <EditAlbumPopup
+                        onClose={toggleAlbumPopup}
+                        userId={loggedUserId}
+                        albumData={editingAlbum}
+                        onAlbumUpdated={handleAlbumUpdated}
+                    />
+                ) : (
+                    <CreateAlbumPopup
+                        onClose={toggleAlbumPopup}
+                        userId={loggedUserId}
+                        onAlbumCreated={handleAlbumUpdated}
+                    />
+                )
             )}
         </div>
     );

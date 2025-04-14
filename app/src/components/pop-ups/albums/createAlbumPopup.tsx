@@ -6,7 +6,7 @@ import Checkbox from "../../inputs/checkbox/checkbox.tsx";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { GoPencil } from "react-icons/go";
 import { paralax10 } from "../../../assets/img/imgExport.tsx";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { CreateAlbumRequest } from "../../../../../common/requests/album_requests.ts";
 
 interface CreateAlbumPopupProps {
@@ -28,69 +28,88 @@ const CheckboxOptions: CheckboxOption[] = [
     { id: "Rodzinne", title: "Rodzinne", serviceId: 4 },
 ];
 
-function CreateAlbumPopup({ 
-    onClose, 
-    userId, 
-    onAlbumCreated
-}: CreateAlbumPopupProps) {
-    const [formDataAlbum, setFormDataAlbum] = useState<Omit<CreateAlbumRequest, 'album_id'>>({
+function CreateAlbumPopup({ onClose, userId, onAlbumCreated }: CreateAlbumPopupProps) {
+    const [formData, setFormData] = useState<Omit<CreateAlbumRequest, 'album_id'>>({
         user_id: userId,
         name: "",
         description: "",
         service_id: 0,
         is_public: true,
-        file: paralax10,
+        file: null,
     });
+
     const [isSuccess, setIsSuccess] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const [preview, setPreview] = useState(paralax10);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setFormData(prev => ({ ...prev, file }));
+            setPreview(URL.createObjectURL(file));
+        }
+    };
     
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormDataAlbum(prev => ({ ...prev, name: e.target.value }));
+        setFormData(prev => ({ ...prev, name: e.target.value }));
     };
 
     const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setFormDataAlbum(prev => ({ ...prev, description: e.target.value }));
+        setFormData(prev => ({ ...prev, description: e.target.value }));
     };
 
     const handleCheckboxChange = (serviceId: number, isChecked: boolean) => {
-        setFormDataAlbum(prev => ({ ...prev, service_id: isChecked ? serviceId : 0 }));
+        setFormData(prev => ({ ...prev, service_id: isChecked ? serviceId : 0 }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
 
-        if (formDataAlbum.service_id === 0) {
+        if (formData.service_id === 0) {
             setError("Proszę wybrać kategorię albumu");
             return;
         }
     
-        if (!formDataAlbum.name.trim()) {
+        if (!formData.name.trim()) {
             setError("Proszę podać tytuł albumu");
             return;
         }
 
+        if (!formData.file) {
+            setError("Proszę wybrać zdjęcie okładki albumu");
+            return;
+        }
+
+        const formDataToSend = new FormData();
+        formDataToSend.append("user_id", userId.toString());
+        formDataToSend.append("name", formData.name);
+        formDataToSend.append("description", formData.description || "");
+        formDataToSend.append("service_id", formData.service_id.toString());
+        formDataToSend.append("is_public", formData.is_public.toString());
+        formDataToSend.append("file", formData.file);
+
+        console.log("Dane formularza:", {
+            user_id: userId,
+            name: formData.name,
+            description: formData.description,
+            service_id: formData.service_id,
+            is_public: formData.is_public,
+            file: formData.file?.name
+        });
+    
         try {
             const response = await fetch('/api/albums', {
                 method: 'POST',
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest"
-                },
-                body: JSON.stringify(formDataAlbum)
+                body: formDataToSend,
+                credentials: 'include'
             });
 
-            let data;
-            try {
-                data = await response.json();
-            } catch (jsonError) {
-                const text = await response.text();
-                throw new Error(text || `Status: ${response.status}`);
-            }
-
             if (!response.ok) {
-                throw new Error(data.message || `Błąd HTTP: ${response.status}`);
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Błąd HTTP: ${response.status}`);
             }
 
             setIsSuccess(true);
@@ -130,10 +149,17 @@ function CreateAlbumPopup({
                                 <h2 className="album-popup__content--form--img-section--title">
                                     Okładka projektu
                                 </h2>
-                                <img src={paralax10} alt="album image" className="album-popup__content--form--img-section--img"/>
-                                <span className="album-popup__content--form--img-section--change">
-                                    <GoPencil /> Zmień
+                                <img src={preview} alt="album image" className="album-popup__content--form--img-section--img"/>
+                                <span onClick={() => fileInputRef.current?.click()} className="album-popup__content--form--img-section--change">
+                                    <GoPencil /> Edytuj okładkę
                                 </span>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    onChange={handleFileChange}
+                                    accept="image/*"
+                                    style={{ display: 'none' }}
+                                />
                             </div>
                             <div className="album-popup__content--form--inputs">
                                 <div className="album-popup__content--form--inputs--body">
@@ -141,21 +167,21 @@ function CreateAlbumPopup({
                                         id="name" 
                                         label="Tytuł projektu" 
                                         type="text" 
-                                        value={formDataAlbum.name}
+                                        value={formData.name}
                                         onChange={handleNameChange}
                                         required
                                     />
                                     <TextArea 
                                         id="description" 
                                         label="Opis" 
-                                        value={formDataAlbum.description}
+                                        value={formData.description}
                                         onChange={handleDescriptionChange}
                                     />
                                     {CheckboxOptions.map(({ id, title, serviceId }) => (
                                         <Checkbox 
                                             key={id} 
                                             title={title} 
-                                            checked={formDataAlbum.service_id === serviceId}
+                                            checked={formData.service_id === serviceId}
                                             onChange={(isChecked: boolean) => handleCheckboxChange(serviceId, isChecked)}
                                         />
                                     ))}
