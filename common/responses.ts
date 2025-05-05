@@ -32,7 +32,14 @@ export interface AlbumResponse {
   cover_id: number;
 }
 
-export interface PhotoResponse {} //TODO
+export interface PhotoResponse {
+  id: number,
+  user_id:number,
+  album_id:number,
+  category_id:number,
+  file_path:string,
+  created_at:number
+} 
 
 export interface AlbumReviewResponse {
   id: number;

@@ -11,6 +11,9 @@ export const PostPhotoSchema = v.object({
     ),
     v.maxSize(1024 * 1024 * 20, "Please select a file smaller than 20 MB."),
   ),
+  user_id: v.pipe(v.string(), v.transform(Number), v.number()),
+  album_id: v.pipe(v.string(), v.transform(Number), v.number()),
+  category_id: v.pipe(v.string(), v.transform(Number), v.number())
 });
 
 export type PostPhotoRequest = v.InferOutput<typeof PostPhotoSchema>;
