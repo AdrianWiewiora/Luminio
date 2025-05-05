@@ -1,5 +1,5 @@
 import "./albumElement.scss";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { paralax10 } from "../../assets/img/imgExport.tsx";
 import { FaStar, FaCog } from "react-icons/fa";
@@ -12,7 +12,9 @@ interface AlbumElementProps {
     loggedUserId: number | null | undefined;
     description?: string;
     serviceId?: number;
+    coverId?: number,
     onEditClick?: (albumId: number) => void;
+    onDeleteClick?: (albumId: number) => void;
 }
 
 function AlbumElement({ 
@@ -23,9 +25,13 @@ function AlbumElement({
     loggedUserId,
     description = "",
     serviceId = 0,
-    onEditClick
+    coverId,
+    onEditClick,
+    onDeleteClick
 }: AlbumElementProps) {
     const [menuOpen, setMenuOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [preview, setPreview] = useState(paralax10);
     let timeoutId: number;
 
     const handleMouseEnter = () => {
@@ -52,11 +58,43 @@ function AlbumElement({
         }
     };
 
+    const handleDeleteClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (onDeleteClick) {
+            onDeleteClick(albumId);
+        }
+    };
+
+    useEffect(() => {
+        const fetchPhoto = async () => {
+            setIsLoading(true);
+            try {
+                const response = await fetch(`/api/photos/${coverId}`);
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const imageUrl = URL.createObjectURL(blob);
+                    setPreview(imageUrl);
+                } else {
+                    console.error("Nie udało się pobrać okładki:", response.statusText);
+                }
+            } catch (error) {
+                console.error("Błąd podczas pobierania okładki:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+    
+        if (userId && coverId) {
+            fetchPhoto();
+        }
+    }, [userId, coverId]);
+
     return (
         <Link to={`/album/${albumId}`} className="album-link">
             <div className="album">
                 <div className="album_img">
-                    <img src={paralax10} alt="Album" className="album_img--content" />
+                    <img src={preview} alt="Album" className="album_img--content" />
                     <div className="album_overlay"></div>
                     <p className="album_title">{title}</p>
                     <div className="album_icons">
@@ -76,7 +114,7 @@ function AlbumElement({
                                                 ) : (
                                                     <p>Opublikuj</p>
                                                 )}
-                                                <p>Usuń</p>
+                                                <p onClick={handleDeleteClick}>Usuń</p>
                                             </div>
                                         )}
                                     </div>
