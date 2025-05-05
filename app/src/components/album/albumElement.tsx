@@ -71,11 +71,6 @@ function AlbumElement({
                                         {menuOpen && (
                                             <div className="dropdown_menu">
                                                 <p onClick={handleEditClick}>Edytuj</p>
-                                                {isPublic ? (
-                                                    <p>Wycofaj publikację</p>
-                                                ) : (
-                                                    <p>Opublikuj</p>
-                                                )}
                                                 <p>Usuń</p>
                                             </div>
                                         )}

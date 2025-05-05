@@ -49,25 +49,3 @@
     }
 }
 
-.wrapper::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, rgba(67, 73, 122, 0.3) 20%, rgba(34, 37, 61, 0.3) 80%);
-    opacity: 0;
-    pointer-events: none; 
-    transition: 0.15s ease-in-out;
-    z-index: 2;
-}
-
-.wrapper:hover::after,
-.wrapper__overlay:hover {
-    opacity: 1; 
-}
-
-.wrapper:hover .wrapper__banner {
-    transform: scale(1.01);
-}

@@ -10,14 +10,6 @@ import { useParams } from 'react-router-dom';
 
 import profile from '../../assets/img/community/community19.png';
 
-const serviceItems = [
-    { id: 1, name: "Ślubne" },
-    { id: 2, name: "Sesje zdjęciowe" },
-    { id: 3, name: "Komunijne" },
-    { id: 4, name: "Artystyczne" },
-    { id: 5, name: "Portretowe" }
-];
-
 const infoItems = [
     { id: 1, name: "Średnia", value: "4.7" },
     { id: 2, name: "Opinie", value: "134" },
@@ -84,13 +76,6 @@ function UserDetails() {
                 <h2 className="aside__container--h2">
                     {userData.city}
                 </h2>
-                <ul className="aside__container--services-ul">
-                    {serviceItems.map(({id, name}) => (
-                        <li key={id} className="aside__container--services-ul--li">
-                            {name}
-                        </li>
-                    ))}
-                </ul>
             
                 <h2 className="aside__container--h2">
                     Informacje
