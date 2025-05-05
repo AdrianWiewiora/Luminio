@@ -14,18 +14,21 @@ const navElements = [
     { id: 3, name: "O mnie" }
 ];
 
-const ProfileForm = [
+const BasicInfoForm = [
     { id: "Imię", label: "Imię", type: "text" },
     { id: "Nazwisko", label: "Nazwisko", type: "text" },
     { id: "Miasto", label: "Miasto", type: "text" },
     { id: "Lokalizacja", label: "Lokalizacja", type: "text" },
+    { id: "Telefon", label: "Telefon", type: "text" },
+    { id: "Email", label: "Email", type: "email" },
+];
+
+const ContactForm = [
     { id: "Portfolio", label: "Portfolio", type: "text" },
     { id: "Linkedin", label: "Linkedin", type: "text" },
     { id: "Instagram", label: "Instagram", type: "text" },
     { id: "Dribbble", label: "Dribbble", type: "text" },
     { id: "Inne", label: "Inne", type: "text" },
-    { id: "Telefon", label: "Telefon", type: "text" },
-    { id: "Email", label: "Email", type: "email" },
 ];
 
 interface ProfilePopupProps {
@@ -35,7 +38,8 @@ interface ProfilePopupProps {
 function ProfilePopup({ onClose }: ProfilePopupProps) {
     const [formData, setFormData] = useState(
         Object.fromEntries([
-            ...ProfileForm.map(({ id }) => [id, ""]),
+            ...BasicInfoForm.map(({ id }) => [id, ""]),
+            ...ContactForm.map(({ id }) => [id, ""]),
             ["Opis", ""]
         ])
     );
@@ -80,7 +84,7 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleBasicInfoSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
         try {
@@ -106,11 +110,6 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
               last_name: formData["Nazwisko"],
               city: formData["Miasto"],
               location: formData["Lokalizacja"],
-              portfolio: formData["Portfolio"],
-              linkedin: formData["Linkedin"],
-              instagram: formData["Instagram"],
-              dribbble: formData["Dribbble"],
-              other: formData["Inne"],
               phone: formData["Telefon"],
               email: formData["Email"],
               description: formData["Opis"]
@@ -127,16 +126,67 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
               throw new Error(responseData.message || "Błąd podczas aktualizacji danych");
             }
       
-            console.log("Dane zostały zaktualizowane:", responseData);
+            console.log("Dane podstawowe zostały zaktualizowane:", responseData);
             onClose();
           } catch (jsonError) {
             console.error("Serwer zwrócił nieprawidłowy JSON:", responseText);
             throw new Error("Nieprawidłowa odpowiedź serwera");
           }
         } catch (error) {
-          console.error("Błąd podczas wysyłania danych:", error);
+          console.error("Błąd podczas wysyłania danych podstawowych:", error);
         }
-      };
+    };
+
+    const handleContactsSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        try {
+          const userResponse = await fetch('/api/users/me', {
+            credentials: 'include'
+          });
+          
+          if (!userResponse.ok) {
+            throw new Error("Nie udało się pobrać danych użytkownika");
+          }
+          
+          const userData = await userResponse.json();
+          const userId = userData.id;
+      
+          const response = await fetch(`/api/users/${userId}/contacts`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              portfolio: formData["Portfolio"],
+              linkedin: formData["Linkedin"],
+              instagram: formData["Instagram"],
+              dribbble: formData["Dribbble"],
+              other: formData["Inne"]
+            })
+          });
+      
+          const responseText = await response.text(); 
+          
+          try {
+            const responseData = responseText ? JSON.parse(responseText) : {};
+            
+            if (!response.ok) {
+              console.error("Błąd serwera:", responseData);
+              throw new Error(responseData.message || "Błąd podczas aktualizacji kontaktów");
+            }
+      
+            console.log("Kontakty zostały zaktualizowane:", responseData);
+            onClose();
+          } catch (jsonError) {
+            console.error("Serwer zwrócił nieprawidłowy JSON:", responseText);
+            throw new Error("Nieprawidłowa odpowiedź serwera");
+          }
+        } catch (error) {
+          console.error("Błąd podczas wysyłania kontaktów:", error);
+        }
+    };
 
     return (
         <section className="profile-popup" onClick={onClose}>
@@ -153,20 +203,57 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                 </div>
                 <section className="profile-popup__content--section">
                     <div className="profile-popup__content--section--basic-info">
-                        <div className="profile-popup__content--section--basic-info--profil">
+                        <form className="profile-popup__content--section--basic-info--profil">
                             <h1>
                                 Podstawowe informacje
                             </h1>
                             <img src={Community19} alt="profil-image" />
-                            <span className="profile-popup__content--section--basic-info--profil--change-img">
-                                <GoPencil /> Zmień
-                            </span>
-                        </div>
+                            <div className="profile-popup__content--section--basic-info--profil--con">
+                                <span className="profile-popup__content--section--basic-info--profil--change-img">
+                                    <GoPencil /> Zmień
+                                </span>
+                                <button type="submit" className="profile-popup__content--section--basic-info--profil--btn">
+                                </button>
+                            </div>
+                        </form>
                         <form 
                             className="profile-popup__content--section--basic-info--form"
-                            onSubmit={handleSubmit} 
+                            onSubmit={handleBasicInfoSubmit} 
                         >
-                            {ProfileForm.map(({ id, label, type }) => (
+                            <h2>Dane osobowe</h2>
+                            {BasicInfoForm.map(({ id, label, type }) => (
+                                <FormInput
+                                    key={id}
+                                    id={id}
+                                    label={label}
+                                    type={type}
+                                    value={formData[id] || ""}
+                                    onChange={handleInputChange}
+                                    required={false}
+                                />
+                            ))} 
+                            <div className="profile-popup__content--section--basic-info--textforminput">
+                                <TextArea 
+                                    id="Opis"
+                                    label="Opis"
+                                    value={formData["Opis"] || ""}
+                                    onChange={handleTextAreaChange}
+                                />
+                            </div>
+                            
+                            <div className="profile-popup__content--section--basic-info--form--options">
+                                <p onClick={onClose}> 
+                                    Anuluj
+                                </p>
+                                <Submit title="Zapisz dane podstawowe" />
+                            </div>
+                        </form>
+                        <form 
+                            className="profile-popup__content--section--basic-info--form"
+                            onSubmit={handleContactsSubmit} 
+                        >
+                            <h2>Media społecznościowe</h2>
+                            {ContactForm.map(({ id, label, type }) => (
                                 <FormInput
                                     key={id}
                                     id={id}
@@ -177,19 +264,12 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                                     required={false}
                                 />
                             ))}
-                            <div profile-popup__content--section--basic-info--textforminput>
-                            <TextArea 
-                                id="Opis"
-                                label="Opis"
-                                value={formData["Opis"] || ""}
-                                onChange={handleTextAreaChange}
-                            />
-                            </div>
+                            
                             <div className="profile-popup__content--section--basic-info--form--options">
                                 <p onClick={onClose}> 
                                     Anuluj
                                 </p>
-                                <Submit title="Zaktualizuj profil" />
+                                <Submit title="Zapisz kontakty" />
                             </div>
                         </form>
                     </div>
