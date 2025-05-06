@@ -54,8 +54,13 @@ photosRouter.get("/api/photos", async (ctx) => {
 //get photos by album
 photosRouter.get("/api/albums/:id/photos", async (ctx) => {
   // TODO: this is unsafe
+  const amountParam = ctx.request.url.searchParams.get("amount");
+  const pageParam = ctx.request.url.searchParams.get("page");
+
+  const amount = amountParam ? parseInt(amountParam, 10) : 1;
+  const page = pageParam ? parseInt(pageParam, 10) : 1;
   const album_id = Number.parseInt(ctx.params.id, 10);
-  const photos = await getPhotosByAlbum(album_id);
+  const photos = await getPhotosByAlbum(album_id,amount,page * amount);
 
   const response: PhotoResponse[] = photos.map((photo) => {
     return {
