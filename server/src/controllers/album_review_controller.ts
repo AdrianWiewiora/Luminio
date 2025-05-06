@@ -25,6 +25,8 @@ albumReviewRouter.get("/api/album_reviews/:id", async (ctx) => {
     album_id: album_review.album_id,
     body: album_review.body,
     value: album_review.value,
+    first_name: album_review.first_name,
+    last_name: album_review.last_name
   };
 
   ctx.response.body = response;
@@ -41,6 +43,8 @@ albumReviewRouter.get("/api/users/:id/album_reviews", async (ctx) => {
       album_id: album_review.album_id,
       body: album_review.body,
       value: album_review.value,
+      first_name: album_review.first_name,
+      last_name: album_review.last_name
     };
   });
 
@@ -58,6 +62,8 @@ albumReviewRouter.get("/api/albums/:id/album_reviews", async (ctx) => {
       album_id: album_review.album_id,
       body: album_review.body,
       value: album_review.value,
+      first_name: album_review.first_name,
+      last_name: album_review.last_name
     };
   });
 

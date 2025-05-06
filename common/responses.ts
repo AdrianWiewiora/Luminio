@@ -47,6 +47,8 @@ export interface AlbumReviewResponse {
   user_id: number;
   body: string;
   value: number;
+  first_name: string;
+  last_name: string;
 }
 
 export interface PhotoReviewResponse {
@@ -55,6 +57,8 @@ export interface PhotoReviewResponse {
   user_id: number;
   body: string;
   value: number;
+  first_name: string;
+  last_name: string;
 }
 
 // Zwracany z /api/register po nieudanej rejestracji (status code 400)
