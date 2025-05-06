@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import "./mainGrid.scss";
 
 interface Photo {
   id: number;
   file_path: string;
-  // inne właściwości jeśli są potrzebne
+  album_id: number; 
 }
 
 function MainGrid() {
@@ -76,7 +77,7 @@ function MainGrid() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [allImages]); // Dodajemy allImages do zależności
+  }, [allImages]);
 
   if (loading) {
     return <div className="loading">Ładowanie zdjęć...</div>;
@@ -86,11 +87,13 @@ function MainGrid() {
     <section className="grid">
       {allImages.map((photo) => (
         <div key={photo.id} className="grid__item">
-          <img 
-            src={`/api/photos/${photo.id}`} 
-            alt={`Zdjęcie ${photo.id}`}
-            className="grid__img"
-          />
+          <Link to={`/album/${photo.album_id}`}>
+            <img 
+              src={`/api/photos/${photo.id}`} 
+              alt={`Zdjęcie ${photo.id}`}
+              className="grid__img"
+            />
+          </Link>
         </div>
       ))}
     </section>

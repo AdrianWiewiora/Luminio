@@ -37,6 +37,10 @@ function Album() {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const [photos, setPhotos] = useState<PhotoWithUrl[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  const amountPerPage = 10;
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -73,60 +77,53 @@ function Album() {
     fetchAlbum();
   }, [id]);
 
-  useEffect(() => {
-    const fetchPhotos = async () => {
-      try {
-        if (!id) return;
-  
-        const response = await fetch(`/api/albums/${id}/photos`);
-        if (!response.ok) throw new Error("Nie udało się pobrać zdjęć");
-  
-        const data = await response.json();
-  
-        console.log("Odebrane dane z /albums/:id/photos:", data);
-  
-        // sprawdzamy czy to tablica, jak nie to pakujemy do tablicy
-        const photosList = Array.isArray(data) ? data : (data ? [data] : []);
-  
-        if (photosList.length === 0) {
-          console.log("Brak zdjęć w albumie.");
-          setPhotos([]);
-          return;
-        }
-  
-        const loadedPhotos = await Promise.all(
-          photosList.map(async (photo) => {
-            try {
-              const imgResponse = await fetch(`/api/photos/${photo.id}`);
-              if (!imgResponse.ok) throw new Error(`Błąd pobierania zdjęcia ${photo.id}`);
-  
-              const blob = await imgResponse.blob();
-              const blobUrl = URL.createObjectURL(blob);
-  
-              return {
-                ...photo,
-                blobUrl,
-              };
-            } catch (error) {
-              console.error(`Błąd przy zdjęciu ${photo.id}:`, error);
-              return null;
-            }
-          })
-        );
-  
-        const validPhotos = loadedPhotos.filter((photo): photo is PhotoWithUrl => photo !== null);
-        console.log("Załadowane zdjęcia:", validPhotos);
-  
-        setPhotos(validPhotos);
-  
-      } catch (error) {
-        console.error("Błąd podczas pobierania zdjęć:", error);
+  const fetchPhotosPage = async (currentPage: number) => {
+    try {
+      if (!id) return;
+
+      const response = await fetch(`/api/albums/${id}/photos?amount=${amountPerPage}&page=${currentPage}`);
+      if (!response.ok) throw new Error(`Nie udało się pobrać zdjęć (page ${currentPage})`);
+
+      const data = await response.json();
+      const photosList = Array.isArray(data) ? data : (data ? [data] : []);
+
+      if (photosList.length === 0) {
+        setHasMore(false);
+        return;
       }
-    };
-  
-    fetchPhotos();
+
+      const loadedPhotos = await Promise.all(
+        photosList.map(async (photo) => {
+          try {
+            const imgResponse = await fetch(`/api/photos/${photo.id}`);
+            if (!imgResponse.ok) throw new Error(`Błąd pobierania zdjęcia ${photo.id}`);
+            const blob = await imgResponse.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            return { ...photo, blobUrl };
+          } catch (error) {
+            console.error(`Błąd przy zdjęciu ${photo.id}:`, error);
+            return null;
+          }
+        })
+      );
+
+      const validPhotos = loadedPhotos.filter((photo): photo is PhotoWithUrl => photo !== null);
+      setPhotos(prev => [...prev, ...validPhotos]);
+
+      if (photosList.length < amountPerPage) {
+        setHasMore(false);
+      }
+
+    } catch (error) {
+      console.error("Błąd podczas pobierania zdjęć:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchPhotosPage(1);
+    }
   }, [id]);
-  
 
   if (loading) {
     return <div>Loading...</div>;
@@ -142,11 +139,22 @@ function Album() {
       <Banner />
       <div className="album-wrapper">
         <div className="album-wrapper__content">
-          <Title
-            title={album.name}
-            description={album.description}
-          />
+          <Title title={album.name} description={album.description} />
           <PhotoGrid photos={photos} />
+          
+          {hasMore && (
+            <button 
+              className="load-more-button" 
+              onClick={() => {
+                const nextPage = page + 1;
+                setPage(nextPage);
+                fetchPhotosPage(nextPage);
+              }}
+            >
+              Załaduj więcej
+            </button>
+          )}
+
           <Reviews />
         </div>
         {id && userId && <AsideManager albumId={id} userId={userId} />}
