@@ -1,19 +1,43 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./mainGrid.scss";
-import { image1, image2, image3, image4, image5, image6, image7, image8 } from "../../../assets/img/imgExport.tsx";
 
-const allImages = [
-  image1, image2, image3, image4, image5, image6, image7, image8,
-  image1, image2, image3, image4, image5, image6, image7, image8,
-  image1, image2, image3, image4, image5, image6, image7, image8,
-];
+interface Photo {
+  id: number;
+  file_path: string;
+  // inne właściwości jeśli są potrzebne
+}
 
-function MainGrid(){
+function MainGrid() {
+  const [allImages, setAllImages] = useState<Photo[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch('/api/photos');
+        if (response.ok) {
+          const photos = await response.json();
+          setAllImages(photos);
+        } else {
+          console.error("Błąd odpowiedzi:", response.status);
+        }
+      } catch (error) {
+        console.error("Błąd podczas pobierania obrazów:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchImages();
+  }, []);
+
   useEffect(() => {
     let lastScrollY = window.scrollY;
 
     const handleScroll = () => {
       const gridContainer = document.querySelector(".grid");
+      if (!gridContainer) return;
+
       const gridItems = document.querySelectorAll(".grid__item");
       const containerRect = gridContainer.getBoundingClientRect();
       const scrollY = window.scrollY;
@@ -44,7 +68,7 @@ function MainGrid(){
           }
 
           item.style.transform = `translateY(${yPos + yOffset}px)`;
-          item.style.opacity = opacity;
+          item.style.opacity = opacity.toString();
           item.style.transition = "transform 0.6s ease-out, opacity 0.6s ease-out";
         });
       }
@@ -52,16 +76,25 @@ function MainGrid(){
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [allImages]); // Dodajemy allImages do zależności
+
+  if (loading) {
+    return <div className="loading">Ładowanie zdjęć...</div>;
+  }
 
   return (
     <section className="grid">
-      {allImages.map((img, index) => (
-        <div key={index} className="grid__item" style={{ backgroundImage: `url(${img})` }}>
+      {allImages.map((photo) => (
+        <div key={photo.id} className="grid__item">
+          <img 
+            src={`/api/photos/${photo.id}`} 
+            alt={`Zdjęcie ${photo.id}`}
+            className="grid__img"
+          />
         </div>
       ))}
     </section>
   );
-};
+}
 
 export default MainGrid;

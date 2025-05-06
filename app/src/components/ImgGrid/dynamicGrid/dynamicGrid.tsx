@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import "./dynamicGrid.scss";
-import { image1, image2, image3, image4, image5, image6, image7, image8 } from "../../../assets/img/imgExport.tsx";
 import AlbumElement from "../../album/albumElement.tsx";
 import AuthorTile from "../../authorTile/authorTile.tsx";
 
@@ -16,6 +15,17 @@ interface Author {
     last_name: string;
 }
 
+interface Album {
+    id: number;
+    title: string;
+    cover_id: number;
+}
+
+interface Photo {
+    id: number;
+    file_path: string;
+}
+
 interface DynamicGridProps {
     view: 'photos' | 'albums' | 'authors';
     authors: Author[];
@@ -23,54 +33,116 @@ interface DynamicGridProps {
 
 const DynamicGrid = ({ view, authors }: DynamicGridProps) => {
     const [items, setItems] = useState<GridItem[]>([]);
+    const [userId, setUserId] = useState<number | null>(null);
+    const [photos, setPhotos] = useState<Photo[]>([]);
 
     useEffect(() => {
-        const allItems: GridItem[] = [
-            { type: 'photo', data: image1 },
-            { type: 'photo', data: image2 },
-            { type: 'photo', data: image3 },
-            { type: 'photo', data: image4 },
-            { type: 'photo', data: image5 },
-            { type: 'photo', data: image6 },
-            { type: 'photo', data: image7 },
-            { type: 'photo', data: image8 },
-            { type: 'album', data: { id: 1, title: "Zdjęcia ślubne Agaty i Łukasza" } },
-            { type: 'album', data: { id: 2, title: "Wakacje 2023" } },
-            { type: 'album', data: { id: 3, title: "Portrety" } },
-        ];
-
-        const typeMap = {
-            photos: 'photo',
-            albums: 'album',
-            authors: 'author',
+        const fetchUserId = async () => {
+            try {
+                const response = await fetch('/api/users/me');
+                if (response.ok) {
+                    const user = await response.json();
+                    setUserId(user.id);
+                }
+            } catch (error) {
+                console.error('Błąd podczas pobierania danych użytkownika:', error);
+            }
         };
+        fetchUserId();
+    }, []);
 
-        const filteredItems = allItems.filter(item => item.type === typeMap[view]);
-        const combinedItems = [
-            ...filteredItems,
-            ...(view === 'authors' ? authors.map(author => ({
-                type: 'author' as const,
-                data: author,
-            })) : []),
-        ];
+    useEffect(() => {
+        const fetchPhotos = async () => {
+            try {
+                const response = await fetch('/api/photos');
+                if (response.ok) {
+                    const photosData = await response.json();
+                    setPhotos(photosData);
+                }
+            } catch (error) {
+                console.error('Błąd podczas pobierania zdjęć:', error);
+            }
+        };
+        fetchPhotos();
+    }, []);
 
-        setItems(combinedItems);
-    }, [view, authors]);
+    useEffect(() => {
+        const fetchAlbums = async () => {
+            try {
+                const response = await fetch('/api/albums');
+                if (response.ok) {
+                    const albums = await response.json();
+                    const allItems: GridItem[] = [
+                        ...photos.map((photo: Photo) => ({
+                          type: 'photo',
+                          data: photo, 
+                        })),
+                        ...albums.map((album: Album) => ({
+                          type: 'album',
+                          data: album,
+                        })),
+                      ];
+                      
+
+                    const typeMap = {
+                        photos: 'photo',
+                        albums: 'album',
+                        authors: 'author',
+                    };
+
+                    const filteredItems = allItems.filter(item => item.type === typeMap[view]);
+                    const combinedItems = [
+                        ...filteredItems,
+                        ...(view === 'authors' ? authors.map(author => ({
+                            type: 'author' as const,
+                            data: author,
+                        })) : []),
+                    ];
+
+                    setItems(combinedItems);
+                }
+            } catch (error) {
+                console.error('Błąd podczas pobierania albumów:', error);
+            }
+        };
+        fetchAlbums();
+    }, [view, authors, photos]);
+
+    if (userId === null) {
+        return <div>Ładowanie...</div>;
+    }
 
     return (
         <section className="grid-container-dynamic">
             {items.map((item, index) => (
                 <div key={index} className="grid-container-dynamic__grid-item-dynamic">
                     {item.type === 'photo' && (
-                        <img src={item.data} alt={`Dynamic Grid item ${index}`} loading="lazy" className="grid-container-dynamic__grid-item-dynamic--img"/>
+                        <Link to={`/album/${item.data.album_id}`}>
+                            <img
+                            src={`/api/photos/${item.data.id}`}
+                            alt={`Zdjęcie ${item.data.id}`}
+                            loading="lazy"
+                            className="grid-container-dynamic__grid-item-dynamic--img"
+                            />
+                        </Link>
                     )}
                     {item.type === 'album' && (
-                        <Link to="/album">
-                            <AlbumElement />
+                        <Link to={`/album/${item.data.id}`}>
+                            <AlbumElement
+                                albumId={item.data.id}
+                                title={item.data.title}
+                                coverId={item.data.cover_id}
+                                isPublic={true}
+                                userId={userId}
+                                loggedUserId={userId}
+                            />
                         </Link>
                     )}
                     {item.type === 'author' && (
-                        <AuthorTile authorId={item.data.id} name={`${item.data.first_name} ${item.data.last_name}`} />
+                        <AuthorTile
+                            authorId={item.data.id}
+                            name={`${item.data.first_name} ${item.data.last_name}`}
+                        />
                     )}
                 </div>
             ))}
