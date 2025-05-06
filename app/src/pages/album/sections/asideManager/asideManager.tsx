@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { TbPhotoPlus } from "react-icons/tb";
-import { IoSettingsOutline } from "react-icons/io5";
-import Submit from '../../../../components/btn/submit/submit.tsx';
 import './asideManager.scss';
 
 interface AsideManagerProps {
     albumId: string;
-    userId: string; 
+    userId: string;
 }
 
 function AsideManager({ albumId, userId }: AsideManagerProps) {
@@ -14,55 +12,57 @@ function AsideManager({ albumId, userId }: AsideManagerProps) {
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [uploadSuccess, setUploadSuccess] = useState(false);
 
-    const handleAddPhoto = async (file: File) => {
-        if (!file) {
-            setUploadError('Proszę wybrać plik');
+    const handleAddPhotos = async (files: FileList) => {
+        if (!files || files.length === 0) {
+            setUploadError('Proszę wybrać pliki');
             return;
         }
-    
+
         setIsUploading(true);
         setUploadError(null);
         setUploadSuccess(false);
-    
+
         try {
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('album_id', albumId);
-            formData.append('category_id', '1');
-            formData.append('user_id', userId); 
-    
-            console.log('Wysyłane dane:', {
-                file: file.name,
-                album_id: albumId,
-                category_id: '1',
-                user_id: userId
-            });
-    
-            const response = await fetch('/api/photos', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-    
-            if (!response.ok) {
-                const text = await response.text();
-                try {
-                    const errorData = JSON.parse(text);
-                    console.error('Pełna odpowiedź serwera:', errorData);
-                    if (errorData.issues) {
-                        const messages = errorData.issues.map((issue: any) =>
-                            `${issue.path?.join('.') || 'field'}: ${issue.message}`
-                        ).join(', ');
-                        throw new Error(`Błędy walidacji: ${messages}`);
+            for (const file of Array.from(files)) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('album_id', albumId);
+                formData.append('category_id', '1');
+                formData.append('user_id', userId);
+
+                console.log('Wysyłane dane:', {
+                    file: file.name,
+                    album_id: albumId,
+                    category_id: '1',
+                    user_id: userId
+                });
+
+                const response = await fetch('/api/photos', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
                     }
-                    throw new Error(errorData.error || 'Nie udało się przesłać zdjęcia');
-                } catch {
-                    throw new Error(text || 'Nie udało się przesłać zdjęcia');
+                });
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    try {
+                        const errorData = JSON.parse(text);
+                        console.error('Pełna odpowiedź serwera:', errorData);
+                        if (errorData.issues) {
+                            const messages = errorData.issues.map((issue: any) =>
+                                `${issue.path?.join('.') || 'field'}: ${issue.message}`
+                            ).join(', ');
+                            throw new Error(`Błędy walidacji: ${messages}`);
+                        }
+                        throw new Error(errorData.error || 'Nie udało się przesłać zdjęcia');
+                    } catch {
+                        throw new Error(text || 'Nie udało się przesłać zdjęcia');
+                    }
                 }
             }
-    
+
             setUploadSuccess(true);
             window.dispatchEvent(new Event('photos-updated'));
         } catch (error) {
@@ -83,11 +83,11 @@ function AsideManager({ albumId, userId }: AsideManagerProps) {
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*';
-        input.multiple = false;
+        input.multiple = true; // <-- tu zmiana!
         input.onchange = (e) => {
             const files = (e.target as HTMLInputElement).files;
             if (files && files.length > 0) {
-                handleAddPhoto(files[0]);
+                handleAddPhotos(files);
             }
         };
         input.click();
@@ -107,7 +107,7 @@ function AsideManager({ albumId, userId }: AsideManagerProps) {
                         aria-disabled={isUploading}
                     >
                         <TbPhotoPlus className="container__sticky--section--item--icon" />
-                        {isUploading ? 'Przesyłanie...' : 'Dodaj zdjęcie'}
+                        {isUploading ? 'Przesyłanie...' : 'Dodaj zdjęcia'}
                     </div>
                     
                     {uploadError && (
@@ -117,12 +117,9 @@ function AsideManager({ albumId, userId }: AsideManagerProps) {
                     )}
                     {uploadSuccess && (
                         <div className="upload-status success">
-                            Zdjęcie zostało pomyślnie dodane!
+                            Zdjęcia zostały pomyślnie dodane!
                         </div>
                     )}
-                </div>
-                <div className="container__sticky--btn">
-                    <Submit title={"Zapisz projekt"} />
                 </div>
             </div>
         </aside>
