@@ -30,6 +30,9 @@ export interface AlbumResponse {
   service_id: number;
   is_public: boolean;
   cover_id: number;
+  average_rating: number;
+  comment_count: number;
+  picture_count: number;
 }
 
 export interface PhotoResponse {

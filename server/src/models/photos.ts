@@ -32,3 +32,10 @@ export async function getPhotosByAlbum(id: number, limit: number, offset: number
   >`SELECT * FROM photos WHERE album_id = ${id} LIMIT ${limit} OFFSET ${offset}`;
   return rows;
 }
+
+export async function getAllPhotosByAlbum(id: number): Promise<DbPhoto[]> {
+  const rows = await sql<
+    DbPhoto[]
+  >`SELECT * FROM photos WHERE album_id = ${id}`;
+  return rows;
+}
