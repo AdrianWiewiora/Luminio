@@ -12,26 +12,52 @@ export interface DbPhotoReview extends NewDbPhotoReview {
   created_at: number;
 }
 
+export interface UserDbPhotoReview extends DbPhotoReview {
+  first_name: string;
+  last_name: string;
+}
+
 export async function getPhotoReviewsByUser(
   id: number,
-): Promise<DbPhotoReview[]> {
+): Promise<UserDbPhotoReview[]> {
   return await sql<
-    DbPhotoReview[]
-  >`SELECT * FROM photo_reviews WHERE user_id = ${id}`;
+    UserDbPhotoReview[]
+  >`SELECT photo_reviews.id,
+  photo_reviews.user_id,
+  photo_reviews.photo_id,
+  photo_reviews.body,
+  photo_reviews.value,
+  photo_reviews.created_at,
+    users.first_name,
+  users.last_name FROM photo_reviews LEFT JOIN users ON photo_reviews.user_id = users.id WHERE photo_reviews.user_id = ${id}`;
 }
 
 export async function getPhotoReviewsByPhoto(
   id: number,
-): Promise<DbPhotoReview[]> {
+): Promise<UserDbPhotoReview[]> {
   return await sql<
-    DbPhotoReview[]
-  >`SELECT * FROM photo_reviews WHERE photo_id = ${id}`;
+    UserDbPhotoReview[]
+  >`SELECT photo_reviews.id,
+  photo_reviews.user_id,
+  photo_reviews.photo_id,
+  photo_reviews.body,
+  photo_reviews.value,
+  photo_reviews.created_at,
+  users.first_name,
+  users.last_name FROM photo_reviews LEFT JOIN users ON photo_reviews.user_id = users.id WHERE photo_reviews.photo_id = ${id}`;
 }
 
-export async function getPhotoReview(id: number): Promise<DbPhotoReview> {
+export async function getPhotoReview(id: number): Promise<UserDbPhotoReview> {
   const rows = await sql<
-    DbPhotoReview[]
-  >`SELECT * FROM photo_reviews WHERE id = ${id} LIMIT 1`;
+    UserDbPhotoReview[]
+  >`SELECT photo_reviews.id,
+  photo_reviews.user_id,
+  photo_reviews.photo_id,
+  photo_reviews.body,
+  photo_reviews.value,
+  photo_reviews.created_at,
+    users.first_name,
+  users.last_name FROM photo_reviews LEFT JOIN users ON photo_reviews.user_id = users.id WHERE photo_reviews.id = ${id} LIMIT 1`;
   return rows[0];
 }
 

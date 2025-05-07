@@ -15,14 +15,22 @@ import { getLoggedInUser } from "../auth.ts";
 import { sql } from "../db.ts";
 import * as v from "@valibot/valibot";
 import { generate } from "@std/uuid/v1";
-import { DbPhoto } from "../models/photos.ts";
+import { DbPhoto, getAllPhotosByAlbum } from "../models/photos.ts";
+import { getAlbumReviewsByAlbum } from "../models/album_revews.ts";
 export const albumRouter = new Router();
 
 //get albums by user
 albumRouter.get("/api/users/:id/albums", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
   const albums = await getAlbumsByUser(id);
-  const response: AlbumResponse[] = albums.map((album) => {
+  const response: AlbumResponse[] = await Promise.all(albums.map(async (album) => {
+    const [album_ratings, album_pictures] = await Promise.all([
+      getAlbumReviewsByAlbum(album.id),
+      getAllPhotosByAlbum(album.id)
+    ]);
+    const average_rating = album_ratings.reduce((sum, rating) => sum + rating.value, 0)/album_ratings.length;
+    const rating_count = album_ratings.length;
+    const picture_count = album_pictures.length;
     return {
       id: album.id,
       user_id: album.user_id,
@@ -31,8 +39,11 @@ albumRouter.get("/api/users/:id/albums", async (ctx) => {
       service_id: album.tag,
       is_public: album.is_public,
       cover_id: album.cover_id,
+      average_rating: average_rating,
+      comment_count: rating_count,
+      picture_count: picture_count
     };
-  });
+  }));
 
   ctx.response.body = response;
 });
@@ -40,7 +51,17 @@ albumRouter.get("/api/users/:id/albums", async (ctx) => {
 //get albums
 albumRouter.get("/api/albums", async (ctx) => {
   const albums = await getAlbums();
-  const response: AlbumResponse[] = albums.map((album) => {
+
+
+
+  const response: AlbumResponse[] = await Promise.all(albums.map(async (album) => {
+    const [album_ratings, album_pictures] = await Promise.all([
+      getAlbumReviewsByAlbum(album.id),
+      getAllPhotosByAlbum(album.id)
+    ]);
+    const average_rating = album_ratings.reduce((sum, rating) => sum + rating.value, 0)/album_ratings.length;
+    const rating_count = album_ratings.length;
+    const picture_count = album_pictures.length;
     return {
       id: album.id,
       user_id: album.user_id,
@@ -49,8 +70,11 @@ albumRouter.get("/api/albums", async (ctx) => {
       service_id: album.tag,
       is_public: album.is_public,
       cover_id: album.cover_id,
+      average_rating: average_rating,
+      comment_count: rating_count,
+      picture_count: picture_count
     };
-  });
+  }));
 
   ctx.response.body = response;
 });
@@ -64,6 +88,15 @@ albumRouter.get("/api/albums/:id", async (ctx) => {
     ctx.response.status = 404;
     return;
   }
+
+  const [album_ratings, album_pictures] = await Promise.all([
+    getAlbumReviewsByAlbum(id),
+    getAllPhotosByAlbum(id)
+  ]);
+  const average_rating = album_ratings.reduce((sum, rating) => sum + rating.value, 0)/album_ratings.length;
+  const rating_count = album_ratings.length;
+  const picture_count = album_pictures.length;
+
   const response: AlbumResponse = {
     id: album.id,
     user_id: album.user_id,
@@ -72,6 +105,9 @@ albumRouter.get("/api/albums/:id", async (ctx) => {
     service_id: album.tag,
     is_public: album.is_public,
     cover_id: album.cover_id,
+    average_rating: average_rating,
+    comment_count: rating_count,
+    picture_count: picture_count
   };
 
   ctx.response.body = response;
