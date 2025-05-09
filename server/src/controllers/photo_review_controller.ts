@@ -27,7 +27,7 @@ photoReviewRouter.get("/api/photo_reviews/:id", async (ctx) => {
     body: photo_review.body,
     value: photo_review.value,
     first_name: photo_review.first_name,
-    last_name: photo_review.last_name
+    last_name: photo_review.last_name,
   };
 
   ctx.response.body = response;
@@ -45,7 +45,7 @@ photoReviewRouter.get("/api/users/:id/photo_reviews", async (ctx) => {
       body: photo_review.body,
       value: photo_review.value,
       first_name: photo_review.first_name,
-      last_name: photo_review.last_name
+      last_name: photo_review.last_name,
     };
   });
 
@@ -57,7 +57,7 @@ photoReviewRouter.get("/api/photos/:id/photo_reviews", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
   const photo_reviews = await getPhotoReviewsByPhoto(id);
   const response: PhotoReviewResponse[] = photo_reviews.map((photo_review) => {
-    console.log(photo_review)
+    console.log(photo_review);
     return {
       id: photo_review.id,
       user_id: photo_review.user_id,
@@ -65,7 +65,7 @@ photoReviewRouter.get("/api/photos/:id/photo_reviews", async (ctx) => {
       body: photo_review.body,
       value: photo_review.value,
       first_name: photo_review.first_name,
-      last_name: photo_review.last_name
+      last_name: photo_review.last_name,
     };
   });
 

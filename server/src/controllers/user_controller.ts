@@ -38,7 +38,7 @@ userRouter.get("/api/users", async (ctx) => {
       city: user.city,
       average_rating: user.average_value,
       comment_count: user.comment_count,
-      album_count: user.album_count
+      album_count: user.album_count,
     };
   });
 
@@ -129,7 +129,7 @@ userRouter.get("/api/users/me", async (ctx) => {
         city: user.city,
         average_rating: user.average_value,
         comment_count: user.comment_count,
-        album_count: user.album_count
+        album_count: user.album_count,
       };
       ctx.response.body = response;
     } else {
@@ -158,7 +158,7 @@ userRouter.get("/api/users/:id", async (ctx) => {
     city: user.city,
     average_rating: user.average_value,
     comment_count: user.comment_count,
-    album_count: user.album_count
+    album_count: user.album_count,
   };
   ctx.response.body = response;
 });

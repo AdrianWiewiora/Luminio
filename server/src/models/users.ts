@@ -19,7 +19,6 @@ export interface DbUser extends NewDbUser {
   created_at: string;
 }
 
-
 export interface ReturnDbUser extends DbUser {
   average_value: number;
   comment_count: number;
@@ -45,7 +44,7 @@ export async function getAllUsers(): Promise<ReturnDbUser[]> {
 
 export async function getUser(id: number): Promise<ReturnDbUser> {
   const rows = await sql<
-  ReturnDbUser[]
+    ReturnDbUser[]
   >`SELECT 
         u.*,
         AVG(ar.value) AS average_value,
@@ -69,7 +68,7 @@ export async function getUserByMail(
   email: string,
 ): Promise<ReturnDbUser | undefined> {
   const rows = await sql<
-  ReturnDbUser[]
+    ReturnDbUser[]
   >`SELECT 
         u.*,
         AVG(ar.value) AS average_value,

@@ -26,7 +26,11 @@ export async function getPhotoById(id: number): Promise<DbPhoto> {
   return rows[0];
 }
 
-export async function getPhotosByAlbum(id: number, limit: number, offset: number): Promise<DbPhoto[]> {
+export async function getPhotosByAlbum(
+  id: number,
+  limit: number,
+  offset: number,
+): Promise<DbPhoto[]> {
   const rows = await sql<
     DbPhoto[]
   >`SELECT * FROM photos WHERE album_id = ${id} LIMIT ${limit} OFFSET ${offset}`;

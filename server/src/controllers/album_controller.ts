@@ -23,27 +23,30 @@ export const albumRouter = new Router();
 albumRouter.get("/api/users/:id/albums", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
   const albums = await getAlbumsByUser(id);
-  const response: AlbumResponse[] = await Promise.all(albums.map(async (album) => {
-    const [album_ratings, album_pictures] = await Promise.all([
-      getAlbumReviewsByAlbum(album.id),
-      getAllPhotosByAlbum(album.id)
-    ]);
-    const average_rating = album_ratings.reduce((sum, rating) => sum + rating.value, 0)/album_ratings.length;
-    const rating_count = album_ratings.length;
-    const picture_count = album_pictures.length;
-    return {
-      id: album.id,
-      user_id: album.user_id,
-      name: album.name,
-      description: album.description,
-      service_id: album.tag,
-      is_public: album.is_public,
-      cover_id: album.cover_id,
-      average_rating: average_rating,
-      comment_count: rating_count,
-      picture_count: picture_count
-    };
-  }));
+  const response: AlbumResponse[] = await Promise.all(
+    albums.map(async (album) => {
+      const [album_ratings, album_pictures] = await Promise.all([
+        getAlbumReviewsByAlbum(album.id),
+        getAllPhotosByAlbum(album.id),
+      ]);
+      const average_rating = album_ratings.reduce((sum, rating) =>
+        sum + rating.value, 0) / album_ratings.length;
+      const rating_count = album_ratings.length;
+      const picture_count = album_pictures.length;
+      return {
+        id: album.id,
+        user_id: album.user_id,
+        name: album.name,
+        description: album.description,
+        service_id: album.tag,
+        is_public: album.is_public,
+        cover_id: album.cover_id,
+        average_rating: average_rating,
+        comment_count: rating_count,
+        picture_count: picture_count,
+      };
+    }),
+  );
 
   ctx.response.body = response;
 });
@@ -52,29 +55,30 @@ albumRouter.get("/api/users/:id/albums", async (ctx) => {
 albumRouter.get("/api/albums", async (ctx) => {
   const albums = await getAlbums();
 
-
-
-  const response: AlbumResponse[] = await Promise.all(albums.map(async (album) => {
-    const [album_ratings, album_pictures] = await Promise.all([
-      getAlbumReviewsByAlbum(album.id),
-      getAllPhotosByAlbum(album.id)
-    ]);
-    const average_rating = album_ratings.reduce((sum, rating) => sum + rating.value, 0)/album_ratings.length;
-    const rating_count = album_ratings.length;
-    const picture_count = album_pictures.length;
-    return {
-      id: album.id,
-      user_id: album.user_id,
-      name: album.name,
-      description: album.description,
-      service_id: album.tag,
-      is_public: album.is_public,
-      cover_id: album.cover_id,
-      average_rating: average_rating,
-      comment_count: rating_count,
-      picture_count: picture_count
-    };
-  }));
+  const response: AlbumResponse[] = await Promise.all(
+    albums.map(async (album) => {
+      const [album_ratings, album_pictures] = await Promise.all([
+        getAlbumReviewsByAlbum(album.id),
+        getAllPhotosByAlbum(album.id),
+      ]);
+      const average_rating = album_ratings.reduce((sum, rating) =>
+        sum + rating.value, 0) / album_ratings.length;
+      const rating_count = album_ratings.length;
+      const picture_count = album_pictures.length;
+      return {
+        id: album.id,
+        user_id: album.user_id,
+        name: album.name,
+        description: album.description,
+        service_id: album.tag,
+        is_public: album.is_public,
+        cover_id: album.cover_id,
+        average_rating: average_rating,
+        comment_count: rating_count,
+        picture_count: picture_count,
+      };
+    }),
+  );
 
   ctx.response.body = response;
 });
@@ -91,9 +95,10 @@ albumRouter.get("/api/albums/:id", async (ctx) => {
 
   const [album_ratings, album_pictures] = await Promise.all([
     getAlbumReviewsByAlbum(id),
-    getAllPhotosByAlbum(id)
+    getAllPhotosByAlbum(id),
   ]);
-  const average_rating = album_ratings.reduce((sum, rating) => sum + rating.value, 0)/album_ratings.length;
+  const average_rating = album_ratings.reduce((sum, rating) =>
+    sum + rating.value, 0) / album_ratings.length;
   const rating_count = album_ratings.length;
   const picture_count = album_pictures.length;
 
@@ -107,7 +112,7 @@ albumRouter.get("/api/albums/:id", async (ctx) => {
     cover_id: album.cover_id,
     average_rating: average_rating,
     comment_count: rating_count,
-    picture_count: picture_count
+    picture_count: picture_count,
   };
 
   ctx.response.body = response;

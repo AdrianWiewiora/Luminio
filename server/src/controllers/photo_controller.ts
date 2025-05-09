@@ -53,7 +53,6 @@ photosRouter.get("/api/photos", async (ctx) => {
 
 //get photos by album
 photosRouter.get("/api/albums/:id/photos", async (ctx) => {
-
   const amountParam = ctx.request.url.searchParams.get("amount");
   const pageParam = ctx.request.url.searchParams.get("page");
 
@@ -62,7 +61,6 @@ photosRouter.get("/api/albums/:id/photos", async (ctx) => {
   const album_id = Number.parseInt(ctx.params.id, 10);
   const offset = (page - 1) * amount;
   const photos = await getPhotosByAlbum(album_id, amount, offset);
-  
 
   const response: PhotoResponse[] = photos.map((photo) => {
     return {
@@ -79,7 +77,6 @@ photosRouter.get("/api/albums/:id/photos", async (ctx) => {
 });
 
 photosRouter.get("/api/photos/id/:id", async (ctx) => {
-
   const photo_id = Number.parseInt(ctx.params.id, 10);
   const photo = await getPhotoById(photo_id);
 
