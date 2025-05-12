@@ -58,7 +58,6 @@ photosRouter.get("/api/albums/:id/photos", async (ctx) => {
 });
 
 photosRouter.get("/api/photos/id/:id", async (ctx) => {
-  // TODO: this is unsafe
   const photo_id = Number.parseInt(ctx.params.id, 10);
   const photo = await getPhotoById(photo_id);
 
