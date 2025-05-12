@@ -7,30 +7,11 @@ import { getLoggedInUser } from "../auth.ts";
 
 export const photosRouter = new Router();
 
-photosRouter.get("/api/photos/:id", async (ctx) => {
+photosRouter.get("/api/files/:id", async (ctx) => {
   const id = Number(ctx.params.id);
   const file = await getFile(id);
   ctx.response.body = file;
 });
-
-// już tego chyba nie potrzebujemy?
-// photosRouter.get("/api/photos", async (ctx) => {
-//   // TODO: this is unsafe
-//   const photos = await getAllPhotos();
-
-//   const response: PhotoResponse[] = photos.map((photo) => {
-//     return {
-//       id: photo.id,
-//       user_id: photo.id,
-//       album_id: photo.album_id,
-//       category_id: photo.category_id,
-//       file_id: photo.file_id,
-//       created_at: photo.created_at,
-//     };
-//   });
-
-//   ctx.response.body = response;
-// });
 
 //get photos by album
 photosRouter.get("/api/albums/:id/photos", async (ctx) => {
@@ -57,7 +38,7 @@ photosRouter.get("/api/albums/:id/photos", async (ctx) => {
   ctx.response.body = response;
 });
 
-photosRouter.get("/api/photos/id/:id", async (ctx) => {
+photosRouter.get("/api/photos/:id", async (ctx) => {
   const photo_id = Number.parseInt(ctx.params.id, 10);
   const photo = await getPhotoById(photo_id);
 

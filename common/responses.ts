@@ -7,6 +7,9 @@ export interface UserResponse {
   last_name: string;
   user_description: string;
   city: string;
+  average_rating: number;
+  comment_count: number;
+  album_count: number;
 }
 
 export interface ServiceResponse {

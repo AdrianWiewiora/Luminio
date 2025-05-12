@@ -117,6 +117,9 @@ albumRouter.get("/api/albums/:id", async (ctx) => {
 
 // Stwórz nowy album
 albumRouter.post("/api/albums", async (ctx) => {
+  const user = await getLoggedInUser(ctx);
+  if (!user) return;
+
   const formData = await ctx.request.body.formData();
   const formObject = Object.fromEntries(formData.entries());
 
@@ -132,35 +135,14 @@ albumRouter.post("/api/albums", async (ctx) => {
   }
   const req = validation_result.output;
 
-  const logged_user = await getLoggedInUser(ctx);
-  if (!logged_user) return;
-
-  if (req.user_id !== logged_user.id) {
-    ctx.response.body = {
-      message: "próba modyfikacji niezalogowanego użytkownika",
-    };
-    ctx.response.status = 400;
-    return;
-  }
-
   const file_id = await fileUpload(req.file);
-
-  const data = {
-    user_id: logged_user.id,
-    file_id: file_id,
-  };
-
-  const [photo] = await sql<DbPhoto[]>`INSERT INTO photos ${
-    sql(data)
-  } returning *`;
-
   const album: NewDbAlbum = {
-    user_id: req.user_id,
+    user_id: user.id,
     name: req.name,
     description: req.description,
     tag: req.service_id,
     is_public: req.is_public,
-    cover_id: photo.id,
+    cover_id: file_id,
   };
 
   await sql`INSERT INTO albums ${sql(album)}`;
@@ -169,6 +151,9 @@ albumRouter.post("/api/albums", async (ctx) => {
 
 // zaktualizuj album
 albumRouter.put("/api/albums/:id", async (ctx) => {
+  const user = await getLoggedInUser(ctx);
+  if (!user) return;
+
   const formData = await ctx.request.body.formData();
   const formObject = Object.fromEntries(formData.entries());
 
@@ -184,17 +169,6 @@ albumRouter.put("/api/albums/:id", async (ctx) => {
   }
   const req = validation_result.output;
 
-  const logged_user = await getLoggedInUser(ctx);
-  if (!logged_user) return;
-
-  if (req.user_id !== logged_user.id) {
-    ctx.response.body = {
-      message: "próba modyfikacji niezalogowanego użytkownika",
-    };
-    ctx.response.status = 400;
-    return;
-  }
-
   const album_id = Number.parseInt(ctx.params.id, 10);
   const updated_album = await getAlbum(album_id);
   if (!updated_album) {
@@ -206,7 +180,7 @@ albumRouter.put("/api/albums/:id", async (ctx) => {
   }
 
   const album: NewDbAlbum = {
-    user_id: req.user_id,
+    user_id: user.id,
     name: req.name,
     description: req.description,
     tag: req.service_id,
@@ -218,7 +192,7 @@ albumRouter.put("/api/albums/:id", async (ctx) => {
     const file_id = await fileUpload(req.file);
 
     const data = {
-      user_id: logged_user.id,
+      user_id: user.id,
       file_id: file_id,
     };
 
