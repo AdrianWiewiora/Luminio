@@ -24,20 +24,18 @@ const AlbumGrid = ({ albums, loggedUserId, onEditClick, onDeleteClick }: AlbumGr
         <section className="grid-album-container">
             {albums.map((album) => (
                 <div key={album.id} className="grid-album-container__item">
-                    <Link to={`/album/${album.id}`}>
-                        <AlbumElement
-                            albumId={album.id}
-                            title={album.name}
-                            isPublic={album.is_public}
-                            userId={album.user_id}
-                            loggedUserId={loggedUserId}
-                            description={album.description}
-                            serviceId={album.service_id}
-                            coverId={album.cover_id}
-                            onEditClick={onEditClick}
-                            onDeleteClick={onDeleteClick}
-                        />
-                    </Link>
+                    <AlbumElement
+                        albumId={album.id}
+                        title={album.name}
+                        isPublic={album.is_public}
+                        userId={album.user_id}
+                        loggedUserId={loggedUserId}
+                        description={album.description}
+                        serviceId={album.service_id}
+                        coverId={album.cover_id}
+                        onEditClick={onEditClick}
+                        onDeleteClick={onDeleteClick}
+                    />
                 </div>
             ))}
         </section>

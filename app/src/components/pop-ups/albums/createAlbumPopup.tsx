@@ -5,7 +5,7 @@ import TextArea from "../../inputs/textarea/textArea.tsx";
 import Checkbox from "../../inputs/checkbox/checkbox.tsx";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { GoPencil } from "react-icons/go";
-import { paralax10 } from "../../../assets/img/imgExport.tsx";
+import { noImageAvailable } from "../../../assets/img/imgExport.tsx";
 import { useState, useRef } from "react";
 import { CreateAlbumRequest } from "../../../../../common/requests/album_requests.ts";
 
@@ -41,7 +41,7 @@ function CreateAlbumPopup({ onClose, userId, onAlbumCreated }: CreateAlbumPopupP
     const [isSuccess, setIsSuccess] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [error, setError] = useState<string | null>(null);
-    const [preview, setPreview] = useState(paralax10);
+    const [preview, setPreview] = useState(noImageAvailable);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
