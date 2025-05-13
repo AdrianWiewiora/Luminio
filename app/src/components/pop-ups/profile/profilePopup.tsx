@@ -68,7 +68,7 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
     const fetchUserData = async () => {
         try {
             // Fetch user basic info
-            const userResponse = await fetch('/api/users/me', {
+            const userResponse = await fetch('/api/me', {
                 credentials: 'include',
             });
 
@@ -193,7 +193,7 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
         e.preventDefault();
         
         try {
-            const userResponse = await fetch('/api/users/me', {
+            const userResponse = await fetch('/api/me', {
                 credentials: 'include'
             });
             if (!userResponse.ok) {
