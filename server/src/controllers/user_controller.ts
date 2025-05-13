@@ -1,7 +1,7 @@
 import { Router } from "@oak/oak/router";
 import {
   deleteUser,
-  // getAllUsers,
+  getAllUsers,
   getUser,
   getUserByMail,
   insertUser,
@@ -26,24 +26,24 @@ import { getLoggedInUser } from "../auth.ts";
 
 export const userRouter = new Router();
 
-// Przykładowy endpoint zwracający wszystkich użytkowników
-// userRouter.get("/api/users", async (ctx) => {
-//   const users = await getAllUsers();
-//   const response: UserResponse[] = users.map((user) => {
-//     return {
-//       id: user.id,
-//       first_name: user.first_name,
-//       last_name: user.last_name,
-//       user_description: user.user_description,
-//       city: user.city,
-//       average_rating: user.average_value,
-//       comment_count: user.comment_count,
-//       album_count: user.album_count,
-//     };
-//   });
+//Przykładowy endpoint zwracający wszystkich użytkowników
+userRouter.get("/api/users", async (ctx) => {
+  const users = await getAllUsers();
+  const response: UserResponse[] = users.map((user) => {
+    return {
+      id: user.id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      user_description: user.user_description,
+      city: user.city,
+      average_rating: user.average_rating,
+      comment_count: user.comment_count,
+      album_count: user.album_count,
+    };
+  });
 
-//   ctx.response.body = response;
-// });
+  ctx.response.body = response;
+});
 
 // Przykładowa rejestracja
 userRouter.post("/api/register", async (ctx) => {

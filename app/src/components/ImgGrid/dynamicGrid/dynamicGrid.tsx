@@ -39,7 +39,7 @@ const DynamicGrid = ({ view, authors }: DynamicGridProps) => {
     useEffect(() => {
         const fetchUserId = async () => {
             try {
-                const response = await fetch('/api/users/me');
+                const response = await fetch('/api/me');
                 if (response.ok) {
                     const user = await response.json();
                     setUserId(user.id);
@@ -119,7 +119,7 @@ const DynamicGrid = ({ view, authors }: DynamicGridProps) => {
                     {item.type === 'photo' && (
                         <Link to={`/album/${item.data.album_id}`}>
                             <img
-                            src={`/api/photos/${item.data.id}`}
+                            src={`/api/files/${item.data.id}`}
                             alt={`Zdjęcie ${item.data.id}`}
                             loading="lazy"
                             className="grid-container-dynamic__grid-item-dynamic--img"
