@@ -34,8 +34,10 @@ userRouter.get("/api/users", async (ctx) => {
       id: user.id,
       first_name: user.first_name,
       last_name: user.last_name,
-      user_description: user.user_description,
       city: user.city,
+      phone_number: user.phone_number,
+      email: user.email,
+      user_description: user.user_description,
     };
   });
 
@@ -122,8 +124,10 @@ userRouter.get("/api/users/me", async (ctx) => {
         id: user.id,
         first_name: user.first_name,
         last_name: user.last_name,
-        user_description: user.user_description,
         city: user.city,
+        phone_number: user.phone_number,
+        email: user.email,
+        user_description: user.user_description,
       };
       ctx.response.body = response;
     } else {
@@ -148,8 +152,10 @@ userRouter.get("/api/users/:id", async (ctx) => {
     id: user.id,
     first_name: user.first_name,
     last_name: user.last_name,
-    user_description: user.user_description,
     city: user.city,
+    phone_number: user.phone_number,
+    email: user.email,
+    user_description: user.user_description
   };
   ctx.response.body = response;
 });

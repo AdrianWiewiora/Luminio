@@ -44,14 +44,19 @@ contactRouter.put("/api/users/:id/contacts", async (ctx) => {
   }
   const old_contacts = await getContactsByUser(user_id);
   if (
-    request.some((contact) =>
-      old_contacts.map((c) => c.name).includes(contact.name)
-    )
+    request.some((contact) => {
+      const existingContact = old_contacts.find((c) => c.name === contact.name);
+      return (
+        existingContact &&
+        JSON.stringify(existingContact.contact_info) === JSON.stringify(contact.contact_info)
+      );
+    })
   ) {
     ctx.response.body = { message: "Ten kontakt już istnieje" };
     ctx.response.status = 400;
     return;
   }
+  
   await updateContacts(request);
 
   ctx.response.body = {};

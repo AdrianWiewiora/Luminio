@@ -18,9 +18,9 @@ const BasicInfoForm = [
     { id: "Imię", label: "Imię", type: "text" },
     { id: "Nazwisko", label: "Nazwisko", type: "text" },
     { id: "Miasto", label: "Miasto", type: "text" },
-    { id: "Lokalizacja", label: "Lokalizacja", type: "text" },
     { id: "Telefon", label: "Telefon", type: "text" },
     { id: "Email", label: "Email", type: "email" },
+    { id: "Opis", label: "Opis", type: "textarea" },
 ];
 
 const ContactForm = [
@@ -36,104 +36,156 @@ interface ProfilePopupProps {
 }
 
 function ProfilePopup({ onClose }: ProfilePopupProps) {
-    const [formData, setFormData] = useState(
-        Object.fromEntries([
-            ...BasicInfoForm.map(({ id }) => [id, ""]),
-            ...ContactForm.map(({ id }) => [id, ""]),
-            ["Opis", ""]
-        ])
+    const [basicInfoData, setBasicInfoData] = useState(
+        Object.fromEntries(BasicInfoForm.map(({ id }) => [id, ""]))
     );
 
+    const [contactData, setContactData] = useState(
+        Object.fromEntries(ContactForm.map(({ id }) => [id, ""]))
+    );
+
+    const [initialContactData, setInitialContactData] = useState(
+        Object.fromEntries(ContactForm.map(({ id }) => [id, ""]))
+    );
+
+    const [profileImage, setProfileImage] = useState<string | null>(null);
+
+    const handleBasicInfoChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { id, value } = event.target;
+        setBasicInfoData((prevData) => ({ ...prevData, [id]: value }));
+    };
+
+    const handleContactChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = event.target;
+        setContactData((prevData) => ({ ...prevData, [id]: value }));
+    }
+
+    const handleProfileImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        
+    };
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const response = await fetch('/api/users/me', {
-                    credentials: 'include', 
+    const fetchUserData = async () => {
+        try {
+            // Fetch user basic info
+            const userResponse = await fetch('/api/users/me', {
+                credentials: 'include',
+            });
+
+            if (userResponse.ok) {
+                const userData = await userResponse.json();
+                
+                setBasicInfoData({
+                    "Id": userData.id,
+                    "Imię": userData.first_name || "",
+                    "Nazwisko": userData.last_name || "",
+                    "Miasto": userData.city || "",
+                    "Telefon": userData.phone_number || "",
+                    "Email": userData.email || "",
+                    "Opis": userData.user_description || "",
                 });
-                if (response.ok) {
-                    const userData = await response.json();
 
-                    setFormData({
-                        "Imię": userData.first_name || "",
-                        "Nazwisko": userData.last_name || "",
-                        "Miasto": userData.city || "",
-                        "Lokalizacja": userData.location || "",
-                        "Portfolio": userData.portfolio || "",
-                        "Linkedin": userData.linkedin || "",
-                        "Instagram": userData.instagram || "",
-                        "Dribbble": userData.dribbble || "",
-                        "Inne": userData.other || "",
-                        "Telefon": userData.phone || "",
-                        "Email": userData.email || "",
-                        "Opis": userData.description || "",
-                    });
+                // Fetch user contacts
+                const contactsResponse = await fetch(`/api/users/${userData.id}/contacts`, {
+                    credentials: 'include',
+                });
+
+                if (contactsResponse.ok) {
+                    const contactsArray = await contactsResponse.json();
+
+                    const contactsObject = contactsArray.reduce(
+                        (acc: Record<string, string>, contact: { name: string; contact_info: string}) => {
+                        switch (contact.name) {
+                            case "Portfolio":
+                                acc["Portfolio"] = contact.contact_info || "";
+                                break;
+                            case "Linkedin":
+                                acc["Linkedin"] = contact.contact_info || "";
+                                break;
+                            case "Instagram":
+                                acc["Instagram"] = contact.contact_info || "";
+                                break;
+                            case "Dribbble":
+                                acc["Dribbble"] = contact.contact_info || "";
+                                break;
+                            case "Inne":
+                                acc["Inne"] = contact.contact_info || "";
+                                break;
+                            default:
+                                console.warn(`Nieznany typ kontaktu: ${contact.name}`);
+                        }
+                        return acc;
+                    }, {});
+
+                    setContactData(contactsObject);
+                    setInitialContactData(contactsObject);
                 }
-            } catch (error) {
-                console.error("Błąd podczas pobierania danych użytkownika:", error);
             }
-        };
-
-        fetchUserData();
-    }, []);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.id]: e.target.value });
+        } catch (error) {
+            console.error("Błąd podczas pobierania danych użytkownika lub kontaktów:", error);
+        }
     };
 
-    const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setFormData({ ...formData, [e.target.id]: e.target.value });
-    };
+    fetchUserData();
+}, []);
+
 
     const handleBasicInfoSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+    
         try {
-          const userResponse = await fetch('/api/users/me', {
-            credentials: 'include'
-          });
-          
-          if (!userResponse.ok) {
-            throw new Error("Nie udało się pobrać danych użytkownika");
-          }
-          
-          const userData = await userResponse.json();
-          const userId = userData.id;
-      
-          const response = await fetch(`/api/users/${userId}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-              first_name: formData["Imię"],
-              last_name: formData["Nazwisko"],
-              city: formData["Miasto"],
-              location: formData["Lokalizacja"],
-              phone: formData["Telefon"],
-              email: formData["Email"],
-              description: formData["Opis"]
-            })
-          });
-      
-          const responseText = await response.text(); 
-          
-          try {
-            const responseData = responseText ? JSON.parse(responseText) : {};
-            
-            if (!response.ok) {
-              console.error("Błąd serwera:", responseData);
-              throw new Error(responseData.message || "Błąd podczas aktualizacji danych");
+            // Pobierz obecne dane formularza
+            const currentUserData = {
+                first_name: basicInfoData["Imię"],
+                last_name: basicInfoData["Nazwisko"],
+                city: basicInfoData["Miasto"],
+                phone_number: basicInfoData["Telefon"],
+                email: basicInfoData["Email"],
+                user_description: basicInfoData["Opis"],
+            };
+    
+            // Filtrujemy tylko niepuste wartości i mapujemy na nowy obiekt
+            const changedData = Object.entries(currentUserData).reduce((acc, [key, value]) => {
+                // Jeśli wartość NIE jest pusta, dodajemy ją do obiektu wynikowego
+                if (value !== "") {
+                    acc[key] = value;
+                }
+                return acc;
+            }, {} as Record<string, string>);
+
+            // Jeśli nie ma żadnych zmian, zakończ funkcję
+            if (Object.keys(changedData).length === 0) {
+                console.log("Brak zmian do zapisania.");
+                return;
             }
-      
-            console.log("Dane podstawowe zostały zaktualizowane:", responseData);
+
+            // Dodaj ID użytkownika do danych
+            const requestData = {
+                ...changedData,
+                id: basicInfoData["Id"]
+            };
+
+            // Wyślij tylko zmienione dane
+            const response = await fetch(`/api/users/${requestData.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            });
+    
+            if (!response.ok) {
+                const responseText = await response.text();
+                const errorMessage = responseText ? JSON.parse(responseText).message : "Błąd podczas aktualizacji danych";
+                console.error("Błąd serwera:", errorMessage);
+                throw new Error(errorMessage);
+            }
+    
+            console.log("Dane podstawowe zostały zaktualizowane:", changedData);
             onClose();
-          } catch (jsonError) {
-            console.error("Serwer zwrócił nieprawidłowy JSON:", responseText);
-            throw new Error("Nieprawidłowa odpowiedź serwera");
-          }
+    
         } catch (error) {
-          console.error("Błąd podczas wysyłania danych podstawowych:", error);
+            console.error("Błąd podczas wysyłania danych podstawowych:", error);
         }
     };
 
@@ -141,50 +193,58 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
         e.preventDefault();
         
         try {
-          const userResponse = await fetch('/api/users/me', {
-            credentials: 'include'
-          });
-          
-          if (!userResponse.ok) {
-            throw new Error("Nie udało się pobrać danych użytkownika");
-          }
-          
-          const userData = await userResponse.json();
-          const userId = userData.id;
-      
-          const response = await fetch(`/api/users/${userId}/contacts`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-              portfolio: formData["Portfolio"],
-              linkedin: formData["Linkedin"],
-              instagram: formData["Instagram"],
-              dribbble: formData["Dribbble"],
-              other: formData["Inne"]
-            })
-          });
-      
-          const responseText = await response.text(); 
-          
-          try {
-            const responseData = responseText ? JSON.parse(responseText) : {};
-            
-            if (!response.ok) {
-              console.error("Błąd serwera:", responseData);
-              throw new Error(responseData.message || "Błąd podczas aktualizacji kontaktów");
+            const userResponse = await fetch('/api/users/me', {
+                credentials: 'include'
+            });
+            if (!userResponse.ok) {
+                throw new Error("Nie udało się pobrać danych użytkownika");
             }
-      
+
+            const userData = await userResponse.json();
+            const userId = userData.id;
+    
+            const contactsData = [
+                { name: "Portfolio", contact_info: contactData["Portfolio"] || "" },
+                { name: "Linkedin", contact_info: contactData["Linkedin"] || "" },
+                { name: "Instagram", contact_info: contactData["Instagram"] || "" },
+                { name: "Dribbble", contact_info: contactData["Dribbble"] || "" },
+                { name: "Inne", contact_info: contactData["Inne"] || "" }
+            ]
+            .filter(contact => contact.contact_info !== "" && contact.contact_info !== initialContactData[contact.name]);
+
+            if (contactsData.length === 0) {
+                console.log("Brak zmian w kontaktach.");
+                return;
+            }
+
+            const contactsWithUserId = contactsData.map(contact => ({
+                ...contact,
+                user_id: userId
+            }));
+
+            console.log("Zmodyfikowane kontakty:", contactsWithUserId);
+
+            const response = await fetch(`/api/users/${userId}/contacts`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(contactsWithUserId)
+            });
+    
+            if (!response.ok) {
+                const errorText = await response.text();
+                const errorData = errorText ? JSON.parse(errorText) : {};
+                throw new Error(errorData.message || "Błąd podczas aktualizacji kontaktów");
+            }
+    
+            const responseData = await response.json();
             console.log("Kontakty zostały zaktualizowane:", responseData);
             onClose();
-          } catch (jsonError) {
-            console.error("Serwer zwrócił nieprawidłowy JSON:", responseText);
-            throw new Error("Nieprawidłowa odpowiedź serwera");
-          }
+    
         } catch (error) {
-          console.error("Błąd podczas wysyłania kontaktów:", error);
+            console.error("Błąd podczas wysyłania kontaktów:", error);
         }
     };
 
@@ -207,13 +267,18 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                             <h1>
                                 Podstawowe informacje
                             </h1>
-                            <img src={Community19} alt="profil-image" />
+                            <img src={profileImage || Community19} alt="profil-image" />
                             <div className="profile-popup__content--section--basic-info--profil--con">
-                                <span className="profile-popup__content--section--basic-info--profil--change-img">
-                                    <GoPencil /> Zmień
-                                </span>
-                                <button type="submit" className="profile-popup__content--section--basic-info--profil--btn">
-                                </button>
+                                <label htmlFor="profileImage" className="profile-popup__content--section--basic-info--profil--change-img">
+                                    <GoPencil /> Zmień profilowe
+                                </label>
+                                <input 
+                                    id="profileImage" 
+                                    type="file" 
+                                    accept="image/*"
+                                    onChange={handleProfileImageChange}
+                                    style={{ display: "none" }} 
+                                />
                             </div>
                         </form>
                         <form 
@@ -227,8 +292,8 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                                     id={id}
                                     label={label}
                                     type={type}
-                                    value={formData[id] || ""}
-                                    onChange={handleInputChange}
+                                    value={basicInfoData[id] || ""}
+                                    onChange={handleBasicInfoChange}
                                     required={false}
                                 />
                             ))} 
@@ -236,8 +301,8 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                                 <TextArea 
                                     id="Opis"
                                     label="Opis"
-                                    value={formData["Opis"] || ""}
-                                    onChange={handleTextAreaChange}
+                                    value={basicInfoData["Opis"] || ""}
+                                    onChange={handleBasicInfoChange}
                                 />
                             </div>
                             
@@ -259,8 +324,8 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                                     id={id}
                                     label={label}
                                     type={type}
-                                    value={formData[id] || ""}
-                                    onChange={handleInputChange}
+                                    value={contactData[id] || ""}
+                                    onChange={handleContactChange}
                                     required={false}
                                 />
                             ))}
