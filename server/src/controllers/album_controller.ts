@@ -20,6 +20,7 @@ export const albumRouter = new Router();
 albumRouter.get("/api/users/:id/albums", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
   const albums = await getAlbumsByUser(id);
+  if (albums == null) return ctx.response.status = 404;
   const response: AlbumResponse[] = await Promise.all(
     albums.map(async (album) => {
       const [album_ratings, album_pictures] = await Promise.all([

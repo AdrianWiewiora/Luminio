@@ -3,8 +3,7 @@ import "./authorNav.scss";
 const navElements = [
     { id: 0, name: "Kolekcje zdjęć", action: "openPicturePopup" }, 
     { id: 1, name: "Dostosuj profil", action: "customizeProfile" },
-    { id: 2, name: "Dodaj", action: "openAlbumPopup" }, 
-    { id: 3, name: "Robocze" } 
+    { id: 2, name: "Dodaj", action: "openAlbumPopup" }
 ];
 
 interface AuthorNavProps {

@@ -131,6 +131,7 @@ userRouter.get("/api/me", async (ctx) => {
 userRouter.get("/api/users/:id", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
   const user = await getUser(id);
+  if (user == null) return ctx.response.status = 404;
   const stats = await getUserStats(id);
   const response: UserResponse = {
     id: user.id,
