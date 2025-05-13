@@ -106,7 +106,11 @@ userRouter.post("/api/logout", async (ctx) => {
 
 userRouter.get("/api/me", async (ctx) => {
   const user = await getLoggedInUser(ctx);
-  if (!user) return;
+  if (!user){
+      ctx.response.status = 204;
+      ctx.response.body = null
+      return;
+  }
 
   const stats = await getUserStats(user.id);
   const response: UserResponse = {
