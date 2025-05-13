@@ -7,6 +7,8 @@ export interface UserResponse {
   last_name: string;
   user_description: string;
   city: string;
+  phone_number: string;
+  email: string;
 }
 
 export interface ServiceResponse {
