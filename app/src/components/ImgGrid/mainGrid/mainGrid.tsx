@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./mainGrid.scss";
 
 interface Photo {
   id: number;
   file_path: string;
-  album_id: number; 
+  album_id: number;
 }
 
 function MainGrid() {
@@ -15,7 +15,7 @@ function MainGrid() {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await fetch('/api/photos');
+        const response = await fetch(`/api/photos?amount=${12}&page=${1}`);
         if (response.ok) {
           const photos = await response.json();
           setAllImages(photos);
@@ -33,7 +33,7 @@ function MainGrid() {
   }, []);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
+    let lastScrollY = globalThis.scrollY;
 
     const handleScroll = () => {
       const gridContainer = document.querySelector(".grid");
@@ -41,17 +41,17 @@ function MainGrid() {
 
       const gridItems = document.querySelectorAll(".grid__item");
       const containerRect = gridContainer.getBoundingClientRect();
-      const scrollY = window.scrollY;
+      const scrollY = globalThis.scrollY;
 
-      if (containerRect.top < window.innerHeight && containerRect.bottom > 0) {
+      if (containerRect.top < globalThis.innerHeight && containerRect.bottom > 0) {
         const smoothScroll = (scrollY - lastScrollY) * 0.1;
         lastScrollY += smoothScroll;
 
         gridItems.forEach((item, index) => {
           const row = Math.floor(index / 4);
           const col = index % 4;
-          const rowSpeed = 5;  
-          const colSpeed = col % 2 === 0 ? 6 : 3; 
+          const rowSpeed = 5;
+          const colSpeed = col % 2 === 0 ? 6 : 3;
 
           let yPos = -((lastScrollY - gridContainer.offsetTop) / rowSpeed) + row * 5;
           let yOffset = (scrollY - gridContainer.offsetTop) / colSpeed;
@@ -63,8 +63,8 @@ function MainGrid() {
           }
 
           let opacity = 1;
-          if (containerRect.bottom <= window.innerHeight) {
-            let fadeStart = window.innerHeight - containerRect.bottom;
+          if (containerRect.bottom <= globalThis.innerHeight) {
+            let fadeStart = globalThis.innerHeight - containerRect.bottom;
             opacity = Math.max(0, 1 - fadeStart / 200);
           }
 
@@ -75,21 +75,23 @@ function MainGrid() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    globalThis.addEventListener("scroll", handleScroll);
+    return () => globalThis.removeEventListener("scroll", handleScroll);
   }, [allImages]);
 
   if (loading) {
     return <div className="loading">Ładowanie zdjęć...</div>;
   }
-
+  if (allImages.length === 0) {
+    return <div className="loading">Brak zdjęć na naszej stronie.</div>;
+  }
   return (
     <section className="grid">
       {allImages.map((photo) => (
         <div key={photo.id} className="grid__item">
           <Link to={`/album/${photo.album_id}`}>
-            <img 
-              src={`/api/photos/${photo.id}`} 
+            <img
+              src={`/api/files/${photo.id}`}
               alt={`Zdjęcie ${photo.id}`}
               className="grid__img"
             />

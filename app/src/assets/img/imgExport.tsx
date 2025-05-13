@@ -58,3 +58,6 @@ export { default as image5 } from "./gallery/image5.png";
 export { default as image6 } from "./gallery/image6.png";
 export { default as image7 } from "./gallery/image7.png";
 export { default as image8 } from "./gallery/image8.png";
+
+// Export noImageAvailable
+export { default as noImageAvailable } from "./noImageAvailable.png";

@@ -3,7 +3,7 @@ import { sql } from "../db.ts";
 export interface NewDbPhoto {
   user_id: number;
   album_id: number;
-  file_path: string;
+  file_id: number;
   category_id: number;
 }
 
@@ -16,6 +16,16 @@ export async function getAllPhotos(): Promise<DbPhoto[]> {
   const rows = await sql<
     DbPhoto[]
   >`SELECT * FROM photos`;
+  return rows;
+}
+
+export async function getAllPhotosParam(
+  limit: number,
+  offset: number,
+): Promise<DbPhoto[]> {
+  const rows = await sql<
+    DbPhoto[]
+  >`SELECT * FROM photos ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`;
   return rows;
 }
 

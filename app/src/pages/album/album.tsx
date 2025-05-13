@@ -25,6 +25,7 @@ interface Photo {
   album_id: number;
   file_path: string;
   created_at: string;
+  file_id: number;
 }
 
 interface PhotoWithUrl extends Photo {
@@ -39,13 +40,22 @@ function Album() {
   const [photos, setPhotos] = useState<PhotoWithUrl[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [isEmpty, setIsEmpty] = useState(false);
 
-  const amountPerPage = 10;
+  const amountPerPage = 8;
+
+  const refreshPhotos = async () => {
+    setPhotos([]);
+    setPage(1);
+    setIsEmpty(false)
+    setHasMore(true);
+    await fetchPhotosPage(1);
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch('/api/users/me');
+        const response = await fetch('/api/me');
         if (response.ok) {
           const userData = await response.json();
           setUserId(userData.id);
@@ -83,9 +93,9 @@ function Album() {
 
       const response = await fetch(`/api/albums/${id}/photos?amount=${amountPerPage}&page=${currentPage}`);
       if (!response.ok) throw new Error(`Nie udało się pobrać zdjęć (page ${currentPage})`);
-
       const data = await response.json();
       const photosList = Array.isArray(data) ? data : (data ? [data] : []);
+      if(currentPage === 1 && photosList.length === 0) setIsEmpty(true);
 
       if (photosList.length === 0) {
         setHasMore(false);
@@ -93,27 +103,31 @@ function Album() {
       }
 
       const loadedPhotos = await Promise.all(
-        photosList.map(async (photo) => {
-          try {
-            const imgResponse = await fetch(`/api/photos/${photo.id}`);
-            if (!imgResponse.ok) throw new Error(`Błąd pobierania zdjęcia ${photo.id}`);
-            const blob = await imgResponse.blob();
-            const blobUrl = URL.createObjectURL(blob);
-            return { ...photo, blobUrl };
-          } catch (error) {
-            console.error(`Błąd przy zdjęciu ${photo.id}:`, error);
-            return null;
-          }
-        })
+          photosList.map(async (photo) => {
+            try {
+              const imgResponse = await fetch(`/api/files/${photo.file_id}`);
+              if (!imgResponse.ok) throw new Error(`Błąd pobierania pliku ${photo.file_id}`);
+              const blob = await imgResponse.blob();
+              const blobUrl = URL.createObjectURL(blob);
+              return { ...photo, blobUrl };
+            } catch (error) {
+              console.error(`Błąd przy pliku ${photo.file_id}:`, error);
+              return null;
+            }
+          })
       );
 
       const validPhotos = loadedPhotos.filter((photo): photo is PhotoWithUrl => photo !== null);
-      setPhotos(prev => [...prev, ...validPhotos]);
+      setPhotos(prev => {
+        const newPhotos = [...prev, ...validPhotos];
+        return newPhotos.filter((photo, index, self) =>
+            index === self.findIndex(p => p.file_id === photo.file_id)
+        );
+      });
 
       if (photosList.length < amountPerPage) {
         setHasMore(false);
       }
-
     } catch (error) {
       console.error("Błąd podczas pobierania zdjęć:", error);
     }
@@ -140,7 +154,11 @@ function Album() {
       <div className="album-wrapper">
         <div className="album-wrapper__content">
           <Title title={album.name} description={album.description} />
-          <PhotoGrid photos={photos} />
+          {!isEmpty ? (
+              <PhotoGrid photos={photos} />
+          ) : (
+              <div className="photo-grid__empty">Brak zdjęć w albumie</div>
+          )}
           
           {hasMore && (
             <button 
@@ -157,7 +175,7 @@ function Album() {
 
           <Reviews />
         </div>
-        {id && userId && <AsideManager albumId={id} userId={userId} />}
+        {id && userId && <AsideManager albumId={id} userId={userId} onPhotosUploaded={refreshPhotos} />}
       </div>
       <Footer />
     </main>

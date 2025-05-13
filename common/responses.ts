@@ -7,6 +7,9 @@ export interface UserResponse {
   last_name: string;
   user_description: string;
   city: string;
+  average_rating: number;
+  comment_count: number;
+  album_count: number;
   phone_number: string;
   email: string;
 }
@@ -17,10 +20,10 @@ export interface ServiceResponse {
 }
 
 export interface ContactResponse {
-  id:number;
-  user_id:number;
-  name:string;
-  contact_info:string;
+  id: number;
+  user_id: number;
+  name: string;
+  contact_info: string;
 }
 
 //nie jestem pewny czy dobrze jest lista zdjęć
@@ -38,13 +41,13 @@ export interface AlbumResponse {
 }
 
 export interface PhotoResponse {
-  id: number,
-  user_id:number,
-  album_id:number,
-  category_id:number,
-  file_path:string,
-  created_at:number
-} 
+  id: number;
+  user_id: number;
+  album_id: number;
+  category_id: number;
+  file_id: number;
+  created_at: number;
+}
 
 export interface AlbumReviewResponse {
   id: number;
@@ -70,4 +73,3 @@ export interface PhotoReviewResponse {
 export interface RegistrationErrorResponse {
   message: string;
 }
-

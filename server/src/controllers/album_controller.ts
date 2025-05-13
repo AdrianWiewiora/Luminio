@@ -7,14 +7,11 @@ import {
   NewDbAlbum,
   updateAlbum,
 } from "../models/albums.ts";
-import * as path from "@std/path";
-import { UPLOADS_DIR } from "../../config.ts";
 import { AlbumResponse } from "../../../common/responses.ts";
 import { CreateAlbumSchema, UpdateAlbumSchema } from "common";
 import { getLoggedInUser } from "../auth.ts";
-import { sql } from "../db.ts";
+import { fileUpload, sql } from "../db.ts";
 import * as v from "@valibot/valibot";
-import { generate } from "@std/uuid/v1";
 import { DbPhoto, getAllPhotosByAlbum } from "../models/photos.ts";
 import { getAlbumReviewsByAlbum } from "../models/album_revews.ts";
 export const albumRouter = new Router();
@@ -23,6 +20,7 @@ export const albumRouter = new Router();
 albumRouter.get("/api/users/:id/albums", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
   const albums = await getAlbumsByUser(id);
+  if (albums == null) return ctx.response.status = 404;
   const response: AlbumResponse[] = await Promise.all(
     albums.map(async (album) => {
       const [album_ratings, album_pictures] = await Promise.all([
@@ -120,6 +118,9 @@ albumRouter.get("/api/albums/:id", async (ctx) => {
 
 // Stwórz nowy album
 albumRouter.post("/api/albums", async (ctx) => {
+  const user = await getLoggedInUser(ctx);
+  if (!user) return;
+
   const formData = await ctx.request.body.formData();
   const formObject = Object.fromEntries(formData.entries());
 
@@ -133,50 +134,27 @@ albumRouter.post("/api/albums", async (ctx) => {
     ctx.response.status = 400;
     return;
   }
-  const request = validation_result.output;
+  const req = validation_result.output;
 
-  const logged_user = await getLoggedInUser(ctx);
-  if (!logged_user) return;
+  const file_id = await fileUpload(req.file);
+  const album: NewDbAlbum = {
+    user_id: user.id,
+    name: req.name,
+    description: req.description,
+    tag: req.service_id,
+    is_public: req.is_public,
+    cover_id: file_id,
+  };
 
-  if (request.user_id !== logged_user.id) {
-    ctx.response.body = {
-      message: "próba modyfikacji niezalogowanego użytkownika",
-    };
-    ctx.response.status = 400;
-    return;
-  }
-  const file_data = request.file.stream();
-  const file_name = generate();
-  const file_path = path.join(UPLOADS_DIR, file_name);
-
-  // Perfom a transaction because we don't want to insert anything to the database when the writeFile fails
-  await sql.begin(async (sql) => {
-    const data = {
-      user_id: logged_user.id,
-      file_path: file_name,
-    };
-    const [photo] = await sql<DbPhoto[]>`INSERT INTO photos ${
-      sql(data)
-    } returning *`;
-    console.log(photo.id);
-    const album: NewDbAlbum = {
-      user_id: request.user_id,
-      name: request.name,
-      description: request.description,
-      tag: request.service_id,
-      is_public: request.is_public,
-      cover_id: photo.id,
-    };
-    await sql`INSERT INTO albums ${sql(album)}`;
-    await Deno.writeFile(file_path, file_data);
-  });
-
-  // Sukces
+  await sql`INSERT INTO albums ${sql(album)}`;
   ctx.response.body = {};
 });
 
 // zaktualizuj album
 albumRouter.put("/api/albums/:id", async (ctx) => {
+  const user = await getLoggedInUser(ctx);
+  if (!user) return;
+
   const formData = await ctx.request.body.formData();
   const formObject = Object.fromEntries(formData.entries());
 
@@ -190,18 +168,7 @@ albumRouter.put("/api/albums/:id", async (ctx) => {
     ctx.response.status = 400;
     return;
   }
-  const request = validation_result.output;
-
-  const logged_user = await getLoggedInUser(ctx);
-  if (!logged_user) return;
-
-  if (request.user_id !== logged_user.id) {
-    ctx.response.body = {
-      message: "próba modyfikacji niezalogowanego użytkownika",
-    };
-    ctx.response.status = 400;
-    return;
-  }
+  const req = validation_result.output;
 
   const album_id = Number.parseInt(ctx.params.id, 10);
   const updated_album = await getAlbum(album_id);
@@ -213,45 +180,31 @@ albumRouter.put("/api/albums/:id", async (ctx) => {
     return;
   }
 
-  if (!request.file) {
-    const album: NewDbAlbum = {
-      user_id: request.user_id,
-      name: request.name,
-      description: request.description,
-      tag: request.service_id,
-      is_public: request.is_public,
-      cover_id: updated_album.cover_id,
-    };
-    await updateAlbum(album, album_id);
-  } else {
-    const file_data = request.file.stream();
-    const file_name = generate();
-    const file_path = path.join(UPLOADS_DIR, file_name);
+  const album: NewDbAlbum = {
+    user_id: user.id,
+    name: req.name,
+    description: req.description,
+    tag: req.service_id,
+    is_public: req.is_public,
+    cover_id: updated_album.cover_id,
+  };
 
-    // Perfom a transaction because we don't want to insert anything to the database when the writeFile fails
-    await sql.begin(async (sql) => {
-      const data = {
-        user_id: logged_user.id,
-        file_path: file_name,
-      };
-      const [photo] = await sql<DbPhoto[]>`INSERT INTO photos ${
-        sql(data)
-      } returning *`;
-      console.log(photo.id);
-      const album: NewDbAlbum = {
-        user_id: request.user_id,
-        name: request.name,
-        description: request.description,
-        tag: request.service_id,
-        is_public: request.is_public,
-        cover_id: photo.id,
-      };
-      await sql`UPDATE albums SET ${sql(album)} WHERE id = ${album_id};`;
-      await Deno.writeFile(file_path, file_data);
-    });
+  if (req.file) {
+    const file_id = await fileUpload(req.file);
+
+    const data = {
+      user_id: user.id,
+      file_id: file_id,
+    };
+
+    const [photo] = await sql<DbPhoto[]>`INSERT INTO photos ${
+      sql(data)
+    } returning *`;
+
+    album.cover_id = photo.id;
   }
 
-  // Sukces
+  await updateAlbum(album, album_id);
   ctx.response.body = {};
 });
 

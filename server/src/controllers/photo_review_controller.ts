@@ -12,7 +12,6 @@ import { PhotoReviewResponse } from "../../../common/responses.ts";
 import * as v from "@valibot/valibot";
 import { CreatePhotoReviewSchema, UpdatePhotoReviewSchema } from "common";
 import { getLoggedInUser } from "../auth.ts";
-import { privateEncrypt } from "node:crypto";
 
 export const photoReviewRouter = new Router();
 

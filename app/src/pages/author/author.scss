@@ -14,4 +14,11 @@
     @media (max-width: 768px) {
         flex-direction: column;
     }
+
+    .empty-albums-message {
+        padding: 2rem;
+        text-align: center;
+        color: var(--white-text);
+        font-size: 1.25rem;
+    }
 }

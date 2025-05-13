@@ -40,7 +40,7 @@ function Header() {
     useEffect(() => {
         const checkSession = async () => {
             try {
-                const response = await fetch("/api/users/me", {
+                const response = await fetch("/api/me", {
                     credentials: "include",
                 });
 
@@ -60,7 +60,7 @@ function Header() {
 
         checkSession();
     }, []);
-  
+
     const handleLogout = async () => {
         try {
             const response = await fetch("/api/logout", {

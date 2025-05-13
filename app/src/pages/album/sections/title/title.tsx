@@ -16,7 +16,7 @@ function Title({ title = "", description = "" }: TitleProps) {
                 <div className="head__details--info">
                     <div className="head__details--info--rating">
                         4.7
-                        <StarRating rating={4} readOnly={true}/>
+                        <StarRating rating={4} readOnly/>
                     </div>
                     15.06.2024
                 </div>

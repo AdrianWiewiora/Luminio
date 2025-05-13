@@ -1,7 +1,7 @@
 import "./albumElement.scss";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { paralax10 } from "../../assets/img/imgExport.tsx";
+import { noImageAvailable } from "../../assets/img/imgExport.tsx";
 import { FaStar, FaCog } from "react-icons/fa";
 
 interface AlbumElementProps {
@@ -30,8 +30,7 @@ function AlbumElement({
     onDeleteClick
 }: AlbumElementProps) {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const [preview, setPreview] = useState(paralax10);
+    const [preview, setPreview] = useState(noImageAvailable);
     let timeoutId: number;
 
     const handleMouseEnter = () => {
@@ -68,9 +67,8 @@ function AlbumElement({
 
     useEffect(() => {
         const fetchPhoto = async () => {
-            setIsLoading(true);
             try {
-                const response = await fetch(`/api/photos/${coverId}`);
+                const response = await fetch(`/api/files/${coverId}`);
                 if (response.ok) {
                     const blob = await response.blob();
                     const imageUrl = URL.createObjectURL(blob);
@@ -80,8 +78,6 @@ function AlbumElement({
                 }
             } catch (error) {
                 console.error("Błąd podczas pobierania okładki:", error);
-            } finally {
-                setIsLoading(false);
             }
         };
     

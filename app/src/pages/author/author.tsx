@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import './author.scss';
 
 import Header from '../../components/header/header.tsx';
@@ -33,52 +33,18 @@ interface Album {
 
 function Author() {
     const { id: userId } = useParams();
-    const navigate = useNavigate();
     const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
     const [isPicturePopupOpen, setIsPicturePopupOpen] = useState(false);
     const [isAlbumPopupOpen, setIsAlbumPopupOpen] = useState(false);
     const [loggedUserId, setLoggedUserId] = useState<number | null>(null);
-    const [userExists, setUserExists] = useState(true);
-    const [allUsers, setAllUsers] = useState<User[]>([]);
     const [albums, setAlbums] = useState<Album[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editingAlbum, setEditingAlbum] = useState<Album | null>(null);
 
     useEffect(() => {
-        const fetchAllUsers = async () => {
-            try {
-                const response = await fetch('/api/users');
-                if (response.ok) {
-                    const data = await response.json();
-                    setAllUsers(data);
-                }
-            } catch (error) {
-                console.error("Błąd podczas pobierania listy użytkowników:", error);
-            }
-        };
-
-        fetchAllUsers();
-    }, []);
-
-    useEffect(() => {
-        if (allUsers.length > 0) {
-            const userExists = allUsers.some(user => user.id === Number(userId));
-            if (!userExists) {
-                setUserExists(false);
-            }
-        }
-    }, [allUsers, userId]);
-
-    useEffect(() => {
-        if (!userExists) {
-            navigate('/not-found');
-        }
-    }, [userExists, navigate]);
-
-    useEffect(() => {
         const fetchLoggedUser = async () => {
             try {
-                const response = await fetch('/api/users/me', {
+                const response = await fetch('/api/me', {
                     credentials: 'include',
                 });
                 if (response.ok) {
@@ -136,7 +102,7 @@ function Author() {
     };
 
     const handleDeleteAlbum = async (albumId: number) => {
-        const confirmDelete = window.confirm("Czy na pewno chcesz usunąć ten album?");
+        const confirmDelete = globalThis.confirm("Czy na pewno chcesz usunąć ten album?");
         if (!confirmDelete) return;
     
         try {
@@ -176,10 +142,6 @@ function Author() {
         }
     };
 
-    if (!userExists) {
-        return null;
-    }
-
     return (
         <div>
             <Header />
@@ -198,7 +160,7 @@ function Author() {
                         <div className="loading-message">Ładowanie albumów...</div>
                     ) : albums.length === 0 ? (
                         <div className="empty-albums-message">
-                            Fotograf nie dodał jeszcze żadnej zawartości
+                            Użytkownik nie dodał jeszcze żadnej zawartości
                         </div>
                     ) : (
                         <AlbumGrid 

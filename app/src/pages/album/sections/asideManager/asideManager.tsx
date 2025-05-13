@@ -5,9 +5,10 @@ import './asideManager.scss';
 interface AsideManagerProps {
     albumId: string;
     userId: string;
+    onPhotosUploaded: () => void;
 }
 
-function AsideManager({ albumId, userId }: AsideManagerProps) {
+function AsideManager({ albumId, userId, onPhotosUploaded }: AsideManagerProps) {
     const [isUploading, setIsUploading] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -64,7 +65,8 @@ function AsideManager({ albumId, userId }: AsideManagerProps) {
             }
 
             setUploadSuccess(true);
-            window.dispatchEvent(new Event('photos-updated'));
+            onPhotosUploaded();
+            globalThis.dispatchEvent(new Event('photos-updated'));
         } catch (error) {
             console.error('Całkowity błąd:', error);
             setUploadError(

@@ -44,7 +44,7 @@ function Reviews() {
 
   const handleSubmit = async () => {
     try {
-      const userResponse = await fetch('/api/users/me', {
+      const userResponse = await fetch('/api/me', {
         method: 'GET',
         credentials: 'include',
       });

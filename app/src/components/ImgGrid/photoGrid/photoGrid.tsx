@@ -31,7 +31,7 @@ function PhotoGrid({ photos }: PhotoGridProps) {
   };
 
   if (photos.length === 0) {
-    return <div className="photo-grid__empty">Brak zdjęć w albumie</div>;
+    return <div className="photo-grid__empty">Ładowanie zdjęć...</div>;
   }
 
   return (
@@ -51,7 +51,7 @@ function PhotoGrid({ photos }: PhotoGridProps) {
       {isPopupOpen && selectedPhoto && (
         <PicturePopup 
           onClose={closePopup}
-          photo={selectedPhoto} // Zmodyfikuj interfejs PicturePopupProps, aby przyjmował photo
+          photo={selectedPhoto}
         />
       )}
     </>

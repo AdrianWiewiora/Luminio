@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import profile from '../../assets/img/community/community19.png';
+import {useNavigate} from "npm:react-router@7.3.0/dist/production/index.d.ts";
 
 const infoItems = [
     { id: 1, name: "Średnia", value: "4.7" },
@@ -43,6 +44,7 @@ interface UserData {
 function UserDetails() {
     const { id: userId } = useParams();
     const [userData, setUserData] = useState<UserData | null>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -52,6 +54,7 @@ function UserDetails() {
                     const data: UserData = await response.json();
                     setUserData(data);
                 } else {
+                    navigate('/not-found');
                     console.error("Błąd podczas pobierania danych użytkownika:", response.statusText);
                 }
             } catch (error) {

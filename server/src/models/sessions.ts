@@ -8,34 +8,44 @@ export interface DbSession {
 }
 
 export async function createSession(user_id: number): Promise<DbSession> {
-  const rows = await sql<DbSession[]>`INSERT INTO sessions ${
+  const [result] = await sql<DbSession[]>`INSERT INTO sessions ${
     sql({ user_id: user_id })
   } RETURNING *`;
-  return rows[0];
+  return result;
 }
 
 export async function getUserBySession(
   session_uuid: string,
 ): Promise<DbUser | undefined> {
-  const rows = await sql<
+  const [result] = await sql<
     DbUser[]
+  >`SELECT users.* FROM users LEFT JOIN sessions ON sessions.user_id = users.id WHERE sessions.id = ${session_uuid}`;
+  return result;
+}
+
+export interface DbUserStats {
+  average_rating: number;
+  comment_count: number;
+  album_count: number;
+}
+
+export async function getUserStats(user_id: number): Promise<DbUserStats> {
+  const [result] = await sql<
+    DbUserStats[]
   >`SELECT
-      u.*,
-      AVG(ar.value) AS average_value,
+      AVG(ar.value) AS average_rating,
       (SELECT COUNT(*) FROM photo_reviews pr WHERE pr.user_id = u.id) +
       (SELECT COUNT(*) FROM album_reviews alr WHERE alr.user_id = u.id) AS comment_count,
       (SELECT COUNT(*) FROM albums WHERE user_id = u.id) as album_count
-    FROM sessions s
-    LEFT JOIN
-      users u ON s.user_id = u.id
+    FROM users u
     LEFT JOIN 
       albums a ON u.id = a.user_id
     LEFT JOIN 
       album_reviews ar ON a.id = ar.album_id
-    WHERE s.id = ${session_uuid}
+    WHERE u.id = ${user_id}
     GROUP BY 
       u.id;`;
-  return rows[0];
+  return result;
 }
 
 export async function deleteSession(user_id: number) {
