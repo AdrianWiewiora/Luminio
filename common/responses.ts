@@ -32,9 +32,19 @@ export interface AlbumResponse {
   service_id: number;
   is_public: boolean;
   cover_id: number;
+  average_rating: number;
+  comment_count: number;
+  picture_count: number;
 }
 
-export interface PhotoResponse {} //TODO
+export interface PhotoResponse {
+  id: number,
+  user_id:number,
+  album_id:number,
+  category_id:number,
+  file_path:string,
+  created_at:number
+} 
 
 export interface AlbumReviewResponse {
   id: number;
@@ -42,6 +52,8 @@ export interface AlbumReviewResponse {
   user_id: number;
   body: string;
   value: number;
+  first_name: string;
+  last_name: string;
 }
 
 export interface PhotoReviewResponse {
@@ -50,6 +62,8 @@ export interface PhotoReviewResponse {
   user_id: number;
   body: string;
   value: number;
+  first_name: string;
+  last_name: string;
 }
 
 // Zwracany z /api/register po nieudanej rejestracji (status code 400)

@@ -9,15 +9,17 @@ interface Album {
     description?: string;
     service_id?: number;
     is_public: boolean;
+    cover_id: number;
 }
 
 interface AlbumGridProps {
     albums: Album[];
     loggedUserId?: number | null;
     onEditClick?: (albumId: number) => void;
+    onDeleteClick?: (albumId: number) => void;
 }
 
-const AlbumGrid = ({ albums, loggedUserId, onEditClick }: AlbumGridProps) => {
+const AlbumGrid = ({ albums, loggedUserId, onEditClick, onDeleteClick }: AlbumGridProps) => {
     return (
         <section className="grid-album-container">
             {albums.map((album) => (
@@ -31,7 +33,9 @@ const AlbumGrid = ({ albums, loggedUserId, onEditClick }: AlbumGridProps) => {
                             loggedUserId={loggedUserId}
                             description={album.description}
                             serviceId={album.service_id}
+                            coverId={album.cover_id}
                             onEditClick={onEditClick}
+                            onDeleteClick={onDeleteClick}
                         />
                     </Link>
                 </div>

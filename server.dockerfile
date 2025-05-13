@@ -2,6 +2,7 @@ FROM denoland/deno:latest
 WORKDIR /LuminioServ/server
 COPY common/ ../common/
 COPY migrations/ ../migrations/
+COPY photos/ ../photos/
 COPY server/src/ src/
 COPY server/deno.json .
 COPY server/deno.lock .

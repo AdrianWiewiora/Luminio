@@ -12,26 +12,55 @@ export interface DbAlbumReview extends NewDbAlbumReview {
   created_at: number;
 }
 
+export interface UserDbAlbumReview extends DbAlbumReview {
+  first_name: string;
+  last_name: string;
+}
+
 export async function getAlbumReviewsByUser(
   id: number,
-): Promise<DbAlbumReview[]> {
+): Promise<UserDbAlbumReview[]> {
   return await sql<
-    DbAlbumReview[]
-  >`SELECT * FROM album_reviews WHERE user_id = ${id}`;
+    UserDbAlbumReview[]
+  >`SELECT album_reviews.id,
+  album_reviews.user_id,
+  album_reviews.album_id,
+  album_reviews.body,
+  album_reviews.value,
+  album_reviews.created_at,
+    users.first_name,
+  users.last_name
+   FROM album_reviews LEFT JOIN users ON album_reviews.user_id = users.id WHERE user_id = ${id}`;
 }
 
 export async function getAlbumReviewsByAlbum(
   id: number,
-): Promise<DbAlbumReview[]> {
+): Promise<UserDbAlbumReview[]> {
   return await sql<
-    DbAlbumReview[]
-  >`SELECT * FROM album_reviews WHERE album_id = ${id}`;
+    UserDbAlbumReview[]
+  >`SELECT album_reviews.id,
+   album_reviews.user_id,
+   album_reviews.album_id,
+   album_reviews.body,
+   album_reviews.value,
+   album_reviews.created_at,
+     users.first_name,
+  users.last_name
+   FROM album_reviews LEFT JOIN users ON album_reviews.user_id = users.id  WHERE album_id = ${id}`;
 }
 
-export async function getAlbumReview(id: number): Promise<DbAlbumReview> {
+export async function getAlbumReview(id: number): Promise<UserDbAlbumReview> {
   const rows = await sql<
-    DbAlbumReview[]
-  >`SELECT * FROM album_reviews WHERE id = ${id} LIMIT 1`;
+    UserDbAlbumReview[]
+  >`SELECT album_reviews.id,
+   album_reviews.user_id,
+   album_reviews.album_id,
+   album_reviews.body,
+   album_reviews.value,
+   album_reviews.created_at,
+     users.first_name,
+  users.last_name
+   FROM album_reviews LEFT JOIN users ON album_reviews.user_id = users.id WHERE id = ${id} LIMIT 1`;
   return rows[0];
 }
 

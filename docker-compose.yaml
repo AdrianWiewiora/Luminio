@@ -10,6 +10,7 @@ services:
       - ./server/src:/LuminioServ/server/src
       - ./common:/common
       - ./migrations:/migrations
+      - ./photos:/LuminioServ/photos
     depends_on:
       - postgres
     networks:

@@ -2,10 +2,10 @@ import { Router } from "@oak/oak/router";
 import {
   deleteAlbum,
   getAlbum,
+  getAlbums,
   getAlbumsByUser,
   NewDbAlbum,
   updateAlbum,
-  getAlbums
 } from "../models/albums.ts";
 import * as path from "@std/path";
 import { UPLOADS_DIR } from "../../config.ts";
@@ -15,24 +15,38 @@ import { getLoggedInUser } from "../auth.ts";
 import { sql } from "../db.ts";
 import * as v from "@valibot/valibot";
 import { generate } from "@std/uuid/v1";
-import { DbPhoto } from "../models/photos.ts";
+import { DbPhoto, getAllPhotosByAlbum } from "../models/photos.ts";
+import { getAlbumReviewsByAlbum } from "../models/album_revews.ts";
 export const albumRouter = new Router();
 
 //get albums by user
 albumRouter.get("/api/users/:id/albums", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
   const albums = await getAlbumsByUser(id);
-  const response: AlbumResponse[] = albums.map((album) => {
-    return {
-      id: album.id,
-      user_id: album.user_id,
-      name: album.name,
-      description: album.description,
-      service_id: album.tag,
-      is_public: album.is_public,
-      cover_id: album.cover_id
-    };
-  });
+  const response: AlbumResponse[] = await Promise.all(
+    albums.map(async (album) => {
+      const [album_ratings, album_pictures] = await Promise.all([
+        getAlbumReviewsByAlbum(album.id),
+        getAllPhotosByAlbum(album.id),
+      ]);
+      const average_rating = album_ratings.reduce((sum, rating) =>
+        sum + rating.value, 0) / album_ratings.length;
+      const rating_count = album_ratings.length;
+      const picture_count = album_pictures.length;
+      return {
+        id: album.id,
+        user_id: album.user_id,
+        name: album.name,
+        description: album.description,
+        service_id: album.tag,
+        is_public: album.is_public,
+        cover_id: album.cover_id,
+        average_rating: average_rating,
+        comment_count: rating_count,
+        picture_count: picture_count,
+      };
+    }),
+  );
 
   ctx.response.body = response;
 });
@@ -40,17 +54,31 @@ albumRouter.get("/api/users/:id/albums", async (ctx) => {
 //get albums
 albumRouter.get("/api/albums", async (ctx) => {
   const albums = await getAlbums();
-  const response: AlbumResponse[] = albums.map((album) => {
-    return {
-      id: album.id,
-      user_id: album.user_id,
-      name: album.name,
-      description: album.description,
-      service_id: album.tag,
-      is_public: album.is_public,
-      cover_id: album.cover_id
-    };
-  });
+
+  const response: AlbumResponse[] = await Promise.all(
+    albums.map(async (album) => {
+      const [album_ratings, album_pictures] = await Promise.all([
+        getAlbumReviewsByAlbum(album.id),
+        getAllPhotosByAlbum(album.id),
+      ]);
+      const average_rating = album_ratings.reduce((sum, rating) =>
+        sum + rating.value, 0) / album_ratings.length;
+      const rating_count = album_ratings.length;
+      const picture_count = album_pictures.length;
+      return {
+        id: album.id,
+        user_id: album.user_id,
+        name: album.name,
+        description: album.description,
+        service_id: album.tag,
+        is_public: album.is_public,
+        cover_id: album.cover_id,
+        average_rating: average_rating,
+        comment_count: rating_count,
+        picture_count: picture_count,
+      };
+    }),
+  );
 
   ctx.response.body = response;
 });
@@ -59,11 +87,21 @@ albumRouter.get("/api/albums", async (ctx) => {
 albumRouter.get("/api/albums/:id", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
   const album = await getAlbum(id);
-  if(!album){
+  if (!album) {
     ctx.response.body = { message: "album nie istnieje" };
     ctx.response.status = 404;
     return;
   }
+
+  const [album_ratings, album_pictures] = await Promise.all([
+    getAlbumReviewsByAlbum(id),
+    getAllPhotosByAlbum(id),
+  ]);
+  const average_rating = album_ratings.reduce((sum, rating) =>
+    sum + rating.value, 0) / album_ratings.length;
+  const rating_count = album_ratings.length;
+  const picture_count = album_pictures.length;
+
   const response: AlbumResponse = {
     id: album.id,
     user_id: album.user_id,
@@ -71,7 +109,10 @@ albumRouter.get("/api/albums/:id", async (ctx) => {
     description: album.description,
     service_id: album.tag,
     is_public: album.is_public,
-    cover_id: album.cover_id
+    cover_id: album.cover_id,
+    average_rating: average_rating,
+    comment_count: rating_count,
+    picture_count: picture_count,
   };
 
   ctx.response.body = response;
@@ -84,7 +125,7 @@ albumRouter.post("/api/albums", async (ctx) => {
 
   const validation_result = await v.safeParseAsync(
     CreateAlbumSchema,
-    formObject
+    formObject,
   );
 
   if (!validation_result.success) {
@@ -104,29 +145,31 @@ albumRouter.post("/api/albums", async (ctx) => {
     ctx.response.status = 400;
     return;
   }
-    const file_data = request.file.stream();
-    const file_name = generate();
-    const file_path = path.join(UPLOADS_DIR, file_name);
-  
-    // Perfom a transaction because we don't want to insert anything to the database when the writeFile fails
-    await sql.begin(async (sql) => {
-      const data = {
-        user_id: logged_user.id,
-        file_path: file_name,
-      };
-      const [photo] = await sql<DbPhoto[]>`INSERT INTO photos ${sql(data)} returning *`;
-      console.log(photo.id)
-      const album: NewDbAlbum = {
-        user_id: request.user_id,
-        name: request.name,
-        description: request.description,
-        tag: request.service_id,
-        is_public: request.is_public,
-        cover_id: photo.id
-      };
-      await sql`INSERT INTO albums ${sql(album)}`;
-      await Deno.writeFile(file_path, file_data);
-    });
+  const file_data = request.file.stream();
+  const file_name = generate();
+  const file_path = path.join(UPLOADS_DIR, file_name);
+
+  // Perfom a transaction because we don't want to insert anything to the database when the writeFile fails
+  await sql.begin(async (sql) => {
+    const data = {
+      user_id: logged_user.id,
+      file_path: file_name,
+    };
+    const [photo] = await sql<DbPhoto[]>`INSERT INTO photos ${
+      sql(data)
+    } returning *`;
+    console.log(photo.id);
+    const album: NewDbAlbum = {
+      user_id: request.user_id,
+      name: request.name,
+      description: request.description,
+      tag: request.service_id,
+      is_public: request.is_public,
+      cover_id: photo.id,
+    };
+    await sql`INSERT INTO albums ${sql(album)}`;
+    await Deno.writeFile(file_path, file_data);
+  });
 
   // Sukces
   ctx.response.body = {};
@@ -139,7 +182,7 @@ albumRouter.put("/api/albums/:id", async (ctx) => {
 
   const validation_result = await v.safeParseAsync(
     UpdateAlbumSchema,
-    formObject
+    formObject,
   );
 
   if (!validation_result.success) {
@@ -170,38 +213,40 @@ albumRouter.put("/api/albums/:id", async (ctx) => {
     return;
   }
 
-  if(!request.file){
-  const album: NewDbAlbum = {
-    user_id: request.user_id,
-    name: request.name,
-    description: request.description,
-    tag: request.service_id,
-    is_public: request.is_public,
-    cover_id: updated_album.cover_id
-  };
-  await updateAlbum(album, album_id);}
-  else{
+  if (!request.file) {
+    const album: NewDbAlbum = {
+      user_id: request.user_id,
+      name: request.name,
+      description: request.description,
+      tag: request.service_id,
+      is_public: request.is_public,
+      cover_id: updated_album.cover_id,
+    };
+    await updateAlbum(album, album_id);
+  } else {
     const file_data = request.file.stream();
     const file_name = generate();
     const file_path = path.join(UPLOADS_DIR, file_name);
-  
+
     // Perfom a transaction because we don't want to insert anything to the database when the writeFile fails
     await sql.begin(async (sql) => {
       const data = {
         user_id: logged_user.id,
         file_path: file_name,
       };
-      const [photo] = await sql<DbPhoto[]>`INSERT INTO photos ${sql(data)} returning *`;
-      console.log(photo.id)
+      const [photo] = await sql<DbPhoto[]>`INSERT INTO photos ${
+        sql(data)
+      } returning *`;
+      console.log(photo.id);
       const album: NewDbAlbum = {
         user_id: request.user_id,
         name: request.name,
         description: request.description,
         tag: request.service_id,
         is_public: request.is_public,
-        cover_id: photo.id
+        cover_id: photo.id,
       };
-      await sql`UPDATE albums SET ${sql(album)} WHERE id = ${album_id};`
+      await sql`UPDATE albums SET ${sql(album)} WHERE id = ${album_id};`;
       await Deno.writeFile(file_path, file_data);
     });
   }

@@ -19,7 +19,22 @@ export async function getUserBySession(
 ): Promise<DbUser | undefined> {
   const rows = await sql<
     DbUser[]
-  >`SELECT u.* FROM sessions s LEFT JOIN users u ON s.user_id = u.id WHERE s.id = ${session_uuid} LIMIT 1`;
+  >`SELECT
+      u.*,
+      AVG(ar.value) AS average_value,
+      (SELECT COUNT(*) FROM photo_reviews pr WHERE pr.user_id = u.id) +
+      (SELECT COUNT(*) FROM album_reviews alr WHERE alr.user_id = u.id) AS comment_count,
+      (SELECT COUNT(*) FROM albums WHERE user_id = u.id) as album_count
+    FROM sessions s
+    LEFT JOIN
+      users u ON s.user_id = u.id
+    LEFT JOIN 
+      albums a ON u.id = a.user_id
+    LEFT JOIN 
+      album_reviews ar ON a.id = ar.album_id
+    WHERE s.id = ${session_uuid}
+    GROUP BY 
+      u.id;`;
   return rows[0];
 }
 

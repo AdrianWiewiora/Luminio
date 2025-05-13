@@ -14,13 +14,13 @@
         position: relative;
         display: flex;
         flex-direction: column;
-        width: 60vw;
+        justify-content: center;
+        width: 40vw;
         height: 95vh;
         background-color: var(--main-background);
         gap: 40px;
         padding: 40px;
         border-radius: 8px;
-        overflow-y: scroll;
 
         @media (max-width: 768px) {
             width: 100vw;

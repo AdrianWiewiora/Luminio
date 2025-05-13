@@ -22,20 +22,22 @@ export async function getAlbumsByTag(id: number): Promise<DbAlbum[]> {
   return await sql<DbAlbum[]>`SELECT * FROM albums WHERE tag = ${id}`;
 }
 
-export async function getAlbum(id: number): Promise<DbAlbum|undefined> {
+export async function getAlbum(id: number): Promise<DbAlbum | undefined> {
   const rows = await sql<
     DbAlbum[]
   >`SELECT * FROM albums WHERE id = ${id} LIMIT 1`;
   return rows[0];
 }
 export async function getAlbums(): Promise<DbAlbum[]> {
-  return  await sql<
+  return await sql<
     DbAlbum[]
   >`SELECT * FROM albums`;
 }
 
 export async function insertAlbum(album: NewDbAlbum): Promise<DbAlbum> {
-  const rows = await sql<DbAlbum[]>`INSERT INTO albums ${sql(album)} RETURNING *`;
+  const rows = await sql<DbAlbum[]>`INSERT INTO albums ${
+    sql(album)
+  } RETURNING *`;
   return rows[0];
 }
 

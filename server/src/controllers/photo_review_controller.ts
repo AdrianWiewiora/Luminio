@@ -12,6 +12,7 @@ import { PhotoReviewResponse } from "../../../common/responses.ts";
 import * as v from "@valibot/valibot";
 import { CreatePhotoReviewSchema, UpdatePhotoReviewSchema } from "common";
 import { getLoggedInUser } from "../auth.ts";
+import { privateEncrypt } from "node:crypto";
 
 export const photoReviewRouter = new Router();
 
@@ -25,6 +26,8 @@ photoReviewRouter.get("/api/photo_reviews/:id", async (ctx) => {
     photo_id: photo_review.photo_id,
     body: photo_review.body,
     value: photo_review.value,
+    first_name: photo_review.first_name,
+    last_name: photo_review.last_name,
   };
 
   ctx.response.body = response;
@@ -41,6 +44,8 @@ photoReviewRouter.get("/api/users/:id/photo_reviews", async (ctx) => {
       photo_id: photo_review.photo_id,
       body: photo_review.body,
       value: photo_review.value,
+      first_name: photo_review.first_name,
+      last_name: photo_review.last_name,
     };
   });
 
@@ -52,12 +57,15 @@ photoReviewRouter.get("/api/photos/:id/photo_reviews", async (ctx) => {
   const id = Number.parseInt(ctx.params.id, 10);
   const photo_reviews = await getPhotoReviewsByPhoto(id);
   const response: PhotoReviewResponse[] = photo_reviews.map((photo_review) => {
+    console.log(photo_review);
     return {
       id: photo_review.id,
       user_id: photo_review.user_id,
       photo_id: photo_review.photo_id,
       body: photo_review.body,
       value: photo_review.value,
+      first_name: photo_review.first_name,
+      last_name: photo_review.last_name,
     };
   });
 
