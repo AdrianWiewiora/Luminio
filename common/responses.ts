@@ -10,6 +10,8 @@ export interface UserResponse {
   average_rating: number;
   comment_count: number;
   album_count: number;
+  phone_number: string;
+  email: string;
 }
 
 export interface ServiceResponse {

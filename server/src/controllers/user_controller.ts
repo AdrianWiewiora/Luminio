@@ -34,9 +34,11 @@ userRouter.get("/api/users", async (ctx) => {
       id: user.id,
       first_name: user.first_name,
       last_name: user.last_name,
-      user_description: user.user_description,
       city: user.city,
       average_rating: user.average_rating,
+      phone_number: user.phone_number,
+      email: user.email,
+      user_description: user.user_description,
       comment_count: user.comment_count,
       album_count: user.album_count,
     };
@@ -106,22 +108,20 @@ userRouter.post("/api/logout", async (ctx) => {
 
 userRouter.get("/api/me", async (ctx) => {
   const user = await getLoggedInUser(ctx);
-  if (!user) {
-    ctx.response.status = 204;
-    ctx.response.body = null;
-    return;
-  }
+  if (!user) return;
 
   const stats = await getUserStats(user.id);
   const response: UserResponse = {
     id: user.id,
     first_name: user.first_name,
     last_name: user.last_name,
-    user_description: user.user_description,
     city: user.city,
     average_rating: stats.average_rating,
     comment_count: stats.comment_count,
     album_count: stats.album_count,
+    user_description: user.user_description,
+    phone_number: user.phone_number,
+    email: user.email,
   };
 
   ctx.response.body = response;
@@ -142,6 +142,8 @@ userRouter.get("/api/users/:id", async (ctx) => {
     average_rating: stats.average_rating,
     comment_count: stats.comment_count,
     album_count: stats.album_count,
+    phone_number: "",
+    email: "",
   };
   ctx.response.body = response;
 });

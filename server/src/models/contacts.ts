@@ -16,13 +16,17 @@ export async function getContactsByUser(id: number): Promise<DbContact[]> {
 }
 
 export async function updateContacts(contacts: NewDbContact[]) {
-  await sql`INSERT INTO contacts 
-  ${sql(contacts)}
-  ON CONFLICT (id)
+  await sql`INSERT INTO contacts (user_id, name, contact_info) VALUES
+    ${
+    sql(
+      contacts.map((
+        { user_id, name, contact_info },
+      ) => [user_id, name, contact_info]),
+    )
+  }
+  ON CONFLICT (user_id, name)
   DO UPDATE SET
-  user_id = EXCLUDED.user_id,
-  name = EXCLUDED.name,
-  contact_info = EXCLUDED.contact_info;`;
+    contact_info = EXCLUDED.contact_info;`;
 }
 
 export async function getAllContacts(): Promise<DbContact[]> {

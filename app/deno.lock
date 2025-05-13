@@ -1,25 +1,32 @@
 {
   "version": "4",
   "specifiers": {
-    "npm:@deno/vite-plugin@^1.0.4": "1.0.4_vite@6.2.1",
+    "npm:@deno/vite-plugin@^1.0.4": "1.0.4_vite@6.2.1_@types+node@22.12.0_sass@1.85.1",
     "npm:@types/node@*": "22.12.0",
     "npm:@types/react-dom@^19.0.4": "19.0.4_@types+react@19.0.10",
     "npm:@types/react@^19.0.10": "19.0.10",
-    "npm:@vitejs/plugin-react-swc@^3.8.0": "3.8.0_vite@6.2.1",
+    "npm:@vitejs/plugin-react-swc@^3.8.0": "3.8.0_vite@6.2.1_@types+node@22.12.0_sass@1.85.1",
     "npm:react-dom@19": "19.0.0_react@19.0.0",
     "npm:react-icons@^5.5.0": "5.5.0_react@19.0.0",
     "npm:react-router-dom@^7.3.0": "7.3.0_react@19.0.0_react-dom@19.0.0__react@19.0.0",
+    "npm:react-router@7.3.0": "7.3.0_react@19.0.0_react-dom@19.0.0__react@19.0.0",
     "npm:react@19": "19.0.0",
     "npm:sass@^1.85.1": "1.85.1",
-    "npm:vite@*": "6.2.1",
-    "npm:vite@^6.1.1": "6.2.1",
+    "npm:vite@*": "6.2.1_@types+node@22.12.0_sass@1.85.1",
+    "npm:vite@^6.1.1": "6.2.1_@types+node@22.12.0_sass@1.85.1",
     "npm:yet-another-react-lightbox@^3.21.8": "3.21.8_@types+react@19.0.10_@types+react-dom@19.0.4__@types+react@19.0.10_react@19.0.0_react-dom@19.0.0__react@19.0.0"
   },
   "npm": {
     "@deno/vite-plugin@1.0.4_vite@6.2.1": {
       "integrity": "sha512-xg8YT8Wn2sGXSnJgiGTpBGX1Dov0c6fd1rAp8VsfrCUtyBRRWzwVMAnd3fQ4yq8h7LSVvJUxEFN4U421k/DQLA==",
       "dependencies": [
-        "vite"
+        "vite@6.2.1"
+      ]
+    },
+    "@deno/vite-plugin@1.0.4_vite@6.2.1_@types+node@22.12.0_sass@1.85.1": {
+      "integrity": "sha512-xg8YT8Wn2sGXSnJgiGTpBGX1Dov0c6fd1rAp8VsfrCUtyBRRWzwVMAnd3fQ4yq8h7LSVvJUxEFN4U421k/DQLA==",
+      "dependencies": [
+        "vite@6.2.1_@types+node@22.12.0_sass@1.85.1"
       ]
     },
     "@esbuild/aix-ppc64@0.25.1": {
@@ -299,7 +306,14 @@
       "integrity": "sha512-T4sHPvS+DIqDP51ifPqa9XIRAz/kIvIi8oXcnOZZgHmMotgmmdxe/DD5tMFlt5nuIRzT0/QuiwmKlH0503Aapw==",
       "dependencies": [
         "@swc/core",
-        "vite"
+        "vite@6.2.1"
+      ]
+    },
+    "@vitejs/plugin-react-swc@3.8.0_vite@6.2.1_@types+node@22.12.0_sass@1.85.1": {
+      "integrity": "sha512-T4sHPvS+DIqDP51ifPqa9XIRAz/kIvIi8oXcnOZZgHmMotgmmdxe/DD5tMFlt5nuIRzT0/QuiwmKlH0503Aapw==",
+      "dependencies": [
+        "@swc/core",
+        "vite@6.2.1_@types+node@22.12.0_sass@1.85.1"
       ]
     },
     "braces@3.0.3": {
@@ -505,6 +519,17 @@
         "fsevents",
         "postcss",
         "rollup"
+      ]
+    },
+    "vite@6.2.1_@types+node@22.12.0_sass@1.85.1": {
+      "integrity": "sha512-n2GnqDb6XPhlt9B8olZPrgMD/es/Nd1RdChF6CBD/fHW6pUyUTt2sQW2fPRX5GiD9XEa6+8A6A4f2vT6pSsE7Q==",
+      "dependencies": [
+        "@types/node",
+        "esbuild",
+        "fsevents",
+        "postcss",
+        "rollup",
+        "sass"
       ]
     },
     "yet-another-react-lightbox@3.21.8_@types+react@19.0.10_@types+react-dom@19.0.4__@types+react@19.0.10_react@19.0.0_react-dom@19.0.0__react@19.0.0": {
