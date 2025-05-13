@@ -67,7 +67,6 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
     useEffect(() => {
     const fetchUserData = async () => {
         try {
-            // Fetch user basic info
             const userResponse = await fetch('/api/me', {
                 credentials: 'include',
             });
@@ -85,7 +84,6 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                     "Opis": userData.user_description || "",
                 });
 
-                // Fetch user contacts
                 const contactsResponse = await fetch(`/api/users/${userData.id}/contacts`, {
                     credentials: 'include',
                 });
@@ -134,7 +132,6 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
         e.preventDefault();
     
         try {
-            // Pobierz obecne dane formularza
             const currentUserData = {
                 first_name: basicInfoData["Imię"],
                 last_name: basicInfoData["Nazwisko"],
@@ -144,28 +141,23 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                 user_description: basicInfoData["Opis"],
             };
     
-            // Filtrujemy tylko niepuste wartości i mapujemy na nowy obiekt
             const changedData = Object.entries(currentUserData).reduce((acc, [key, value]) => {
-                // Jeśli wartość NIE jest pusta, dodajemy ją do obiektu wynikowego
                 if (value !== "") {
                     acc[key] = value;
                 }
                 return acc;
             }, {} as Record<string, string>);
 
-            // Jeśli nie ma żadnych zmian, zakończ funkcję
             if (Object.keys(changedData).length === 0) {
                 console.log("Brak zmian do zapisania.");
                 return;
             }
 
-            // Dodaj ID użytkownika do danych
             const requestData = {
                 ...changedData,
                 id: basicInfoData["Id"]
             };
 
-            // Wyślij tylko zmienione dane
             const response = await fetch(`/api/users/${requestData.id}`, {
                 method: 'PUT',
                 headers: {

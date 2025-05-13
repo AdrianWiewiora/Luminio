@@ -12,9 +12,13 @@ interface AlbumElementProps {
     loggedUserId: number | null | undefined;
     description?: string;
     serviceId?: number;
-    coverId?: number,
+    coverId?: number;
     onEditClick?: (albumId: number) => void;
     onDeleteClick?: (albumId: number) => void;
+}
+
+interface AlbumReview {
+    value: number;
 }
 
 function AlbumElement({ 
@@ -31,6 +35,7 @@ function AlbumElement({
 }: AlbumElementProps) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [preview, setPreview] = useState(noImageAvailable);
+    const [averageRating, setAverageRating] = useState<number | null>(null);
     let timeoutId: number;
 
     const handleMouseEnter = () => {
@@ -86,6 +91,29 @@ function AlbumElement({
         }
     }, [userId, coverId]);
 
+    useEffect(() => {
+        const fetchAlbumReviews = async () => {
+            try {
+                const response = await fetch(`/api/albums/${albumId}/album_reviews`);
+                if (response.ok) {
+                    const reviews: AlbumReview[] = await response.json();
+                    
+                    if (reviews && reviews.length > 0) {
+                        const totalRating = reviews.reduce((sum, review) => sum + review.value, 0);
+                        const avgRating = totalRating / reviews.length;
+                        setAverageRating(avgRating);
+                    } else {
+                        setAverageRating(0);
+                    }
+                }
+            } catch (error) {
+                console.error("Błąd podczas pobierania recenzji albumu:", error);
+            }
+        };
+
+        fetchAlbumReviews();
+    }, [albumId]);
+
     return (
         <Link to={`/album/${albumId}`} className="album-link">
             <div className="album">
@@ -105,7 +133,7 @@ function AlbumElement({
                                         {menuOpen && (
                                             <div className="dropdown_menu">
                                                 <p onClick={handleEditClick}>Edytuj</p>
-                                                <p>Usuń</p>
+                                                <p onClick={handleDeleteClick}>Usuń</p>
                                             </div>
                                         )}
                                     </div>
@@ -114,7 +142,14 @@ function AlbumElement({
                         </div>
                         <div className="rating_container">
                             <div className="rating">
-                                <span>4.7</span> <FaStar className="star_icon" />
+                                <span>
+                                    {averageRating !== null ? (
+                                        averageRating.toFixed(1)
+                                    ) : (
+                                        "Brak"
+                                    )}
+                                </span> 
+                                <FaStar className="star_icon" />
                             </div>
                         </div>
                     </div>
