@@ -47,17 +47,10 @@ function Album() {
   const refreshPhotos = async () => {
     setPhotos([]);
     setPage(1);
+    setIsEmpty(false)
     setHasMore(true);
     await fetchPhotosPage(1);
   };
-
-  useEffect(() => {
-    return () => {
-      photos.forEach(photo => {
-        URL.revokeObjectURL(photo.blobUrl);
-      });
-    };
-  }, [photos]);
 
   useEffect(() => {
     const fetchUser = async () => {

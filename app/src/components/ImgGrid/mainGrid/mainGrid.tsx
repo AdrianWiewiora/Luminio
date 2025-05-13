@@ -5,7 +5,7 @@ import "./mainGrid.scss";
 interface Photo {
   id: number;
   file_path: string;
-  album_id: number; 
+  album_id: number;
 }
 
 function MainGrid() {
@@ -15,7 +15,7 @@ function MainGrid() {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await fetch(`/api/photos?amount=${10}&page=${1}`);
+        const response = await fetch(`/api/photos?amount=${12}&page=${1}`);
         if (response.ok) {
           const photos = await response.json();
           setAllImages(photos);
@@ -50,8 +50,8 @@ function MainGrid() {
         gridItems.forEach((item, index) => {
           const row = Math.floor(index / 4);
           const col = index % 4;
-          const rowSpeed = 5;  
-          const colSpeed = col % 2 === 0 ? 6 : 3; 
+          const rowSpeed = 5;
+          const colSpeed = col % 2 === 0 ? 6 : 3;
 
           let yPos = -((lastScrollY - gridContainer.offsetTop) / rowSpeed) + row * 5;
           let yOffset = (scrollY - gridContainer.offsetTop) / colSpeed;
@@ -90,8 +90,8 @@ function MainGrid() {
       {allImages.map((photo) => (
         <div key={photo.id} className="grid__item">
           <Link to={`/album/${photo.album_id}`}>
-            <img 
-              src={`/api/photos/${photo.id}`} 
+            <img
+              src={`/api/files/${photo.id}`}
               alt={`Zdjęcie ${photo.id}`}
               className="grid__img"
             />
