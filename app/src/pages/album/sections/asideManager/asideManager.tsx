@@ -66,7 +66,7 @@ function AsideManager({ albumId, userId, onPhotosUploaded }: AsideManagerProps) 
 
             setUploadSuccess(true);
             onPhotosUploaded();
-            window.dispatchEvent(new Event('photos-updated'));
+            globalThis.dispatchEvent(new Event('photos-updated'));
         } catch (error) {
             console.error('Całkowity błąd:', error);
             setUploadError(

@@ -102,7 +102,7 @@ function Author() {
     };
 
     const handleDeleteAlbum = async (albumId: number) => {
-        const confirmDelete = window.confirm("Czy na pewno chcesz usunąć ten album?");
+        const confirmDelete = globalThis.confirm("Czy na pewno chcesz usunąć ten album?");
         if (!confirmDelete) return;
     
         try {

@@ -132,7 +132,7 @@ const DynamicGrid = ({ view, authors }: DynamicGridProps) => {
                                 albumId={item.data.id}
                                 title={item.data.title}
                                 coverId={item.data.cover_id}
-                                isPublic={true}
+                                isPublic
                                 userId={userId}
                                 loggedUserId={userId}
                             />

@@ -21,7 +21,7 @@ const SingleReview: FC<SingleReviewProps> = ({ author, rating, date, content }) 
           </h1>
         </div>
         <div className="review__head--info">
-          <StarRating rating={rating} readOnly={true} />
+          <StarRating rating={rating} readOnly />
           <h2 className="review__head--info--date">
             {date}
           </h2>

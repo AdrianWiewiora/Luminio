@@ -33,7 +33,7 @@ function MainGrid() {
   }, []);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
+    let lastScrollY = globalThis.scrollY;
 
     const handleScroll = () => {
       const gridContainer = document.querySelector(".grid");
@@ -41,9 +41,9 @@ function MainGrid() {
 
       const gridItems = document.querySelectorAll(".grid__item");
       const containerRect = gridContainer.getBoundingClientRect();
-      const scrollY = window.scrollY;
+      const scrollY = globalThis.scrollY;
 
-      if (containerRect.top < window.innerHeight && containerRect.bottom > 0) {
+      if (containerRect.top < globalThis.innerHeight && containerRect.bottom > 0) {
         const smoothScroll = (scrollY - lastScrollY) * 0.1;
         lastScrollY += smoothScroll;
 
@@ -63,8 +63,8 @@ function MainGrid() {
           }
 
           let opacity = 1;
-          if (containerRect.bottom <= window.innerHeight) {
-            let fadeStart = window.innerHeight - containerRect.bottom;
+          if (containerRect.bottom <= globalThis.innerHeight) {
+            let fadeStart = globalThis.innerHeight - containerRect.bottom;
             opacity = Math.max(0, 1 - fadeStart / 200);
           }
 
@@ -75,8 +75,8 @@ function MainGrid() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    globalThis.addEventListener("scroll", handleScroll);
+    return () => globalThis.removeEventListener("scroll", handleScroll);
   }, [allImages]);
 
   if (loading) {
