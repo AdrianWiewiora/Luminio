@@ -17,7 +17,13 @@ export async function getContactsByUser(id: number): Promise<DbContact[]> {
 
 export async function updateContacts(contacts: NewDbContact[]) {
   await sql`INSERT INTO contacts (user_id, name, contact_info) VALUES
-    ${sql(contacts.map(({ user_id, name, contact_info }) => [user_id, name, contact_info]))}
+    ${
+    sql(
+      contacts.map((
+        { user_id, name, contact_info },
+      ) => [user_id, name, contact_info]),
+    )
+  }
   ON CONFLICT (user_id, name)
   DO UPDATE SET
     contact_info = EXCLUDED.contact_info;`;

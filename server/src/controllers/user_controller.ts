@@ -161,7 +161,7 @@ userRouter.get("/api/users/:id", async (ctx) => {
     city: user.city,
     phone_number: user.phone_number,
     email: user.email,
-    user_description: user.user_description
+    user_description: user.user_description,
     average_rating: user.average_value,
     comment_count: user.comment_count,
     album_count: user.album_count,

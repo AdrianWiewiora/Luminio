@@ -48,7 +48,8 @@ contactRouter.put("/api/users/:id/contacts", async (ctx) => {
       const existingContact = old_contacts.find((c) => c.name === contact.name);
       return (
         existingContact &&
-        JSON.stringify(existingContact.contact_info) === JSON.stringify(contact.contact_info)
+        JSON.stringify(existingContact.contact_info) ===
+          JSON.stringify(contact.contact_info)
       );
     })
   ) {
@@ -56,7 +57,7 @@ contactRouter.put("/api/users/:id/contacts", async (ctx) => {
     ctx.response.status = 400;
     return;
   }
-  
+
   await updateContacts(request);
 
   ctx.response.body = {};
