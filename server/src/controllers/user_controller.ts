@@ -89,7 +89,7 @@ userRouter.post("/api/login", async (ctx) => {
     ctx.response.body = {};
     return;
   } else {
-    ctx.response.status = 400;
+    ctx.response.status = 401;
     ctx.response.body = { message: "Niepoprawny email lub hasło" };
   }
 });

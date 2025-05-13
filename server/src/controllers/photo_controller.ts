@@ -1,6 +1,10 @@
 import { Router } from "@oak/oak/router";
 import { PhotoResponse, PostPhotoSchema } from "common";
-import { getPhotoById, getPhotosByAlbum } from "../models/photos.ts";
+import {
+  getAllPhotosParam,
+  getPhotoById,
+  getPhotosByAlbum,
+} from "../models/photos.ts";
 import * as v from "@valibot/valibot";
 import { fileUpload, getFile, sql } from "../db.ts";
 import { getLoggedInUser } from "../auth.ts";
@@ -23,6 +27,28 @@ photosRouter.get("/api/albums/:id/photos", async (ctx) => {
   const album_id = Number.parseInt(ctx.params.id, 10);
   const offset = (page - 1) * amount;
   const photos = await getPhotosByAlbum(album_id, amount, offset);
+
+  const response: PhotoResponse[] = photos.map((photo) => {
+    return {
+      id: photo.id,
+      user_id: photo.id,
+      album_id: photo.album_id,
+      category_id: photo.category_id,
+      file_id: photo.file_id,
+      created_at: photo.created_at,
+    };
+  });
+
+  ctx.response.body = response;
+});
+
+photosRouter.get("/api/photos", async (ctx) => {
+  const amountParam = ctx.request.url.searchParams.get("amount");
+  const pageParam = ctx.request.url.searchParams.get("page");
+  const amount = amountParam ? parseInt(amountParam, 10) : 1;
+  const page = pageParam ? parseInt(pageParam, 10) : 1;
+  const offset = (page - 1) * amount;
+  const photos = await getAllPhotosParam(amount, offset);
 
   const response: PhotoResponse[] = photos.map((photo) => {
     return {

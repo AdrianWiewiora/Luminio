@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./mainGrid.scss";
 
@@ -15,7 +15,7 @@ function MainGrid() {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await fetch('/api/photos');
+        const response = await fetch(`/api/photos?amount=${10}&page=${1}`);
         if (response.ok) {
           const photos = await response.json();
           setAllImages(photos);
@@ -82,7 +82,9 @@ function MainGrid() {
   if (loading) {
     return <div className="loading">Ładowanie zdjęć...</div>;
   }
-
+  if (allImages.length === 0) {
+    return <div className="loading">Brak zdjęć na naszej stronie.</div>;
+  }
   return (
     <section className="grid">
       {allImages.map((photo) => (

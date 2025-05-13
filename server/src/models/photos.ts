@@ -19,6 +19,16 @@ export async function getAllPhotos(): Promise<DbPhoto[]> {
   return rows;
 }
 
+export async function getAllPhotosParam(
+  limit: number,
+  offset: number,
+): Promise<DbPhoto[]> {
+  const rows = await sql<
+    DbPhoto[]
+  >`SELECT * FROM photos ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`;
+  return rows;
+}
+
 export async function getPhotoById(id: number): Promise<DbPhoto> {
   const rows = await sql<
     DbPhoto[]
