@@ -7,7 +7,6 @@ import Banner from '../../components/banner/banner.tsx';
 import UserDetails from '../../components/userDetails/userDetails.tsx';
 import AuthorNav from '../../components/nav/authorNav.tsx';
 import ProfilePopup from '../../components/pop-ups/profile/profilePopup.tsx';
-import PicturePopup from '../../components/pop-ups/picture/picturePopup.tsx';
 import CreateAlbumPopup from "../../components/pop-ups/albums/createAlbumPopup.tsx";
 import EditAlbumPopup from "../../components/pop-ups/albums/editAlbumPopup.tsx";
 import AlbumGrid from "../../components/ImgGrid/albumGrid/albumGrid.tsx";
@@ -29,12 +28,12 @@ interface Album {
     tag: string;
     is_public: boolean;
     service_id: number;
+    cover_id: number;
 }
 
 function Author() {
     const { id: userId } = useParams();
     const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
-    const [isPicturePopupOpen, setIsPicturePopupOpen] = useState(false);
     const [isAlbumPopupOpen, setIsAlbumPopupOpen] = useState(false);
     const [loggedUserId, setLoggedUserId] = useState<number | null>(null);
     const [albums, setAlbums] = useState<Album[]>([]);
@@ -82,10 +81,6 @@ function Author() {
 
     const toggleProfilePopup = () => {
         setIsProfilePopupOpen(!isProfilePopupOpen);
-    };
-
-    const togglePicturePopup = () => {
-        setIsPicturePopupOpen(!isPicturePopupOpen);
     };
 
     const toggleAlbumPopup = () => {
@@ -153,7 +148,6 @@ function Author() {
                         <AuthorNav
                             onCustomizeProfileClick={toggleProfilePopup}
                             onAlbumPopupClick={toggleAlbumPopup}
-                            onPicturePopupClick={togglePicturePopup}
                         />
                     )}
                     {isLoading ? (
@@ -173,7 +167,6 @@ function Author() {
                 </div>
             </div>
             {isProfilePopupOpen && <ProfilePopup onClose={toggleProfilePopup} />}
-            {isPicturePopupOpen && <PicturePopup onClose={togglePicturePopup} />}
             {isAlbumPopupOpen && loggedUserId && (
                 editingAlbum ? (
                     <EditAlbumPopup

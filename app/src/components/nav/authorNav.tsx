@@ -1,21 +1,18 @@
 import "./authorNav.scss";
 
 const navElements = [
-  { id: 0, name: "Kolekcje zdjęć", action: "openPicturePopup" },
-  { id: 1, name: "Dostosuj profil", action: "customizeProfile" },
-  { id: 2, name: "Dodaj", action: "openAlbumPopup" },
+  { id: 0, name: "Dostosuj profil", action: "customizeProfile" },
+  { id: 1, name: "Dodaj", action: "openAlbumPopup" },
 ];
 
 interface AuthorNavProps {
   onCustomizeProfileClick: () => void;
   onAlbumPopupClick: () => void;
-  onPicturePopupClick: () => void;
 }
 
 function AuthorNav({
   onCustomizeProfileClick,
   onAlbumPopupClick,
-  onPicturePopupClick,
 }: AuthorNavProps) {
   return (
     <nav className="navigation">
@@ -26,8 +23,6 @@ function AuthorNav({
             ? onCustomizeProfileClick
             : action === "openAlbumPopup"
             ? onAlbumPopupClick
-            : action === "openPicturePopup"
-            ? onPicturePopupClick
             : undefined}
         >
           {name}
