@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from "react-router-dom";
 import "./dynamicGrid.scss";
 import AlbumElement from "../../album/albumElement.tsx";
@@ -22,12 +22,14 @@ interface Album {
   id: number;
   title: string;
   cover_id: number;
+  user_id: number;
 }
 
 interface Photo {
   id: number;
-  file_path: string;
+  file_id: number;
   album_id: number;
+  user_id: number;
 }
 
 interface DynamicGridProps {
@@ -38,7 +40,16 @@ interface DynamicGridProps {
 const DynamicGrid = ({ view, authors }: DynamicGridProps) => {
   const [items, setItems] = useState<GridItem[]>([]);
   const [userData, setUserData] = useState<any | null>(null);
-  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const itemsPerPage = 10;
+
+  const typeMap = {
+    photos: 'photo',
+    albums: 'album',
+    authors: 'author',
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -55,68 +66,77 @@ const DynamicGrid = ({ view, authors }: DynamicGridProps) => {
     fetchUserData();
   }, []);
 
-  useEffect(() => {
-    const fetchPhotos = async () => {
-      try {
-        const response = await fetch('/api/photos');
-        if (response.ok) {
-          const photosData = await response.json();
-          setPhotos(photosData);
-        }
-      } catch (error) {
-        console.error('Błąd podczas pobierania zdjęć:', error);
-      }
-    };
-    fetchPhotos();
-  }, []);
+  const fetchItems = useCallback(async () => {
+    try {
+      setLoading(true);
+      
+      // Pobierz zdjęcia z paginacją
+      const photosResponse = await fetch(`/api/photos?amount=${itemsPerPage}&page=${page}`);
+      const photosData = photosResponse.ok ? await photosResponse.json() : [];
+      
+      // Pobierz albumy
+      const albumsResponse = await fetch('/api/albums');
+      const albumsData = albumsResponse.ok ? await albumsResponse.json() : [];
+
+      const newItems: GridItem[] = [
+        ...photosData.map((photo: Photo) => ({
+          type: 'photo',
+          data: {
+            ...photo,
+            id: photo.file_id
+          },
+        })),
+        ...albumsData.map((album: Album) => ({
+          type: 'album',
+          data: album,
+        })),
+        ...authors.map((author: Author) => ({
+          type: 'author',
+          data: author,
+        })),
+      ];
+
+      const filteredItems = newItems.filter(item => item.type === typeMap[view]);
+      
+      setItems(prev => page === 1 ? filteredItems : [...prev, ...filteredItems]);
+      setHasMore(filteredItems.length > 0);
+    } catch (error) {
+      console.error('Błąd podczas pobierania danych:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [view, authors, page]);
 
   useEffect(() => {
-    const fetchAlbums = async () => {
-      try {
-        const response = await fetch('/api/albums');
-        if (response.ok) {
-          const albums = await response.json();
+    fetchItems();
+  }, [fetchItems]);
 
-          const allItems: GridItem[] = [
-            ...photos.map((photo: Photo) => ({
-              type: 'photo',
-              data: photo,
-            })),
-            ...albums.map((album: Album) => ({
-              type: 'album',
-              data: album,
-            })),
-            ...authors.map((author: Author) => ({
-              type: 'author',
-              data: author,
-            })),
-          ];
-
-          const typeMap = {
-            photos: 'photo',
-            albums: 'album',
-            authors: 'author',
-          };
-
-          const filteredItems = allItems.filter(item => item.type === typeMap[view]);
-
-          setItems(filteredItems);
-        }
-      } catch (error) {
-        console.error('Błąd podczas pobierania albumów:', error);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop !== 
+        document.documentElement.offsetHeight || 
+        loading || 
+        !hasMore ||
+        view !== 'photos'
+      ) {
+        return;
       }
+      setPage(prev => prev + 1);
     };
-    fetchAlbums();
-  }, [view, authors, photos]);
 
-  if (userData === null) {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [loading, hasMore, view]);
+
+  if (loading && page === 1) {
     return <div>Ładowanie...</div>;
   }
 
   return (
     <section className="grid-container-dynamic">
       {items.map((item, index) => (
-        <div key={index} className="grid-container-dynamic__grid-item-dynamic">
+        <div key={`${item.type}-${item.data.id}-${index}`} className="grid-container-dynamic__grid-item-dynamic">
           {item.type === 'photo' && (
             <Link to={`/album/${item.data.album_id}`}>
               <img
@@ -133,21 +153,22 @@ const DynamicGrid = ({ view, authors }: DynamicGridProps) => {
               title={item.data.title}
               coverId={item.data.cover_id}
               isPublic
-              userId={userData.id} 
-              loggedUserId={userData.id}
+              userId={item.data.user_id}
+              loggedUserId={userData?.id}
             />
           )}
-        {item.type === 'author' && (
+          {item.type === 'author' && (
             <AuthorTile
-                authorId={item.data.id}
-                name={`${item.data.first_name} ${item.data.last_name}`}
-                averageRating={item.data.average_rating ? parseFloat(item.data.average_rating) : null}
-                reviewsCount={item.data.album_count ? parseInt(item.data.album_count) : 0}
-                commentsCount={item.data.comment_count ? parseInt(item.data.comment_count) : 0}
+              authorId={item.data.id}
+              name={`${item.data.first_name} ${item.data.last_name}`}
+              averageRating={item.data.average_rating ? parseFloat(item.data.average_rating) : null}
+              reviewsCount={item.data.reviews_count || 0}
+              commentsCount={item.data.comments_count || 0}
             />
-        )}
+          )}
         </div>
       ))}
+      {loading && page > 1 && <div>Ładowanie kolejnych zdjęć...</div>}
     </section>
   );
 };
