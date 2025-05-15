@@ -48,8 +48,6 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
         Object.fromEntries(ContactForm.map(({ id }) => [id, ""]))
     );
 
-    const [profileImage, setProfileImage] = useState<string | null>(null);
-
     const handleBasicInfoChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = event.target;
         setBasicInfoData((prevData) => ({ ...prevData, [id]: value }));
@@ -60,10 +58,38 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
         setContactData((prevData) => ({ ...prevData, [id]: value }));
     }
 
-    const handleProfileImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const [profileImage, setProfileImage] = useState<string | null>(null);
+
+    const handleProfileImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-        
+        if (!file) return;
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('album_id', '3');
+            formData.append('category_id', '6');
+            formData.append('user_id', basicInfoData.Id);
+
+            const response = await fetch("/api/photos", {
+                method: "POST",
+                credentials: "include",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Błąd podczas przesyłania zdjęcia:", errorData);
+                throw new Error(errorData.message || "Błąd przesyłania pliku");
+            }
+
+            const fileUrl = URL.createObjectURL(file);
+            setProfileImage(fileUrl);
+            console.log("Zdjęcie zostało przesłane pomyślnie.");
+        } catch (error) {
+            console.error("Błąd przesyłania zdjęcia:", error);
+        }
     };
+
     useEffect(() => {
     const fetchUserData = async () => {
         try {
@@ -158,7 +184,7 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                 id: basicInfoData["Id"]
             };
 
-            const response = await fetch(`/api/users/${requestData.id}`, {
+            const response = await fetch(`/api/me`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -255,7 +281,9 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                 </div>
                 <section className="profile-popup__content--section">
                     <div className="profile-popup__content--section--basic-info">
-                        <form className="profile-popup__content--section--basic-info--profil">
+                        <form className="profile-popup__content--section--basic-info--profil"
+                        onSubmit={handleProfileImageChange} 
+                        >
                             <h1>
                                 Podstawowe informacje
                             </h1>
@@ -278,7 +306,7 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                             onSubmit={handleBasicInfoSubmit} 
                         >
                             <h2>Dane osobowe</h2>
-                            {BasicInfoForm.map(({ id, label, type }) => (
+                            {BasicInfoForm.filter(({ label }) => label !== "Opis").map(({ id, label, type }) => (
                                 <FormInput
                                     key={id}
                                     id={id}
