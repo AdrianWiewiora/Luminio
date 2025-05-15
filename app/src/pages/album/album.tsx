@@ -188,18 +188,19 @@ function Album() {
           )}
 
           {hasMore && (
-            <button 
-              className="load-more-button" 
-              onClick={() => {
-                const nextPage = page + 1;
-                setPage(nextPage);
-                fetchPhotosPage(nextPage);
-              }}
-            >
-              Załaduj więcej
-            </button>
+            <div className="submit-btn-wrapper">
+              <button
+                className="btn-padding-md" 
+                onClick={() => {
+                  const nextPage = page + 1;
+                  setPage(nextPage);
+                  fetchPhotosPage(nextPage);
+                }}
+              >
+                Załaduj więcej
+              </button>
+            </div>
           )}
-
           <Reviews />
         </div>
         {id && userId && <AsideManager albumId={id} userId={userId} onPhotosUploaded={refreshPhotos} />}
