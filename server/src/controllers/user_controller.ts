@@ -11,6 +11,7 @@ import {
 import { hash, verify } from "@felix/bcrypt";
 import * as v from "@valibot/valibot";
 import {
+  AvatarChangeSchema,
   LoginSchema,
   RegistrationErrorResponse,
   RegistrationSchema,
@@ -23,26 +24,30 @@ import {
   getUserStats,
 } from "./../models/sessions.ts";
 import { getLoggedInUser } from "../auth.ts";
+import { fileUpload } from "../db.ts";
+import { avatar_url } from "../util.ts";
 
 export const userRouter = new Router();
 
 //Przykładowy endpoint zwracający wszystkich użytkowników
 userRouter.get("/api/users", async (ctx) => {
   const users = await getAllUsers();
-  const response: UserResponse[] = users.map((user) => {
+  const response: UserResponse[] = await Promise.all(users.map(async (user) => {
+    const stats = await getUserStats(user.id);
     return {
       id: user.id,
       first_name: user.first_name,
       last_name: user.last_name,
       city: user.city,
-      average_rating: user.average_rating,
       phone_number: user.phone_number,
       email: user.email,
       user_description: user.user_description,
-      comment_count: user.comment_count,
-      album_count: user.album_count,
+      average_rating: stats.average_rating,
+      comment_count: stats.comment_count,
+      album_count: stats.album_count,
+      avatar_url: avatar_url(user),
     };
-  });
+  }));
 
   ctx.response.body = response;
 });
@@ -122,6 +127,7 @@ userRouter.get("/api/me", async (ctx) => {
     user_description: user.user_description,
     phone_number: user.phone_number,
     email: user.email,
+    avatar_url: avatar_url(user),
   };
 
   ctx.response.body = response;
@@ -142,8 +148,9 @@ userRouter.get("/api/users/:id", async (ctx) => {
     average_rating: stats.average_rating,
     comment_count: stats.comment_count,
     album_count: stats.album_count,
-    phone_number: "",
-    email: "",
+    phone_number: user.phone_number,
+    email: user.email,
+    avatar_url: avatar_url(user),
   };
   ctx.response.body = response;
 });
@@ -169,5 +176,24 @@ userRouter.delete("/api/me", async (ctx) => {
 
   await deleteUser(user.id);
   ctx.cookies.delete("SESSION");
+  ctx.response.body = {};
+});
+
+// Ustawianie własnego profilowego
+userRouter.post("/api/avatar", async (ctx) => {
+  const user = await getLoggedInUser(ctx);
+  if (!user) return;
+
+  const form_data = await ctx.request.body.formData();
+  const file = form_data.get("file");
+  const validation = v.safeParse(AvatarChangeSchema, file);
+  if (!validation.success) {
+    ctx.response.body = validation.issues;
+    ctx.response.status = 400;
+    return;
+  }
+
+  const file_id = await fileUpload(validation.output);
+  await updateUser({ avatar_file_id: file_id }, user.id);
   ctx.response.body = {};
 });

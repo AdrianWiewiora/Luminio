@@ -12,6 +12,7 @@ export interface UserResponse {
   album_count: number;
   phone_number: string;
   email: string;
+  avatar_url?: string;
 }
 
 export interface ServiceResponse {
