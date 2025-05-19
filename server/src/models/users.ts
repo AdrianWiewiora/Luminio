@@ -1,5 +1,4 @@
 import { sql } from "../db.ts";
-import { UserResponse } from "common";
 
 export interface NewDbUser {
   first_name: string;
@@ -10,6 +9,7 @@ export interface NewDbUser {
   password_hash: string;
   user_description: string;
   role: number;
+  avatar_file_id?: number;
 }
 
 // Klucz głowny i inne pola generowane po stronie bazy danych nie mogą być
@@ -20,29 +20,8 @@ export interface DbUser extends NewDbUser {
   created_at: string;
 }
 
-export async function getAllUsers(): Promise<UserResponse[]> {
-  return await sql<UserResponse[]>`
-    SELECT
-      u.id,
-      u.first_name,
-      u.last_name,
-      u.user_description,
-      u.city,
-      COALESCE(AVG(ar.value), 0) AS average_rating,
-      (
-        SELECT COUNT(*) FROM photo_reviews pr WHERE pr.user_id = u.id
-      ) +
-      (
-        SELECT COUNT(*) FROM album_reviews alr WHERE alr.user_id = u.id
-      ) AS comment_count,
-      (
-        SELECT COUNT(*) FROM albums a WHERE a.user_id = u.id
-      ) AS album_count
-    FROM users u
-           LEFT JOIN albums a ON u.id = a.user_id
-           LEFT JOIN album_reviews ar ON a.id = ar.album_id
-    GROUP BY u.id;
-  `;
+export async function getAllUsers(): Promise<DbUser[]> {
+  return await sql<DbUser[]>`SELECT * FROM users`;
 }
 
 export async function getUser(id: number): Promise<DbUser> {
@@ -65,7 +44,7 @@ export async function insertUser(user: NewDbUser) {
   await sql`INSERT INTO users ${sql(user)}`;
 }
 
-export async function updateUser(user: NewDbUser, id: number) {
+export async function updateUser(user: Partial<NewDbUser>, id: number) {
   await sql`UPDATE users
   SET ${sql(user)}
   WHERE id = ${id};`;
