@@ -63,14 +63,13 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
     const handleProfileImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
+        
         try {
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('album_id', '3');
-            formData.append('category_id', '6');
             formData.append('user_id', basicInfoData.Id);
 
-            const response = await fetch("/api/photos", {
+            const response = await fetch("/api/avatar", {
                 method: "POST",
                 credentials: "include",
                 body: formData,
@@ -109,6 +108,10 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                     "Email": userData.email || "",
                     "Opis": userData.user_description || "",
                 });
+
+                if (userData.avatar_url) {
+                    setProfileImage(userData.avatar_url);
+                }
 
                 const contactsResponse = await fetch(`/api/users/${userData.id}/contacts`, {
                     credentials: 'include',
@@ -281,8 +284,8 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                 </div>
                 <section className="profile-popup__content--section">
                     <div className="profile-popup__content--section--basic-info">
-                        <form className="profile-popup__content--section--basic-info--profil"
-                        onSubmit={handleProfileImageChange} 
+                        <form 
+                            className="profile-popup__content--section--basic-info--profil"
                         >
                             <h1>
                                 Podstawowe informacje
