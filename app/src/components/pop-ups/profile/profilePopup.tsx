@@ -48,8 +48,6 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
         Object.fromEntries(ContactForm.map(({ id }) => [id, ""]))
     );
 
-    const [profileImage, setProfileImage] = useState<string | null>(null);
-
     const handleBasicInfoChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = event.target;
         setBasicInfoData((prevData) => ({ ...prevData, [id]: value }));
@@ -60,14 +58,41 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
         setContactData((prevData) => ({ ...prevData, [id]: value }));
     }
 
-    const handleProfileImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const [profileImage, setProfileImage] = useState<string | null>(null);
+
+    const handleProfileImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-        
+        if (!file) return;
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('album_id', '3');
+            formData.append('category_id', '6');
+            formData.append('user_id', basicInfoData.Id);
+
+            const response = await fetch("/api/photos", {
+                method: "POST",
+                credentials: "include",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Błąd podczas przesyłania zdjęcia:", errorData);
+                throw new Error(errorData.message || "Błąd przesyłania pliku");
+            }
+
+            const fileUrl = URL.createObjectURL(file);
+            setProfileImage(fileUrl);
+            console.log("Zdjęcie zostało przesłane pomyślnie.");
+        } catch (error) {
+            console.error("Błąd przesyłania zdjęcia:", error);
+        }
     };
+
     useEffect(() => {
     const fetchUserData = async () => {
         try {
-            // Fetch user basic info
             const userResponse = await fetch('/api/me', {
                 credentials: 'include',
             });
@@ -85,7 +110,6 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                     "Opis": userData.user_description || "",
                 });
 
-                // Fetch user contacts
                 const contactsResponse = await fetch(`/api/users/${userData.id}/contacts`, {
                     credentials: 'include',
                 });
@@ -134,7 +158,6 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
         e.preventDefault();
     
         try {
-            // Pobierz obecne dane formularza
             const currentUserData = {
                 first_name: basicInfoData["Imię"],
                 last_name: basicInfoData["Nazwisko"],
@@ -144,29 +167,24 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                 user_description: basicInfoData["Opis"],
             };
     
-            // Filtrujemy tylko niepuste wartości i mapujemy na nowy obiekt
             const changedData = Object.entries(currentUserData).reduce((acc, [key, value]) => {
-                // Jeśli wartość NIE jest pusta, dodajemy ją do obiektu wynikowego
                 if (value !== "") {
                     acc[key] = value;
                 }
                 return acc;
             }, {} as Record<string, string>);
 
-            // Jeśli nie ma żadnych zmian, zakończ funkcję
             if (Object.keys(changedData).length === 0) {
                 console.log("Brak zmian do zapisania.");
                 return;
             }
 
-            // Dodaj ID użytkownika do danych
             const requestData = {
                 ...changedData,
                 id: basicInfoData["Id"]
             };
 
-            // Wyślij tylko zmienione dane
-            const response = await fetch(`/api/users/${requestData.id}`, {
+            const response = await fetch(`/api/me`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -263,7 +281,9 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                 </div>
                 <section className="profile-popup__content--section">
                     <div className="profile-popup__content--section--basic-info">
-                        <form className="profile-popup__content--section--basic-info--profil">
+                        <form className="profile-popup__content--section--basic-info--profil"
+                        onSubmit={handleProfileImageChange} 
+                        >
                             <h1>
                                 Podstawowe informacje
                             </h1>
@@ -286,7 +306,7 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                             onSubmit={handleBasicInfoSubmit} 
                         >
                             <h2>Dane osobowe</h2>
-                            {BasicInfoForm.map(({ id, label, type }) => (
+                            {BasicInfoForm.filter(({ label }) => label !== "Opis").map(({ id, label, type }) => (
                                 <FormInput
                                     key={id}
                                     id={id}

@@ -41,6 +41,7 @@ function Album() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [averageRating, setAverageRating] = useState<number | null>(null); 
 
   const amountPerPage = 8;
 
@@ -83,8 +84,29 @@ function Album() {
       }
     };
 
+    const fetchAlbumReviews = async () => {
+      try {
+        if (!id) return;
+
+        const response = await fetch(`/api/albums/${id}/album_reviews`);
+        if (response.ok) {
+          const reviews = await response.json();
+          if (reviews && reviews.length > 0) {
+            const totalRating = reviews.reduce((sum: number, review: { value: number }) => sum + review.value, 0);
+            const avgRating = totalRating / reviews.length;
+            setAverageRating(avgRating); 
+          } else {
+            setAverageRating(0); 
+          }
+        }
+      } catch (error) {
+        console.error("Błąd przy pobieraniu ocen albumu:", error);
+      }
+    };
+
     fetchUser();
     fetchAlbum();
+    fetchAlbumReviews(); 
   }, [id]);
 
   const fetchPhotosPage = async (currentPage: number) => {
@@ -153,26 +175,32 @@ function Album() {
       <Banner />
       <div className="album-wrapper">
         <div className="album-wrapper__content">
-          <Title title={album.name} description={album.description} />
+          <Title
+            title={album.name}
+            description={album.description}
+            albumId={album.id} 
+            averageRating={averageRating} 
+          />
           {!isEmpty ? (
               <PhotoGrid photos={photos} />
           ) : (
               <div className="photo-grid__empty">Brak zdjęć w albumie</div>
           )}
-          
-          {hasMore && (
-            <button 
-              className="load-more-button" 
-              onClick={() => {
-                const nextPage = page + 1;
-                setPage(nextPage);
-                fetchPhotosPage(nextPage);
-              }}
-            >
-              Załaduj więcej
-            </button>
-          )}
 
+          {hasMore && (
+            <div className="submit-btn-wrapper">
+              <button
+                className="btn-padding-md" 
+                onClick={() => {
+                  const nextPage = page + 1;
+                  setPage(nextPage);
+                  fetchPhotosPage(nextPage);
+                }}
+              >
+                Załaduj więcej
+              </button>
+            </div>
+          )}
           <Reviews />
         </div>
         {id && userId && <AsideManager albumId={id} userId={userId} onPhotosUploaded={refreshPhotos} />}

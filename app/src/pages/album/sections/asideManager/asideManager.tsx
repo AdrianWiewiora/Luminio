@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TbPhotoPlus } from "react-icons/tb";
 import './asideManager.scss';
 
@@ -12,6 +12,21 @@ function AsideManager({ albumId, userId, onPhotosUploaded }: AsideManagerProps) 
     const [isUploading, setIsUploading] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [uploadSuccess, setUploadSuccess] = useState(false);
+    const [isOwner, setIsOwner] = useState(false);
+
+    useEffect(() => {
+        const fetchAlbum = async () => {
+            try {
+                const res = await fetch(`/api/albums/${albumId}`);
+                if (!res.ok) throw new Error('Nie udało się pobrać albumu');
+                const album = await res.json();
+                setIsOwner(album.user_id === Number(userId));
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchAlbum();
+    }, [albumId, userId]);
 
     const handleAddPhotos = async (files: FileList) => {
         if (!files || files.length === 0) {
@@ -31,13 +46,6 @@ function AsideManager({ albumId, userId, onPhotosUploaded }: AsideManagerProps) 
                 formData.append('category_id', '1');
                 formData.append('user_id', userId);
 
-                console.log('Wysyłane dane:', {
-                    file: file.name,
-                    album_id: albumId,
-                    category_id: '1',
-                    user_id: userId
-                });
-
                 const response = await fetch('/api/photos', {
                     method: 'POST',
                     body: formData,
@@ -50,7 +58,6 @@ function AsideManager({ albumId, userId, onPhotosUploaded }: AsideManagerProps) 
                     const text = await response.text();
                     try {
                         const errorData = JSON.parse(text);
-                        console.error('Pełna odpowiedź serwera:', errorData);
                         if (errorData.issues) {
                             const messages = errorData.issues.map((issue: any) =>
                                 `${issue.path?.join('.') || 'field'}: ${issue.message}`
@@ -68,12 +75,8 @@ function AsideManager({ albumId, userId, onPhotosUploaded }: AsideManagerProps) 
             onPhotosUploaded();
             globalThis.dispatchEvent(new Event('photos-updated'));
         } catch (error) {
-            console.error('Całkowity błąd:', error);
-            setUploadError(
-                error instanceof Error
-                    ? error.message
-                    : 'Wystąpił nieoczekiwany błąd podczas przesyłania'
-            );
+            console.error(error);
+            setUploadError(error instanceof Error ? error.message : 'Wystąpił nieoczekiwany błąd podczas przesyłania');
         } finally {
             setIsUploading(false);
         }
@@ -81,11 +84,10 @@ function AsideManager({ albumId, userId, onPhotosUploaded }: AsideManagerProps) 
 
     const triggerFileInput = () => {
         if (isUploading) return;
-
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*';
-        input.multiple = true; // <-- tu zmiana!
+        input.multiple = true;
         input.onchange = (e) => {
             const files = (e.target as HTMLInputElement).files;
             if (files && files.length > 0) {
@@ -96,35 +98,30 @@ function AsideManager({ albumId, userId, onPhotosUploaded }: AsideManagerProps) 
     };
 
     return (
-        <aside className="container">
-            <div className="container__sticky">
-                <div className="container__sticky--section">
-                    <h2 className="container__sticky--section--h2">
-                        Dodaj zawartość
-                    </h2>
-                    <div 
-                        className={`container__sticky--section--item ${isUploading ? 'uploading' : ''}`} 
-                        onClick={triggerFileInput}
-                        style={{ cursor: isUploading ? 'not-allowed' : 'pointer' }}
-                        aria-disabled={isUploading}
-                    >
-                        <TbPhotoPlus className="container__sticky--section--item--icon" />
-                        {isUploading ? 'Przesyłanie...' : 'Dodaj zdjęcia'}
-                    </div>
-                    
-                    {uploadError && (
-                        <div className="upload-status error">
-                            {uploadError}
-                        </div>
-                    )}
-                    {uploadSuccess && (
-                        <div className="upload-status success">
-                            Zdjęcia zostały pomyślnie dodane!
-                        </div>
-                    )}
+    <aside className="container">
+        <div className="container__sticky">
+        <div className="container__sticky--section">
+            {isOwner && (
+            <>
+                <h2 className="container__sticky--section--h2">Dodaj zawartość</h2>
+
+                <div
+                className={`container__sticky--section--item ${isUploading ? 'uploading' : ''}`}
+                onClick={triggerFileInput}
+                style={{ cursor: isUploading ? 'not-allowed' : 'pointer' }}
+                aria-disabled={isUploading}
+                >
+                <TbPhotoPlus className="container__sticky--section--item--icon" />
+                {isUploading ? 'Przesyłanie...' : 'Dodaj zdjęcia'}
                 </div>
-            </div>
-        </aside>
+
+                {uploadError && <div className="upload-status error">{uploadError}</div>}
+                {uploadSuccess && <div className="upload-status success">Zdjęcia zostały pomyślnie dodane!</div>}
+            </>
+            )}
+        </div>
+        </div>
+    </aside>
     );
 }
 
