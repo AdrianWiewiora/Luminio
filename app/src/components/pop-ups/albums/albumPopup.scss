@@ -1,0 +1,136 @@
+.album-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+
+    &__content {
+        position: relative;
+        display: flex;
+        width: 60vw;
+        height: 80vh;
+        background-color: var(--main-background);
+        padding: 40px;
+        border-radius: 8px;
+        overflow-y: auto;
+        border: 1px solid var(--background3);
+
+        @media (max-width: 1200px) {
+            width: 100vw;
+            height: 100vh;
+            padding: 48px;
+            flex-direction: column;
+        }
+
+        &--button {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+
+            &--icon {
+                font-size: 1.5rem;
+            }
+        }
+
+        &--form {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            gap: 40px;
+
+            @media (max-width: 768px) {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            &--img-section {
+                flex: 1 1 40%;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+
+                &--title {
+                    color: var(--gray-text);
+                    font-weight: 500;
+                }
+
+                &--img {
+                    width: 100%;
+                    height: auto;
+                    aspect-ratio: 1/1;
+                    border-radius: 8px;
+                    object-fit: cover;
+                    max-height: 320px;
+                }
+
+                &--change {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: var(--gray-text);
+                    transition: 0.15s ease-in-out;
+
+                    &:hover {
+                        color: var(--white-text);
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            &--inputs {
+                flex: 1 1 60%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                gap: 24px;
+
+                &--body {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 24px;
+
+                    #description {
+                        width: 100%;
+                        min-height: 120px;
+                    }
+                }
+
+                &--options {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    gap: 24px;
+                    color: var(--gray-text);
+                    transition: 0.15s ease-in-out;
+
+                    .submit-btn {
+                        width: fit-content;
+                        padding: 12px 24px;
+                    }
+
+                    &:hover {
+                        color: var(--white-text);
+                    }
+                }
+            }
+        }
+    }
+
+    &__error {
+        position: absolute;
+        left: 24px;
+        bottom: 24px;
+        color: var(--error-color);
+        font-size: 0.875rem;
+    }
+}

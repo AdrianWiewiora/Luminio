@@ -1,0 +1,63 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server.dockerfile
+    container_name: server-container
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./server/src:/LuminioServ/server/src
+      - ./common:/common
+      - ./migrations:/migrations
+      - ./photos:/LuminioServ/photos
+    depends_on:
+      - postgres
+    networks:
+      - deno
+    develop:
+      watch:
+        - action: restart
+          path: ./LuminioServ/server/src
+          target: /LuminioServ/server/src
+
+        - action: restart
+          path: ./common
+          target: /common
+
+        - action: restart
+          path: ./migrations
+          target: /migrations
+  postgres:
+    image: postgres:latest
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: luminio
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - deno
+
+  frontend:
+    build:
+      context: .
+      dockerfile: app.dockerfile
+    container_name: frontend-container
+    ports:
+      - "5173:5173"
+    environment:
+      - IS_DOCKER=true
+    volumes:
+      - ./app/src:/LuminioApp/app/src
+    networks:
+      - deno
+
+volumes:
+  postgres-data:
+
+networks:
+  deno: {}

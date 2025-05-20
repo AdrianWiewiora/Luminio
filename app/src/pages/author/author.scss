@@ -1,0 +1,24 @@
+.content {
+    display: flex;
+    gap: 40px;
+    font-size: 1.25rem;
+
+    & > *:first-child {
+        flex: 0 0 auto;
+    }
+
+    & > *:last-child {
+        flex: 1;
+    }
+
+    @media (max-width: 1200px) {
+        flex-direction: column;
+    }
+
+    .empty-albums-message {
+        padding: 2rem;
+        text-align: center;
+        color: var(--white-text);
+        font-size: 1.25rem;
+    }
+}

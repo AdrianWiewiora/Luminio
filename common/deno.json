@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "@valibot/valibot": "jsr:@valibot/valibot@^0.42.1"
+  }
+}

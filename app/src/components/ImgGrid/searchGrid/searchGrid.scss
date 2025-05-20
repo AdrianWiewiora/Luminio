@@ -1,0 +1,31 @@
+.search-grid {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--main-background);
+    padding: 90px 56px;
+    gap: 24px;
+
+    &__h2{
+        font-size: 2.25rem;
+        font-weight: 400;
+        color: var(--white-text);
+    }
+
+    &__filter-content{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 22px;
+    }
+
+    @media (max-width: 700px) {
+        padding: 60px 36px;
+    }
+
+    @media (max-width: 400px) {
+
+        &__h2 {
+            font-size: 1.5rem;
+        }
+    }
+}

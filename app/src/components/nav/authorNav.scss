@@ -1,0 +1,26 @@
+.navigation {
+    display: flex;
+    gap: 48px;
+    transition: 0.15s ease-in-out;
+    padding: 24px;
+}
+
+.navigation > span:hover {
+    color: var(--white-text);
+    cursor: pointer;
+}
+
+
+@media only screen and (max-width: 1200px) {
+    .navigation {
+        gap: 24px;
+        justify-content: center;
+        row-gap: 16px;
+        padding: 16px;
+    }
+    
+    .navigation > span {
+        padding: 8px 0;
+        white-space: nowrap;
+    }
+}
