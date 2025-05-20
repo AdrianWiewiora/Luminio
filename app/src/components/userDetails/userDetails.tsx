@@ -8,14 +8,8 @@ import { RiFolderUserLine } from "react-icons/ri";
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import profile from '../../assets/img/community/community19.png';
+import profile from '../../assets/img/noprofileimage.png';
 import {useNavigate} from "npm:react-router@7.3.0/dist/production/index.d.ts";
-
-const infoItems = [
-    { id: 1, name: "Średnia", value: "" },
-    { id: 2, name: "Opinie", value: "0" },
-    { id: 3, name: "Albumy", value: "0" }
-];
 
 interface UserData {
     id: number;
