@@ -8,14 +8,8 @@ import { RiFolderUserLine } from "react-icons/ri";
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import profile from '../../assets/img/community/community19.png';
+import profile from '../../assets/img/noprofileimage.png';
 import {useNavigate} from "npm:react-router@7.3.0/dist/production/index.d.ts";
-
-const infoItems = [
-    { id: 1, name: "Średnia", value: "" },
-    { id: 2, name: "Opinie", value: "0" },
-    { id: 3, name: "Albumy", value: "0" }
-];
 
 interface UserData {
     id: number;
@@ -38,6 +32,7 @@ interface UserData {
 function UserDetails() {
     const { id: userId } = useParams();
     const [userData, setUserData] = useState<UserData | null>(null);
+    const [profileImage, setProfileImage] = useState<string | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -49,8 +44,12 @@ function UserDetails() {
                     console.error("Błąd podczas pobierania danych użytkownika:", response.statusText);
                     return;
                 }
-                const data: UserData = await response.json();
-                console.log(data);
+                const data: UserData & { avatar_url?: string } = await response.json();
+
+                if (data.avatar_url) {
+                    setProfileImage(data.avatar_url);
+                }
+
                 const contactsResponse = await fetch(`/api/users/${data.id}/contacts`, {
                     credentials: 'include',
                 });
@@ -104,7 +103,7 @@ function UserDetails() {
 
     return (
         <aside className="aside">
-            <img src={profile} alt="profile" className="aside__profile" />
+            <img src={profileImage || profile} alt="profile" className="aside__profile" />
             <div className="aside__container">
                 <h1 className="aside__container--h1">
                     {userData.first_name} {userData.last_name}

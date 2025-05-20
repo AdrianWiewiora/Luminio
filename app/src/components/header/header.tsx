@@ -2,6 +2,7 @@ import { Link, useNavigate, useSearchParams, useLocation } from "react-router-do
 import { useState, useEffect } from "react";
 import "./header.scss";
 import Logo from '../../assets/img/logo.png';
+import NoProfileImage from '../../assets/img/noprofileimage.png';
 
 interface UserData {
     id: number;
@@ -9,6 +10,7 @@ interface UserData {
     last_name: string;
     user_description?: string;
     city?: string;
+    avatar_url?: string;
 }
 
 const navItems = [
@@ -26,6 +28,7 @@ function Header() {
     const view = searchParams.get("view") || "photos"; 
     const [activeView, setActiveView] = useState<string>(view); 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [profileImage, setProfileImage] = useState<string | null>(null);
 
     useEffect(() => {
         setActiveView(view); 
@@ -48,6 +51,7 @@ function Header() {
                     const userData: UserData = await response.json();
                     setIsLoggedIn(true);
                     setUserData(userData);
+                    setProfileImage(userData.avatar_url || NoProfileImage);
                 } else {
                     setIsLoggedIn(false);
                     setUserData(null);
@@ -138,7 +142,13 @@ function Header() {
                     <div className="header__btn-container">
                         {userData ? `${userData.first_name} ${userData.last_name}` : "Użytkownik"}
                         <div className="header__btn-container--trigger">
-                            <div className="trigger-circle"></div>
+                            <div className="trigger-circle">
+                                {profileImage ? (
+                                    <img src={profileImage} alt="Avatar" className="trigger-circle__avatar" />
+                                ) : (
+                                    <div className="trigger-circle__placeholder" />
+                                )}
+                            </div>
                             <ul className="header__btn-container--profile">
                                 <li onClick={handleProfileClick} className="header__btn-container--profile-item">
                                     Mój profil
