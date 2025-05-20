@@ -39,6 +39,7 @@ function Author() {
     const [albums, setAlbums] = useState<Album[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editingAlbum, setEditingAlbum] = useState<Album | null>(null);
+    const [reloadUserDetails, setReloadUserDetails] = useState(false);
 
     useEffect(() => {
         const fetchLoggedUser = async () => {
@@ -81,6 +82,7 @@ function Author() {
 
     const toggleProfilePopup = () => {
         setIsProfilePopupOpen(!isProfilePopupOpen);
+        setReloadUserDetails(prev => !prev);
     };
 
     const toggleAlbumPopup = () => {
@@ -142,7 +144,7 @@ function Author() {
             <Header />
             <Banner />
             <div className="content">
-                <UserDetails />
+                <UserDetails reload={reloadUserDetails} />
                 <div className="content__item-grid">
                     {loggedUserId !== null && loggedUserId === Number(userId) && (
                         <AuthorNav

@@ -1,6 +1,6 @@
 import "./authorTile.scss";
-import { Community1 } from "../../assets/img/imgExport.tsx";
 import { useNavigate } from 'react-router-dom';
+import NoProfileImage from '../../assets/img/noprofileimage.png';
 
 interface AuthorTileProps {
     authorId: number;
@@ -8,9 +8,10 @@ interface AuthorTileProps {
     averageRating?: number | null;
     reviewsCount?: number;
     commentsCount?: number;
+    avatarUrl?: number;
 }
 
-function AuthorTile({ authorId, name, averageRating, reviewsCount, commentsCount }: AuthorTileProps) {
+function AuthorTile({ authorId, name, averageRating, reviewsCount, commentsCount, avatarUrl }: AuthorTileProps) {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -21,7 +22,11 @@ function AuthorTile({ authorId, name, averageRating, reviewsCount, commentsCount
         <div className="author-tile" onClick={handleClick}> 
             <div className="author-tile__banner"></div>
             <div className="author-tile__profile">
-                <img src={Community1} alt="Community" className="author-tile__profile--img"/>
+                <img
+                    src={avatarUrl ? `${avatarUrl}` : NoProfileImage}
+                    alt={`Zdjęcie użytkownika ${authorId}`}
+                    className="author-tile__profile--img"
+                />
                 <h2 className="author-tile__profile--name">
                     {name} 
                 </h2>

@@ -29,7 +29,11 @@ interface UserData {
     other?: string;
 }
 
-function UserDetails() {
+interface UserDetailsProps {
+    reload?: boolean;
+}
+
+function UserDetails({ reload }: UserDetailsProps) {
     const { id: userId } = useParams();
     const [userData, setUserData] = useState<UserData | null>(null);
     const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -87,7 +91,7 @@ function UserDetails() {
         };
 
         fetchUserData();
-    }, [userId]);
+    }, [userId, reload]);
 
     if (!userData) {
         return <div>Ładowanie...</div>;

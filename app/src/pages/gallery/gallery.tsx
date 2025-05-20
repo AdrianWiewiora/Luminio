@@ -12,6 +12,10 @@ interface Author {
     id: number;
     first_name: string;
     last_name: string;
+    average_rating: number;
+    reviews_count: number;
+    comments_count: number;
+    avatar_url: number;
 }
 
 type SelectedView = 'photos' | 'albums' | 'authors';

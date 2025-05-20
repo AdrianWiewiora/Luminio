@@ -61,3 +61,4 @@ export { default as image8 } from "./gallery/image8.png";
 
 // Export noImageAvailable
 export { default as noImageAvailable } from "./noImageAvailable.png";
+export { default as noProfileAvailable } from "./noprofileimage.png";

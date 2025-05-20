@@ -4,8 +4,8 @@ import FormInput from "../../inputs/formInput/formInput.tsx";
 import TextArea from "../../inputs/textarea/textArea.tsx";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { GoPencil } from "react-icons/go";
-import { Community19 } from "../../../assets/img/imgExport.tsx";
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
+import NoProfileImage from '../../../assets/img/noprofileimage.png';
 
 const navElements = [
     { id: 0, name: "Podstawowe informacje" },
@@ -275,13 +275,13 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                 <button className="profile-popup__content--button" onClick={onClose}>
                     <FaRegCircleXmark className="profile-popup__content--button--icon"/>
                 </button>
-                <div className="profile-popup__content--nav">
-                    {navElements.map(({id, name}) =>
-                        <span key={id} className="profile-popup__content--nav--element">
-                            {name}
-                        </span>
-                    )}
-                </div>
+                {/*<div className="profile-popup__content--nav">*/}
+                {/*    {navElements.map(({id, name}) =>*/}
+                {/*        <span key={id} className="profile-popup__content--nav--element">*/}
+                {/*            {name}*/}
+                {/*        </span>*/}
+                {/*    )}*/}
+                {/*</div>*/}
                 <section className="profile-popup__content--section">
                     <div className="profile-popup__content--section--basic-info">
                         <form 
@@ -290,7 +290,7 @@ function ProfilePopup({ onClose }: ProfilePopupProps) {
                             <h1>
                                 Podstawowe informacje
                             </h1>
-                            <img src={profileImage || Community19} alt="profil-image" />
+                            <img src={profileImage || NoProfileImage} alt="profil-image" />
                             <div className="profile-popup__content--section--basic-info--profil--con">
                                 <label htmlFor="profileImage" className="profile-popup__content--section--basic-info--profil--change-img">
                                     <GoPencil /> Zmień profilowe
