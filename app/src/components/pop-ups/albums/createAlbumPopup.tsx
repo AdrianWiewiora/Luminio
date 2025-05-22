@@ -24,8 +24,9 @@ interface CheckboxOption {
 const CheckboxOptions: CheckboxOption[] = [
     { id: "Wesele", title: "Wesele", serviceId: 1 },
     { id: "Artystyczne", title: "Artystyczne", serviceId: 2 },
-    { id: "Sesja zdjęciowa", title: "Sesja zdjęciowa", serviceId: 3 },
-    { id: "Rodzinne", title: "Rodzinne", serviceId: 4 },
+    { id: "Dziecięce", title: "Dziecięce", serviceId: 4 },
+    { id: "Rodzinne", title: "Rodzinne", serviceId: 5 },
+    { id: "Inne", title: "Inne", serviceId: 6 },
 ];
 
 function CreateAlbumPopup({ onClose, userId, onAlbumCreated }: CreateAlbumPopupProps) {
