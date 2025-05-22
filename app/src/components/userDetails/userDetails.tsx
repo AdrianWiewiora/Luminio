@@ -125,7 +125,7 @@ function UserDetails({ reload }: UserDetailsProps) {
                     <span className="aside__container--item--value">
                         {userData.average_rating ? (
                             <>
-                                {userData.average_rating}
+                                {Number(userData.average_rating).toFixed(1)}
                                 <GoStarFill className="aside__container--item--icon" />
                             </>
                         ) : (
