@@ -40,58 +40,59 @@ function UserDetails({ reload }: UserDetailsProps) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const response = await fetch(`/api/me`);
-                if (!response.ok) {
-                    navigate('/not-found');
-                    console.error("Błąd podczas pobierania danych użytkownika:", response.statusText);
-                    return;
-                }
-                const data: UserData & { avatar_url?: string } = await response.json();
-
-                if (data.avatar_url) {
-                    setProfileImage(data.avatar_url);
-                }
-
-                const contactsResponse = await fetch(`/api/users/${data.id}/contacts`, {
-                    credentials: 'include',
-                });
-                if (contactsResponse.ok) {
-                    const contactsArray = await contactsResponse.json();
-                    const contactsObject = contactsArray.reduce((acc: Partial<UserData>, contact: { name: string; contact_info: string }) => {
-                        switch (contact.name) {
-                            case "Portfolio":
-                                acc.portfolio = contact.contact_info || "";
-                                break;
-                            case "Linkedin":
-                                acc.linkedin = contact.contact_info || "";
-                                break;
-                            case "Instagram":
-                                acc.instagram = contact.contact_info || "";
-                                break;
-                            case "Dribbble":
-                                acc.dribbble = contact.contact_info || "";
-                                break;
-                            case "Inne":
-                                acc.other = contact.contact_info || "";
-                                break;
-                            default:
-                                console.warn(`Nieznany typ kontaktu: ${contact.name}`);
-                        }
-                        return acc;
-                    }, {});
-                    setUserData({ ...data, ...contactsObject });
-                } else {
-                    console.error("Błąd podczas pobierania kontaktów:", contactsResponse.statusText);
-                }
-            } catch (error) {
-                console.error("Błąd podczas pobierania danych użytkownika:", error);
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(`/api/users/${userId}`);
+            if (!response.ok) {
+                navigate('/not-found');
+                console.error("Błąd podczas pobierania danych użytkownika:", response.statusText);
+                return;
             }
-        };
+            const data: UserData & { avatar_url?: string } = await response.json();
 
-        fetchUserData();
-    }, [userId, reload]);
+            if (data.avatar_url) {
+                setProfileImage(data.avatar_url);
+            }
+
+            const contactsResponse = await fetch(`/api/users/${userId}/contacts`, {
+                credentials: 'include',
+            });
+            if (contactsResponse.ok) {
+                const contactsArray = await contactsResponse.json();
+                const contactsObject = contactsArray.reduce((acc: Partial<UserData>, contact: { name: string; contact_info: string }) => {
+                    switch (contact.name) {
+                        case "Portfolio":
+                            acc.portfolio = contact.contact_info || "";
+                            break;
+                        case "Linkedin":
+                            acc.linkedin = contact.contact_info || "";
+                            break;
+                        case "Instagram":
+                            acc.instagram = contact.contact_info || "";
+                            break;
+                        case "Dribbble":
+                            acc.dribbble = contact.contact_info || "";
+                            break;
+                        case "Inne":
+                            acc.other = contact.contact_info || "";
+                            break;
+                        default:
+                            console.warn(`Nieznany typ kontaktu: ${contact.name}`);
+                    }
+                    return acc;
+                }, {});
+                setUserData({ ...data, ...contactsObject });
+            } else {
+                console.error("Błąd podczas pobierania kontaktów:", contactsResponse.statusText);
+            }
+        } catch (error) {
+            console.error("Błąd podczas pobierania danych użytkownika:", error);
+        }
+    };
+
+    fetchUserData();
+}, [userId, reload]);
+
 
     if (!userData) {
         return <div>Ładowanie...</div>;

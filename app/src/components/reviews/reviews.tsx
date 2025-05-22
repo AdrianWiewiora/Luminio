@@ -1,7 +1,7 @@
 import './reviews.scss';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import profile from '../../assets/img/community/community13.png';
+import noProfileImage from '../../assets/img/noprofileimage.png';
 import SingleReview from './singleReview/singleReview.tsx';
 import StarRating from './starRating/starRating.tsx';
 
@@ -13,6 +13,14 @@ interface ReviewData {
   value: number;
   first_name: string;
   last_name: string;
+  avatar_url?: string;
+}
+
+interface UserData {
+  id: number;
+  first_name: string;
+  last_name: string;
+  avatar_url?: string;
 }
 
 function Reviews() {
@@ -21,14 +29,25 @@ function Reviews() {
   const [rating, setRating] = useState(0);
   const [body, setBody] = useState('');
   const [reviews, setReviews] = useState<ReviewData[]>([]);
-  const [userId, setUserId] = useState<number | null>(null);
+  const [currentUser, setCurrentUser] = useState<UserData | null>(null);
 
   useEffect(() => {
     if (!albumId) return;
+    
     fetch(`/api/albums/${albumId}/album_reviews`)
       .then(res => res.json())
       .then(data => setReviews(data))
       .catch(err => console.error('Błąd przy pobieraniu recenzji:', err));
+
+    fetch('/api/me', {
+      credentials: 'include',
+    })
+      .then(res => {
+        if (res.ok) return res.json();
+        return null;
+      })
+      .then(data => setCurrentUser(data))
+      .catch(err => console.error('Błąd przy pobieraniu danych użytkownika:', err));
   }, [albumId]);
 
   const checkIfReviewExists = async (userId: number) => {
@@ -43,26 +62,13 @@ function Reviews() {
   };
 
   const handleSubmit = async () => {
+    if (!currentUser) {
+      alert('Użytkownik nie jest zalogowany');
+      return;
+    }
+
     try {
-      const userResponse = await fetch('/api/me', {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!userResponse.ok) {
-        alert('Użytkownik nie jest zalogowany');
-        return;
-      }
-
-      const userData = await userResponse.json();
-      const userId = userData.id;
-
-      if (!userId) {
-        alert('Użytkownik nie jest zalogowany');
-        return;
-      }
-
-      const reviewExists = await checkIfReviewExists(userId);
+      const reviewExists = await checkIfReviewExists(currentUser.id);
       if (reviewExists) {
         alert('Już dodałeś recenzję do tego albumu.');
         return;
@@ -72,7 +78,7 @@ function Reviews() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          user_id: userId,
+          user_id: currentUser.id,
           album_id: albumId,
           body,
           value: rating,
@@ -89,7 +95,7 @@ function Reviews() {
         alert(error.message || 'Błąd przy dodawaniu komentarza');
       }
     } catch (err) {
-      console.error('Błąd przy logowaniu lub dodawaniu recenzji:', err);
+      console.error('Błąd przy dodawaniu recenzji:', err);
       alert('Wystąpił błąd podczas próby dodania recenzji.');
     }
   };
@@ -100,26 +106,35 @@ function Reviews() {
 
   return (
     <section className="reviews">
-      <div className="reviews__new-review">
-        <div className="reviews__new-review--writebox">
-          <img src={profile} alt="profile" className="reviews__new-review--writebox--profile" />
-          <textarea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            className="reviews__new-review--writebox--input"
-            placeholder="Treść komentarza..."
-          />
+      {currentUser && (
+        <div className="reviews__new-review">
+          <div className="reviews__new-review--writebox">
+            <img 
+              src={currentUser.avatar_url || noProfileImage} 
+              alt="profile" 
+              className="reviews__new-review--writebox--profile" 
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = noProfileImage;
+              }}
+            />
+            <textarea
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              className="reviews__new-review--writebox--input"
+              placeholder="Treść komentarza..."
+            />
+          </div>
+          <div className="reviews__new-review--else">
+            <StarRating rating={rating} onChange={setRating} />
+            <span
+              className="reviews__new-review--else--submit"
+              onClick={handleSubmit}
+            >
+              Dodaj komentarz
+            </span>
+          </div>
         </div>
-        <div className="reviews__new-review--else">
-          <StarRating rating={rating} onChange={setRating} />
-          <span
-            className="reviews__new-review--else--submit"
-            onClick={handleSubmit}
-          >
-            Dodaj komentarz
-          </span>
-        </div>
-      </div>
+      )}
 
       <div className="reviews__grid">
         {reviews.map((review) => (
@@ -129,6 +144,7 @@ function Reviews() {
             rating={review.value}
             date={new Date().toLocaleDateString()}
             content={review.body}
+            avatarUrl={review.avatar_url}
           />
         ))}
       </div>

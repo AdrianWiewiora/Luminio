@@ -33,7 +33,7 @@ function CreateAlbumPopup({ onClose, userId, onAlbumCreated }: CreateAlbumPopupP
         user_id: userId,
         name: "",
         description: "",
-        service_id: 0,
+        service_id: CheckboxOptions[0].serviceId,
         is_public: true,
         file: null,
     });
@@ -60,8 +60,13 @@ function CreateAlbumPopup({ onClose, userId, onAlbumCreated }: CreateAlbumPopupP
         setFormData(prev => ({ ...prev, description: e.target.value }));
     };
 
-    const handleCheckboxChange = (serviceId: number, isChecked: boolean) => {
-        setFormData(prev => ({ ...prev, service_id: isChecked ? serviceId : 0 }));
+    const handleCheckboxChange = (serviceId: number) => {
+        setFormData(prev => {
+            if (prev.service_id === serviceId) {
+                return prev; 
+            }
+            return { ...prev, service_id: serviceId };
+        });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -182,7 +187,7 @@ function CreateAlbumPopup({ onClose, userId, onAlbumCreated }: CreateAlbumPopupP
                                             key={id} 
                                             title={title} 
                                             checked={formData.service_id === serviceId}
-                                            onChange={(isChecked: boolean) => handleCheckboxChange(serviceId, isChecked)}
+                                            onChange={() => handleCheckboxChange(serviceId)}
                                         />
                                     ))}
                                 </div>
