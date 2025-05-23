@@ -9,9 +9,10 @@ interface AuthorTileProps {
     reviewsCount?: number;
     commentsCount?: number;
     avatarUrl?: number;
+    albumCount: number;
 }
 
-function AuthorTile({ authorId, name, averageRating, reviewsCount, commentsCount, avatarUrl }: AuthorTileProps) {
+function AuthorTile({ authorId, name, averageRating, reviewsCount, commentsCount, avatarUrl, albumCount }: AuthorTileProps) {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -45,7 +46,7 @@ function AuthorTile({ authorId, name, averageRating, reviewsCount, commentsCount
                     <p>Komentarze</p>
                 </div>
                 <div className="author-tile__author-data--single-info">
-                    <p>{reviewsCount || '0'}</p>
+                    <p>{albumCount || '0'}</p>
                     <p>Albumy</p>
                 </div>
             </div>
