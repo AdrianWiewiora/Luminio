@@ -31,7 +31,7 @@ photosRouter.get("/api/albums/:id/photos", async (ctx) => {
   const response: PhotoResponse[] = photos.map((photo) => {
     return {
       id: photo.id,
-      user_id: photo.id,
+      user_id: photo.user_id,
       album_id: photo.album_id,
       category_id: photo.category_id,
       file_id: photo.file_id,
@@ -53,7 +53,7 @@ photosRouter.get("/api/photos", async (ctx) => {
   const response: PhotoResponse[] = photos.map((photo) => {
     return {
       id: photo.id,
-      user_id: photo.id,
+      user_id: photo.user_id,
       album_id: photo.album_id,
       category_id: photo.category_id,
       file_id: photo.file_id,
@@ -70,7 +70,7 @@ photosRouter.get("/api/photos/:id", async (ctx) => {
 
   const response: PhotoResponse = {
     id: photo.id,
-    user_id: photo.id,
+    user_id: photo.user_id,
     album_id: photo.album_id,
     category_id: photo.category_id,
     file_id: photo.file_id,
