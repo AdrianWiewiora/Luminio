@@ -54,7 +54,8 @@ function Reviews() {
     try {
       const reviewsResponse = await fetch(`/api/albums/${albumId}/album_reviews`);
       const reviewsData = await reviewsResponse.json();
-      return reviewsData.some((review: { user_id: number }) => review.user_id === userId);
+      return reviewsData.some((review: { user_id: number; album_id: number }) => 
+        review.user_id === userId && review.album_id === albumId);
     } catch (err) {
       console.error('Błąd przy sprawdzaniu recenzji użytkownika:', err);
       return false;
@@ -144,7 +145,7 @@ function Reviews() {
             rating={review.value}
             date={new Date().toLocaleDateString()}
             content={review.body}
-            avatarUrl={review.avatar_url}
+            avatarUrl={review.avatar_url || noProfileImage}
           />
         ))}
       </div>
