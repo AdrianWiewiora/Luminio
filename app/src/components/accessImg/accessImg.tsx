@@ -19,11 +19,11 @@ const images: ImageType[] = [
     { id: 8, src: logReg9 }
 ];
 
-function getRandomImage(): string {
+const getRandomImage = (): string => {
     const randomId = Math.floor(Math.random() * images.length); 
     const selectedImage = images.find(image => image.id === randomId); 
     return selectedImage ? selectedImage.src : logReg1;
-}
+};
 
 function AccessImg() {
     const [randomImage] = useState<string>(getRandomImage()); 

@@ -15,8 +15,9 @@ interface Author {
   last_name: string;
   average_rating: number;
   reviews_count: number;
-  comments_count: number;
+  comment_count: number;
   avatar_url: number;
+  album_count: number;
 }
 
 interface Album {
@@ -164,8 +165,9 @@ const DynamicGrid = ({ view, authors }: DynamicGridProps) => {
               name={`${item.data.first_name} ${item.data.last_name}`}
               averageRating={item.data.average_rating ? parseFloat(item.data.average_rating) : null}
               reviewsCount={item.data.reviews_count || 0}
-              commentsCount={item.data.comments_count || 0}
+              commentsCount={item.data.comment_count || 0}
               avatarUrl={item.data.avatar_url}
+              albumCount={item.data.album_count}
             />
           )}
         </div>

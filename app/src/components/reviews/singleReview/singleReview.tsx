@@ -1,6 +1,6 @@
 import './singleReview.scss';
 import { FC } from 'react';
-import profile from '../../../assets/img/community/community9.png';
+import noProfileImage from '../../../assets/img/noprofileimage.png';
 import StarRating from '../starRating/starRating.tsx';
 
 interface SingleReviewProps {
@@ -8,14 +8,22 @@ interface SingleReviewProps {
   rating: number;
   date: string;
   content: string;
+  avatarUrl?: string;
 }
 
-const SingleReview: FC<SingleReviewProps> = ({ author, rating, date, content }) => {
+const SingleReview: FC<SingleReviewProps> = ({ author, rating, date, content, avatarUrl }) => {
   return (
     <div className="review">
       <div className="review__head">
         <div className="review__head--user">
-          <img src={profile} alt="profile" className="review__head--user--profile" />
+          <img 
+            src={avatarUrl || noProfileImage} 
+            alt="profile" 
+            className="review__head--user--profile"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = noProfileImage;
+            }}
+          />
           <h1 className="review__head--user--h1">
             {author}
           </h1>

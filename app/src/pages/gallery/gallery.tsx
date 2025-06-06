@@ -14,8 +14,9 @@ interface Author {
     last_name: string;
     average_rating: number;
     reviews_count: number;
-    comments_count: number;
+    comment_count: number;
     avatar_url: number;
+    album_count: number;
 }
 
 type SelectedView = 'photos' | 'albums' | 'authors';
